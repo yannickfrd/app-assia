@@ -27,7 +27,7 @@ export default class DocumentViewer {
 
     init() {
         this.btnDownloadElt.addEventListener('click', e => this.#requestDownload(e))
-        this.btnEditElt.addEventListener('click', () => this.manager.requestShowDocument(this.btnEditElt.dataset.path))
+        this.btnEditElt.addEventListener('click', () => this.manager.requestShow(this.manager.objectId))
 
         const modalDialogElt = this.previewModalElt.querySelector('.modal-dialog')
         const modalFooterElt = this.previewModalElt.querySelector('.modal-footer-preview')
@@ -38,10 +38,8 @@ export default class DocumentViewer {
     /**
      * @param {string} url
      */
-     requestPreview(url) {
-        if (!this.loader.isActive()) {
-            this.loader.on()
-
+     requestPreview(id) {
+        if (this.loader.isActive() === false) {
             this.ajax.send('GET', url, this.responseAjax)
         }
     }
@@ -52,7 +50,7 @@ export default class DocumentViewer {
      #requestDownload(e) {
         e.preventDefault()
         if (['doc', 'docx', 'txt'].includes(this.documentExtension)) {
-            if(!this.loader.isActive()) {
+            if(this.loader.isActive() === false) {
                 this.loader.on()
                 this.ajax.send('GET', this.btnDownloadElt.dataset.path, this.responseAjax)
             }
@@ -82,8 +80,8 @@ export default class DocumentViewer {
 
         content.childNodes.forEach(elt => elt.remove())
 
-        this.btnEditElt.dataset.path = this.manager.containerDocumentsElt.dataset.pathShow.replace('__id__', data.headers.get('document-id'))
-        this.btnDownloadElt.dataset.path  = this.manager.containerDocumentsElt.dataset.pathDownload.replace('__id__', data.headers.get('document-id'))
+        this.btnEditElt.dataset.path = this.manager.containerElt.dataset.pathShow.replace('__id__', data.headers.get('document-id'))
+        this.btnDownloadElt.dataset.path  = this.manager.containerElt.dataset.pathDownload.replace('__id__', data.headers.get('document-id'))
 
         if (this.file.type === 'application/pdf') {
             content.append(this.#createObject())

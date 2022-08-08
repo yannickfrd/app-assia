@@ -87,7 +87,7 @@ class DocumentControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('table tbody tr td[data-cell="name"]', 'Document');
+        $this->assertSelectorTextContains('table tbody tr td[data-object-key="name"]', 'Document');
     }
 
     public function testCreateNewDocumentIsSuccessful(): void

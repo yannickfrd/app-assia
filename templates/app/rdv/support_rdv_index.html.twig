@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% set support_is_not_defined = support is not defined %}
+{% set rdv_index = support is not defined %}
 {% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
 {% set title = 'Rendez-vous' ~ (restoration_mode ? ' (Corbeille)') %}
+{% set alert_prototype = true %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -13,16 +14,16 @@
 
         <div class="row mb-2">
             <div class="col-sm-4 count align-middle">
-                <a href="{{ support_is_not_defined ? path('calendar_show') : path('support_calendar_show', {'id': support.id}) }}"
+                <a href="{{ rdv_index ? path('calendar_show') : path('support_calendar_show', {id: support.id}) }}"
                 class="btn btn-primary shadow me-1"
                 title="Passer en vue agenda" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="far fa-calendar-alt"></i>
                     <span class="d-none d-lg-inline ms-1">Vue calendrier</span>
                 </a>
                 {% if not restoration_mode %}
-                    <button class="btn btn-primary shadow my-1 me-2" title="Créer un nouveau rdv" 
-                        data-bs-toggle="modal" data-bs-placement="bottom" data-bs-target="#modal-rdv"
-                        data-action="add-rdv" data-url="{{ path('rdv_create') }}">
+                    <button class="btn btn-primary shadow my-1 me-2" data-action="new_rdv" 
+                        title="Créer un nouveau rdv" data-bs-toggle="modal" data-bs-placement="bottom" 
+                        data-bs-target="#modal_rdv">
                         <i class="fas fa-plus-square"></i>
                         <span class="d-none d-lg-inline ms-1">Nouveau RDV</span>
                     </button>
@@ -31,9 +32,8 @@
                             id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
                         </a>
                     {% endif %}
-                <span class="align-middle">Résultat :
-                <span id="count-rdvs" data-count-rdvs="{{ rdvs.getTotalItemCount|number }}">
-                    {{ rdvs.getTotalItemCount|number }}</span>
+                    <span class="align-middle me-1">Résultat :</span>
+                    <span class="align-middle" data-counter="rdv">{{ rdvs.getTotalItemCount|number }}</span>
             </div>
             <div class="col-sm-8">
                 <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
@@ -42,12 +42,16 @@
 
         {% include 'app/rdv/_support_rdv_search_form.html.twig' %}
 
-        {% include 'app/rdv/_rdv_table.html.twig' %}
+        <div class="row mb-4">
+            <div class="col-md-12">
+                {% include 'app/rdv/_rdv_table.html.twig' %}
+            </div>
+        </div>
     </div>
 
     {% include 'app/rdv/_rdv_form_modal.html.twig' %}
-    {% include 'app/rdv/_rdv_update_api_modal.html.twig' with {modal_id: 'modal-update'} %}
     {% include 'app/rdv/_rdv_delete_modal.html.twig' %}
+    {% include 'app/rdv/_rdv_update_api_modal.html.twig' with {modal_id: 'update_api_modal'} %}
 {% endblock %}
 
 {% block javascripts %}

@@ -96,64 +96,30 @@ final class RdvController extends AbstractController
     }
 
     /**
-     * Without SupportGroup.
-     *
      * @Route("/rdv/create", name="rdv_create", methods="POST")
+     * @Route("/support/{id}/rdv/create", name="support_rdv_create", methods="POST")
      */
     public function create(
         Request $request,
         EntityManagerInterface $em,
         ApiCalendarRouter $calendarRouter,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        SupportGroupRepository $supportGroupRepo,
+        ?int $id,
     ): JsonResponse {
         $form = $this->createForm(RdvType::class, $rdv = new Rdv())
             ->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            RdvManager::addonBeforeFlush($rdv, $form);
+        // Add SupportGroup to Rdv if id exists
+        if (null !== $id) {
+            $supportGroup = $supportGroupRepo->findSupportById($id);
+            $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-            $em->persist($rdv);
-            $em->flush();
-
-            RdvManager::deleteCacheItems($rdv);
-
-            return $this->json([
-                'action' => 'create',
-                'alert' => 'success',
-                'msg' => $translator->trans('rdv.created_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
-                'rdv' => $rdv,
-                'apiUrls' => $calendarRouter->getUrls(
-                    'create', $rdv->getId(), (array) $form->getData()
-                ),
-            ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
+            $rdv->setSupportGroup($supportGroup);
         }
 
-        return $this->getErrorMessage($form);
-    }
-
-    /**
-     * With SupportGroup.
-     *
-     * @Route("/support/{id}/rdv/create", name="support_rdv_create", methods="POST")
-     */
-    public function supportRdvCreate(
-        int $id,
-        SupportGroupRepository $supportGroupRepo,
-        Request $request,
-        EntityManagerInterface $em,
-        ApiCalendarRouter $calendarRouter,
-        TranslatorInterface $translator
-    ): JsonResponse {
-        $supportGroup = $supportGroupRepo->findSupportById($id);
-
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
-
-        $rdv = (new Rdv())->setSupportGroup($supportGroup);
-        $form = $this->createForm(RdvType::class, $rdv)
-            ->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            RdvManager::addonBeforeFlush($rdv, $form, $supportGroup);
+            RdvManager::addonBeforeFlush($rdv);
 
             $em->persist($rdv);
             $em->flush();
@@ -165,9 +131,7 @@ final class RdvController extends AbstractController
                 'alert' => 'success',
                 'msg' => $translator->trans('rdv.created_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
                 'rdv' => $rdv,
-                'apiUrls' => $calendarRouter->getUrls(
-                    'create', $rdv->getId(), (array) $form->getData()
-                ),
+                'apiUrls' => $calendarRouter->getUrls('create', $rdv),
             ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
 
@@ -218,15 +182,11 @@ final class RdvController extends AbstractController
             RdvManager::deleteCacheItems($rdv);
 
             return $this->json([
-                'action' => 'edit',
+                'action' => 'update',
                 'alert' => 'success',
                 'msg' => $translator->trans('rdv.updated_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
                 'rdv' => $rdv,
-                'apiUrls' => $calendarRouter->getUrls(
-                    'update',
-                    $rdv->getId(),
-                    (array) $form->getData()
-                ),
+                'apiUrls' => $calendarRouter->getUrls('update', $rdv),
             ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
 
@@ -257,10 +217,7 @@ final class RdvController extends AbstractController
             'rdv' => ['id' => $id],
             'alert' => 'warning',
             'msg' => $translator->trans('rdv.deleted_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
-            'apiUrls' => $calendarRouter->getUrls('delete', $id, [], [
-                'google' => $rdv->getGoogleEventId(),
-                'outlook' => $rdv->getOutlookEventId(),
-            ]),
+            'apiUrls' => $calendarRouter->getUrls('delete', $rdv),
         ]);
     }
 

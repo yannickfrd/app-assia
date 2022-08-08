@@ -49,7 +49,7 @@ Encore
     .addEntry('service', './assets/js/service/service.js')
     .addEntry('support', './assets/js/support/support.js')
     .addEntry('tag', './assets/js/tag/tagIndex.js')
-    .addEntry('task', './assets/js/event/task/taskIndex.js')
+    .addEntry('task', './assets/js/event/task/task-index.js')
     .addEntry('user', './assets/js/user/user.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-md-7 mb-2">
+        {% if notes.getTotalItemCount %}
+            <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+                {{ knp_pagination_sortable(notes, 'Titre', 'n.title') }}
+            </span>
+            <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+                {{ knp_pagination_sortable(notes, 'Date de création', 'n.createdAt') }}
+            </span>
+            <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+                {{ knp_pagination_sortable(notes, 'Date de mise à jour', 'n.updatedAt') }}
+            </span>
+        {% endif %}
+    </div>
+    <div class="col-md-5">
+        <div class="navigation">{{ knp_pagination_render(notes) }}</div>
+    </div>
+</div>
+
+<div id="container_notes" class="row"
+    data-prototype="{{ include('app/note/_note_card_component.html.twig', {note: form.vars.value})|spaceless|e }}"
+    data-path-create="{{ support is defined ? path('support_note_create', {id: support.id}) }}"
+    data-path-show="{{ path('note_show', {id: '__id__'}) }}"
+    data-path-edit="{{ path('note_edit', {id: '__id__'}) }}"
+    data-path-delete="{{ path('note_delete', {id: '__id__'}) }}"
+    data-path-restore="{{ path('note_restore', {id: '__id__'}) }}"
+    data-path-export-word="{{ path('note_export_word', {id: '__id__'}) }}"
+    data-path-export-pdf="{{ path('note_export_pdf', {id: '__id__'}) }}"
+>
+    {% for note in notes %}
+        {{ include('app/note/_note_card_component.html.twig') }}
+    {% else %}
+        <div class="col-md-12 sr-only">
+            <p>Aucune note.</p>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="navigation">{{ knp_pagination_render(notes) }}</div>

@@ -2,9 +2,12 @@
 
 {% extends 'model/_modal_dialog.html.twig' %}
 
-{% block modal_title %}Nouveau groupe{% endblock %}
 
-{% block modal_body_and_footer %}
+{% block modal_content %}
+    <div class="modal-header">
+        <h5 class="modal-title">Nouveau groupe</h5>
+    </div>
+
     {{ form_start(form_new_group) }}
 
     <div class="modal-body">

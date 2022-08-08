@@ -29,9 +29,9 @@
                         <td class="align-middle">{{ form_widget(form_person_place.commentEndReason) }}</td>
                         <td class="align-middle text-center">
 							{% if not is_header %}
-                                <button data-action="remove" data-url="{{ path('support_person_place_delete', {'id': placePersonId}) }}" 
+                                <button data-action="remove" data-path="{{ path('support_person_place_delete', {'id': placePersonId}) }}" 
                                     class="btn btn-danger btn-sm shadow my-1" title="Supprimer la personne de la prise en charge" 
-                                    data-bs-toggle="modal" data-bs-target="#modal-block">
+                                    data-bs-toggle="modal" data-bs-target="#modal_confirm">
                                     <span class="fas fa-trash-alt"><span class="visually-hidden">Supprimer</span></span>
                                 </button>
                             {% endif %}

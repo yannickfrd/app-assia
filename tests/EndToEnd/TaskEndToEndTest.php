@@ -12,14 +12,18 @@ class TaskEndToEndTest extends PantherTestCase
 
     public const CONTAINER = '#container-tasks';
 
-    public const BUTTON_NEW = '#js_new_task';
-    public const BUTTON_SHOW = 'button[data-action="edit_task"]';
-    public const BUTTON_DELETE = 'button[data-action="delete_task"]';
-    public const BUTTON_RESTORE = 'button[name="restore"]';
+    public const BUTTON_NEW = 'button[data-action="new_task"]';
+    public const FIRST_BUTTON_SHOW = 'button[data-action="edit"]';
+    public const FIRST_BUTTON_DELETE = 'button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = 'tr button[data-action="restore"]';
+    public const FIRST_CHECKBOX_TOGGLE_STATUS = 'input[data-action="toggle_status"]';
 
-    public const MODAL_BUTTON_SAVE = '#js-btn-save';
-    public const MODAL_BUTTON_CLOSE = '#js-btn-cancel';
     public const FORM_TASK = 'form[name="task"]';
+    public const MODAL_BUTTON_SAVE = '#modal_task button[data-action="save"]';
+    public const MODAL_BUTTON_CLOSE = '#modal_task button[data-action="close_modal"]';
+    public const MODAL_BUTTON_DELETE = '#modal_task button[data-action="delete"]';
+
+    public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
     public const ALERT_SUCCESS = '.toast.show.alert-success';
     public const ALERT_WARNING = '.toast.show.alert-warning';
@@ -97,7 +101,7 @@ class TaskEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Edit a task');
 
-        $this->clickElement(self::BUTTON_SHOW);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(1); // animation effect
 
         $this->setForm(self::FORM_TASK, [
@@ -118,7 +122,8 @@ class TaskEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Toggle status task');
 
-        $this->clickElement('input[data-action="toggle_task_status"]');
+        $this->clickElement(self::FIRST_CHECKBOX_TOGGLE_STATUS);
+        sleep(1); // animation effect
 
         $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);
@@ -130,13 +135,13 @@ class TaskEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a task');
 
-        $this->clickElement(self::BUTTON_SHOW);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(1); // animation effect
 
-        $this->clickElement('#modal-btn-delete');
+        $this->clickElement(self::MODAL_BUTTON_DELETE);
         sleep(1); // animation effect
 
-        $this->clickElement('#modal-block #modal-confirm');
+        $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
         $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
@@ -153,7 +158,7 @@ class TaskEndToEndTest extends PantherTestCase
         $this->clickElement('button[id="search"]');
 
         $this->client->waitFor('table');
-        $this->clickElement(self::BUTTON_RESTORE);
+        $this->clickElement(self::FIRST_BUTTON_RESTORE);
 
         $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);

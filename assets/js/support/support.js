@@ -11,7 +11,7 @@ import '../utils/maskNumber'
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('support')) {
         new RadioSelecter('table-support-people')
-        new ConfirmAction('tr[data-support-person]')
+        new ConfirmAction('tr[data-support-person-id]')
     }
 
     if (document.getElementById('avdl_support')) {

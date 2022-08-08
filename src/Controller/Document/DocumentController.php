@@ -65,9 +65,9 @@ final class DocumentController extends AbstractController
         ]);
         $formSearch->handleRequest($request);
 
-        $documentForm = $this->createForm(DocumentType::class, (new Document())->setSupportGroup($supportGroup));
+        $formDocument = $this->createForm(DocumentType::class, (new Document())->setSupportGroup($supportGroup));
 
-        $dropzoneForm = $this->createForm(DropzoneDocumentType::class, null, [
+        $form_dropzone = $this->createForm(DropzoneDocumentType::class, null, [
             'action' => $this->generateUrl('document_create', ['id' => $supportGroup->getId()]),
         ]);
 
@@ -78,8 +78,8 @@ final class DocumentController extends AbstractController
         return $this->render('app/document/support_document_index.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
-            'documentForm' => $documentForm->createView(),
-            'dropzoneForm' => $dropzoneForm->createView(),
+            'form_document' => $formDocument->createView(),
+            'form_dropzone' => $form_dropzone->createView(),
             'action_form' => $actionForm->createView(),
             'documents' => $paginator->paginate($request, $search, $supportGroup),
         ]);
@@ -228,7 +228,7 @@ final class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/document/{id}/delete", name="document_delete", methods="GET")
+     * @Route("/document/{id}/delete", name="document_delete", methods="DELETE")
      */
     public function delete(Document $document, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
     {

@@ -14,7 +14,7 @@ class EvaluationEndToEndTest extends PantherTestCase
 
     public const FORM_RDV = 'form[name="evaluation"]';
     public const BUTTON_SAVE = 'button[name="send"]';
-    public const BUTTON_DELETE = 'a#modal-btn-delete';
+    public const BUTTON_DELETE = '#modal_delete_btn';
 
     public const ALERT_SUCCESS = '.toast.show.alert-success';
     public const ALERT_WARNING = '.toast.show.alert-warning';

@@ -1,0 +1,82 @@
+{% set is_deleted = note.isDeleted %}
+
+<tr data-note-id="{{ note.id }}">
+    <td class="align-middle text-center">
+        {% if support is not defined %}
+            <a href="{{ path('support_note_index', {id: support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
+                class="btn btn-{{ is_deleted ? 'secondary' : 'primary' }} btn-sm shadow {{ is_deleted ? 'disabled' }}"
+                type="button" title="Voir la note sociale" data-bs-toggle="tooltip" data-bs-placement="bottom" 
+                data-action="show"><i class="fas fa-eye"></i>
+            </a>
+        {% else %}
+            {% include 'model/button/_show_button.html.twig' with {
+                disabled: is_deleted,
+                show_title: 'Voir la note'
+            } %}
+        {% endif %}
+    </td>
+    <td class="align-middle justify">
+        <span class="fw-bold" data-object-key="title">{{ note.title }}</span></span>
+        <span data-object-key="content">{{ note.content|u.truncate(200, ' [...]', false)|striptags|raw }}</span> 
+    </td>
+    {% if dashboard_index is not defined %}
+        <td class="align-middle" data-object-key="type" data-note-type="{{ note.type }}">{{ note.typeToString }}</td>
+    {% endif %}
+    <td class="align-middle" data-object-key="status" data-note-status="{{ note.status }}">{{ note.statusToString }}</td>
+    {% if dashboard_index is not defined %}
+        <td class="align-middle" data-object-key="tags">
+            {% for tag in note.tags %}
+                <span class="badge bg-{{ tag.color }}" data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
+            {% endfor %}
+        </td>
+    {% endif %}
+    {% if support is not defined %}
+        <td class=" align-middle" data-object-key="support">
+            {{ note.supportGroup ? note.supportGroup.header.fullname }}
+        </td>
+    {% endif %}
+    {% if support is not defined and dashboard_index is not defined %}
+        <td class="align-middle" data-object-key="service">
+            {{ note.supportGroup.service.name }}<br/>
+            <span class="text-secondary">({{ note.supportGroup.device.name }})</span>
+        </td>
+    {% endif %}
+    <td class="align-middle" data-object-key="createdAt">
+        {{ is_deleted ? note.deletedAt|date('d/m/Y H:i') : note.createdAt|date('d/m/Y') }}
+    </td>
+    {% if support is not defined %}
+        {% if dashboard_index is not defined %}
+            <td class="align-middle" data-object-key="createdBy">{{ note.createdBy ? note.createdBy.fullname }}</td>
+        {% endif %}
+        <td class="align-middle" data-object-key="updatedAt">{{ note.updatedAt|date('d/m/Y') }}</td>
+        {% if dashboard_index is not defined %}
+            <td class="align-middle" data-object-key="updatedBy">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
+        {% endif %}
+    {% endif %}
+    {% if not is_deleted and dashboard_index is not defined %}
+        <td class="align-middle text-center p-1">
+            <button class="btn btn-primary btn-sm mb-1 shadow" data-action="export_word"
+                title="Exporter la note au format Word" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <i class="fas fa-file-word fa-lg bg-primary"></i>
+                    <span class="visually-hidden">Word</span>
+            </button>
+            <button class="btn btn-primary btn-sm mb-1 shadow" data-action="export_pdf"
+            title="Exporter la note au format PDF" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <i class="fas fa-file-pdf fa-lg bg-danger"></i>
+                    <span class="visually-hidden">PDF</span>
+            </button>
+        </td>
+    {% endif %}
+    {% if dashboard_index is not defined %}
+        <td class="align-middle text-center">
+            {% if is_deleted %}
+                {% include 'model/button/_restore_button.html.twig' %}
+            {% else %}
+                <button class="btn btn-sm btn-danger shadow" data-action="delete"
+                    title="Supprimer la note" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            {% endif %}
+        </td>
+    {% endif %}
+</tr>

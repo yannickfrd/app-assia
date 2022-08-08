@@ -10,14 +10,17 @@ class RdvEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    public const BUTTON_NEW = '#js-new-rdv';
-    public const BUTTON_SHOW = 'a.calendar-event';
-    public const BUTTON_DELETE = 'button[data-action="delete-rdv"]';
-    public const BUTTON_RESTORE = 'button[name="restore"]';
+    public const BUTTON_NEW = 'button[data-action="new_rdv"]';
+    public const FIRST_BUTTON_SHOW = 'a.calendar-event';
+    public const FIRST_BUTTON_DELETE = 'tr button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = 'tr button[data-action="restore"]';
 
-    public const MODAL_BUTTON_SAVE = 'button[name="save-rdv"]';
-    public const MODAL_BUTTON_CLOSE = '#js-btn-cancel';
     public const FORM_RDV = 'form[name="rdv"]';
+    public const MODAL_BUTTON_SAVE = '#modal_rdv button[data-action="save"]';
+    public const MODAL_BUTTON_CLOSE = '#modal_rdv button[data-action="close_modal"]';
+    public const MODAL_BUTTON_DELETE = '#modal_rdv button[data-action="delete"]';
+
+    public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
     public const ALERT_SUCCESS = '.toast.show.alert-success';
     public const ALERT_WARNING = '.toast.show.alert-warning';
@@ -96,10 +99,10 @@ class RdvEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Edit a rdv');
 
-        $this->clickElement(self::BUTTON_SHOW);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
+        sleep(1); // animation effect
 
         $this->client->waitFor(self::MODAL_BUTTON_SAVE);
-        sleep(1); // animation effect
 
         $this->setForm(self::FORM_RDV, [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
@@ -120,13 +123,14 @@ class RdvEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a rdv by modal');
 
-        $this->clickElement(self::BUTTON_SHOW);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(1); // animation effect
 
-        $this->clickElement('#modal-btn-delete');
+        $this->clickElement(self::MODAL_BUTTON_DELETE);
         sleep(1); // animation effect
 
-        $this->clickElement('#modal-block #modal-confirm');
+        $this->clickElement(self::MODAL_BUTTON_CONFIRM);
+        sleep(1); // animation effect
 
         $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
@@ -137,13 +141,13 @@ class RdvEndToEndTest extends PantherTestCase
     private function deleteRdvByTable(): void
     {
         $this->outputMsg('Delete a rdv by table');
-        sleep(5);
-
-        $this->clickElement('a#btn_show_rdv_index');
-        $this->clickElement(self::BUTTON_DELETE);
         sleep(1); // animation effect
 
-        $this->clickElement('#modal-block #modal-confirm');
+        $this->clickElement('a#btn_show_rdv_index');
+        $this->clickElement(self::FIRST_BUTTON_DELETE);
+        sleep(1); // animation effect
+
+        $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
         $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
@@ -159,7 +163,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->clickElement('button[id="search"]');
 
         $this->client->waitFor('table');
-        $this->clickElement(self::BUTTON_RESTORE);
+        $this->clickElement(self::FIRST_BUTTON_RESTORE);
 
         $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);

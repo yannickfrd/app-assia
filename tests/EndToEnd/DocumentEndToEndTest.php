@@ -11,16 +11,18 @@ class DocumentEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    public const BUTTON_NEW = '#btn-new-files';
-    public const BUTTON_SHOW_FIRST = 'td[data-cell="name"]';
-    public const BUTTON_PREVIEW_FIRST = 'a[data-action="preview"]';
-    public const BUTTON_DOWNLOAD_FIRST = 'a[data-action="download"]';
-    public const BUTTON_DELETE_FIRST = 'button[data-action="delete"]';
-    public const BUTTON_RESTORE_FIRST = 'button[name="restore"]';
+    public const BUTTON_NEW = '#btn_add_files';
+    public const FIRST_BUTTON_SHOW = 'td[data-object-key="name"]';
+    public const FIRST_BUTTON_PREVIEW = 'a[data-action="preview"]';
+    public const FIRST_BUTTON_DOWNLOAD = 'a[data-action="download"]';
+    public const FIRST_BUTTON_DELETE = 'button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = 'button[data-action="restore"]';
 
+    public const FORM_DOCUMENT = 'form[name="document"]';
     public const MODAL_BUTTON_SAVE = 'button[name="document_update"]';
     public const MODAL_BUTTON_CLOSE = 'button[type="button" data-dismiss="modal"]';
-    public const FORM_DOCUMENT = 'form[name="document"]';
+
+    public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
     public const ALERT_SUCCESS = '.toast.show.alert-success';
     public const ALERT_WARNING = '.toast.show.alert-warning';
@@ -94,7 +96,7 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Select a document');
 
-        $this->clickElement(self::BUTTON_SHOW_FIRST);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
 
         $this->outputMsg('Edit a document');
 
@@ -120,14 +122,14 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->outputMsg('Preview a document');
         sleep(1);
 
-        $this->clickElement(self::BUTTON_PREVIEW_FIRST);
+        $this->clickElement(self::FIRST_BUTTON_PREVIEW);
     }
 
     private function downloadDocument(): void
     {
         $this->outputMsg('Download a document');
 
-        $this->clickElement(self::BUTTON_DOWNLOAD_FIRST);
+        $this->clickElement(self::FIRST_BUTTON_DOWNLOAD);
         sleep(2);
     }
 
@@ -135,7 +137,7 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Download all documents');
 
-        $this->clickElement('#table-documents div.form-check');
+        $this->clickElement('#table_documents div.form-check');
 
         $this->client->submitForm('action-validate', [
             'action[type]' => 1,
@@ -150,9 +152,9 @@ class DocumentEndToEndTest extends PantherTestCase
     private function deleteDocument(): void
     {
         $this->outputMsg('Delete a document');
-        $this->clickElement('#container-documents '.self::BUTTON_DELETE_FIRST);
+        $this->clickElement('#container-documents '.self::FIRST_BUTTON_DELETE);
         sleep(1); // animation effect
-        $this->clickElement('#modal-confirm');
+        $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
         $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
@@ -164,11 +166,11 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a document in modal');
 
-        $this->clickElement(self::BUTTON_SHOW_FIRST);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(2); // animation effect
-        $this->clickElement('#document-modal '.self::BUTTON_DELETE_FIRST);
+        $this->clickElement('#modal_document '.self::FIRST_BUTTON_DELETE);
         sleep(1); // animation effect
-        $this->clickElement('#modal-confirm');
+        $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
         $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
@@ -185,12 +187,12 @@ class DocumentEndToEndTest extends PantherTestCase
 
         $this->client->waitFor('table', 1);
 
-        $this->clickElement(self::BUTTON_RESTORE_FIRST);
+        $this->clickElement(self::FIRST_BUTTON_RESTORE);
 
         $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);
 
-        $this->clickElement(self::BUTTON_RESTORE_FIRST);
+        $this->clickElement(self::FIRST_BUTTON_RESTORE);
         $this->clickElement('a#return_index');
     }
 

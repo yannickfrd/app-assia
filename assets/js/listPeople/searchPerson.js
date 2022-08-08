@@ -36,7 +36,7 @@ export default class SearchPerson {
         this.siSiaoSearchCheckboxElt = document.getElementById('siSiaoSearch')
         
         if (this.siSiaoSearchCheckboxElt) {
-            this.siSiaoGroupModal = new Modal(document.getElementById('modal-si-siao-group'))
+            this.siSiaoGroupModal = new Modal(document.getElementById('modal_sisiao_group'))
             this.importSiSiaoGroupAElt = document.querySelector('a[data-action="import-si-siao-group"]');
         }
         
@@ -92,7 +92,7 @@ export default class SearchPerson {
         if (this.checkParamsInForm() === false) {
             this.noParams()
         }
-        if (!this.loader.isActive()) {
+        if (this.loader.isActive() === false) {
             this.sendRequest()
         } else {
             setTimeout(() => this.loader.off(), 1000)
@@ -226,10 +226,10 @@ export default class SearchPerson {
             return this.noResults()
         }
         
-        document.querySelector('#modal-si-siao-group .modal-body').innerHTML = data.html.content
+        document.querySelector('#modal_sisiao_group .modal-body').innerHTML = data.html.content
         this.siSiaoGroupModal.show()
 
-        this.importSiSiaoGroupAElt.href = this.importSiSiaoGroupAElt.dataset.url.replace('__id__', data.idGroup)
+        this.importSiSiaoGroupAElt.href = this.importSiSiaoGroupAElt.dataset.path.replace('__id__', data.idGroup)
         this.loader.off()
     }
 
@@ -253,7 +253,7 @@ export default class SearchPerson {
     addBtnElt(person) {
         if (this.groupId) {
             return `<a href="/group/${this.groupId}/add_person/${person.id}" class="js-add-person shadow" 
-                        data-bs-toggle="modal" data-bs-target="#modal-block" data-bs-placement="bottom" title="Ajouter la personne au groupe">
+                        data-bs-toggle="modal" data-bs-target="#modal_confirm" data-bs-placement="bottom" title="Ajouter la personne au groupe">
                         <span class="fas fa-plus-square text-dark fa-2x"></span>
                     </a>`
         }

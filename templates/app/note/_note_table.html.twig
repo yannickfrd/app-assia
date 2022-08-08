@@ -1,9 +1,5 @@
-<div class="table-responsive" id="container-notes" data-support="{{ support is defined ? support.id }}"
-    data-path-show="{{ path('note_show', {'id': '__id__'}) }}"
-    data-path-delete="{{ path('note_delete', {'id': '__id__'}) }}"
-    data-path-export-word="{{ path('note_export_word', {'id': '__id__'}) }}"
-    data-path-export-pdf="{{ path('note_export_pdf', {'id': '__id__'}) }}">
-    <table id="table-notes" class="table table-bordered table-striped table-hover text-dark shadow-sm">
+<div class="table-responsive">
+    <table id="table_notes" class="table table-bordered table-striped table-hover text-dark shadow-sm">
         <thead>
             <tr>
                 <th scope="col" class="align-middle th-w-80"></th>
@@ -51,79 +47,21 @@
                 <th scope="col" class="align-middle th-w-80"></th>
             </tr>
         </thead>
-        <tbody class="table-group-divider">
+        <tbody id="container_notes" class="table-group-divider"
+            {% if support is defined %}
+                data-prototype="{{ include('app/note/_note_tr_component.html.twig', {note: form.vars.value})|e }}"
+                data-container-tag="tr"
+            {% endif %}
+            data-path-create="{{ support is defined ? path('support_note_create', {id: support.id}) }}"
+            data-path-show="{{ path('note_show', {id: '__id__'}) }}"
+            data-path-edit="{{ path('note_edit', {id: '__id__'}) }}"
+            data-path-delete="{{ path('note_delete', {id: '__id__'}) }}"
+            data-path-restore="{{ path('note_restore', {id: '__id__'}) }}"
+            data-path-export-word="{{ path('note_export_word', {id: '__id__'}) }}"
+            data-path-export-pdf="{{ path('note_export_pdf', {id: '__id__'}) }}"
+        >
             {% for note in notes %}
-                {% set is_deleted = note.isDeleted %}
-                <tr id="note-{{ note.id }}">
-                    <td class="align-middle text-center">
-                        {% if support is not defined %}
-                            <a href="{{ path('support_note_index', {'id': support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
-                                class="btn btn-{{ is_deleted ? 'secondary' : 'primary' }} btn-sm shadow {{ is_deleted ? 'disabled' }}"
-                                type="button" title="Voir la note sociale" data-bs-toggle="tooltip" data-bs-placement="bottom" 
-                                data-action="show"><i class="fas fa-eye"></i>
-                            </a>
-                        {% else %}
-                            {% include 'model/button/_show_button.html.twig' with {
-                                'path_route': path('note_show', {'id': note.id}),
-                                'disabled': is_deleted,
-                                'show_title': 'Voir la note'
-                            } %}
-                        {% endif %}
-                    </td>
-                    <td class="align-middle justify" data-cell="title-content">
-                        {% if note.title %}<span class="fw-bold">{{ note.title }}</span> {% endif %}
-                        {{ note.content|u.truncate(200, ' [...]', false)|striptags|raw }}</td>
-                    <td class="align-middle" data-cell="type" data-note-type="{{ note.type }}">{{ note.typeToString }}</td>
-                    <td class="align-middle" data-cell="status" data-note-status="{{ note.status }}">{{ note.statusToString }}</td>
-                    <td class="align-middle" data-cell="tags">
-                        {% for tag in note.tags %}
-                            <span class="badge bg-{{ tag.color }}" data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
-                        {% endfor %}
-                    </td>
-                    {% if support is not defined %}
-                        <td class=" align-middle"
-                            data-cell="support">{{ note.supportGroup ? note.supportGroup.header.fullname }}
-                        </td>
-                        <td class="align-middle" data-cell="service">
-                            {{ note.supportGroup.service.name }}<br/>
-                            <span class="text-secondary">({{ note.supportGroup.device.name }})</span>
-                        </td>
-                    {% endif %}
-                    <td class="align-middle" data-cell="createdAt">
-                        {{ is_deleted ? note.deletedAt|date('d/m/Y H:i') : note.createdAtToString }}
-                    </td>
-                    {% if support is not defined %}
-                        <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
-                        <td class="align-middle">{{ note.updatedAt|date('d/m/Y') }}</td>
-                        <td class="align-middle">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
-                    {% endif %}
-                     {% if not is_deleted %}
-                        <td class="align-middle text-center p-1">
-                            <a href="{{ path('note_export_word', {'id': note.id}) }}"
-                                class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format Word"
-                                data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                    <i class="fas fa-file-word fa-lg bg-primary"></i><span class="visually-hidden">Word</span>
-                            </a>
-                            <a href="{{ path('note_export_pdf', {'id': note.id}) }}"
-                                class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format PDF"
-                                data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                    <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="visually-hidden">PDF</span>
-                            </a>
-                        </td>
-                    {% endif %}                   
-                    <td class="align-middle text-center">
-                        {% if is_deleted %}
-                            {% include 'model/button/_restore_button.html.twig' with {
-                                path_route: path('note_restore', {'id': note.id})} %}
-                        {% else %}
-                            <button class="btn btn-sm btn-danger shadow" 
-                                data-action="delete-note" data-path-delete="{{ path('note_delete', {'id': note.id}) }}"
-                                title="Supprimer la note" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                    {% endif %}
-                    </td>
-                </tr>
+                {{ include('app/note/_note_tr_component.html.twig') }}
             {% endfor %}
         </tbody>
     </table>

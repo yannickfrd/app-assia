@@ -207,7 +207,6 @@ class TaskControllerTest extends WebTestCase
         $this->client->request('POST', "/task/$id/edit", [
             'task' => [
                 'title' => 'Task edit',
-                'location' => $this->task->getLocation(),
                 'content' => $this->task->getContent(),
                 'level' => Task::MEDIUM_LEVEL,
                 'users' => [$this->user->getId()],

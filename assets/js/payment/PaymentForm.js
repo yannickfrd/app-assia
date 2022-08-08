@@ -1,9 +1,8 @@
 import PaymentManager from './PaymentManager'
-import FormValidator from "../utils/form/formValidator";
-import ParametersUrl from "../utils/parametersUrl";
-import AlertMessage from "../utils/AlertMessage";
-import FieldDisplayer from "../utils/form/fieldDisplayer";
-import ContributionCalcul from "./ContributionCalcul";
+import FormValidator from "../utils/form/formValidator"
+import AlertMessage from "../utils/AlertMessage"
+import FieldDisplayer from "../utils/form/fieldDisplayer"
+import ContributionCalcul from "./ContributionCalcul"
 
 export default class PaymentForm {
 
@@ -17,8 +16,8 @@ export default class PaymentForm {
         this.responseAjax = paymentManager.responseAjax.bind(paymentManager)
 
         // Formulaire modal
-        this.modalPaymentElt = document.getElementById('payment_modal')
-        this.formPaymentElt = this.modalPaymentElt.querySelector('form[name=payment]')
+        this.paymentModalElt = paymentManager.modalElt
+        this.formPaymentElt = this.paymentModalElt.querySelector('form[name=payment]')
         this.typeSelectElt = document.getElementById('payment_type')
         this.startDateInputElt = document.getElementById('payment_startDate')
         this.endDateInputElt = document.getElementById('payment_endDate')
@@ -36,7 +35,7 @@ export default class PaymentForm {
         this.returnAmtInputElt = document.getElementById('payment_returnAmt')
         this.commentInputElt = document.getElementById('payment_comment')
         this.commentExportInputElt = document.getElementById('payment_commentExport')
-        this.infoPaymentDivElt = document.getElementById('js_info_payment')
+        this.infoPaymentElt = document.querySelector('[data-payment="info"]')
 
         this.pdfBtnElt = this.formPaymentElt.querySelector('button[data-action="create_pdf"]')
         this.mailBtnElt = this.formPaymentElt.querySelector('button[data-action="send_email"]')
@@ -44,9 +43,8 @@ export default class PaymentForm {
         this.saveBtnElt = this.formPaymentElt.querySelector('button[data-action="save"]')
         this.editBtnElts = this.formPaymentElt.querySelectorAll('button[data-edit]')
 
-        this.confirmBtnElt = document.getElementById('modal-confirm')
+        this.btnConfirmElt = document.getElementById('modal_confirm_btn')
 
-        this.parametersUrl = new ParametersUrl()
         this.formValidator = new FormValidator(this.formPaymentElt)
         this.contributionCalcul = new ContributionCalcul(this.formPaymentElt, this.afterCalculContribution.bind(this))
 
@@ -58,25 +56,15 @@ export default class PaymentForm {
     }
 
     init() {
-        // If paymentId is in url "get"
-        const paymentId = this.parametersUrl.get('paymentId')
-        this.paymentManager.trElt = document.getElementById('payment-' + paymentId)
-        document.querySelectorAll('table#table_payments tbody tr')
-            .forEach(trElt => {
-                if (trElt.id === 'payment-'+paymentId) {
-                    this.requestShowPayment(paymentId)
-                }
-            })
-
         document.querySelectorAll('div[data-parent-field]')
             .forEach(elt => this.displayedFields.push(new FieldDisplayer(elt)))
 
-        this.modalPaymentElt.querySelectorAll('input[data-amount]')
+        this.paymentModalElt.querySelectorAll('input[data-amount]')
             .forEach(elt => elt
                 .addEventListener('input', () => this.formValidator.checkAmount(elt, 0, 9999)))
 
         this.typeSelectElt.addEventListener('input', () => {
-            this.initForm()
+            this.#resetForm()
             this.checkType()
         })
 
@@ -94,22 +82,19 @@ export default class PaymentForm {
             this.tryToSave()
         })
 
+        this.deleteBtnElt.addEventListener('click', e => {
+            e.preventDefault()
+            this.paymentManager.showModalConfirm(this.payment.id)
+        })
+
         this.pdfBtnElt.addEventListener('click', e => {
             e.preventDefault()
-            window.open(this.pdfBtnElt.dataset.path.replace('__id__', this.payment.id))
+            this.paymentManager.requestExportPdf(this.payment.id)
         })
         
         this.mailBtnElt.addEventListener('click', e => {
             e.preventDefault()
-            if (window.confirm('Confirmer l\'envoi du reçu par email au suivi ?')) {
-                this.ajax.send('GET', this.mailBtnElt.dataset.path.replace('__id__',  this.payment.id), this.responseAjax)
-            }
-        })
-
-        this.deleteBtnElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.paymentManager.confirmModal.show()
-            this.confirmBtnElt.dataset.path = this.deleteBtnElt.dataset.path.replace('__id__',  this.payment.id)
+            this.paymentManager.requestSendEmail(this.payment.id)
         })
 
         if (this.rentAmtInputElt) {
@@ -126,11 +111,8 @@ export default class PaymentForm {
         }
     }
 
-    /**
-     * Enregistre l'opération.
-     */
     tryToSave() {
-        if (!this.loader.isActive()) {
+        if (this.loader.isActive() === false) {
             this.loader.on()
 
             if (this.isValidForm()) {
@@ -147,21 +129,17 @@ export default class PaymentForm {
         }
     }
 
-    requestShowPayment(paymentId) {
-        if (!this.loader.isActive()) {
-            this.loader.on()
-
-            const path = document.querySelector('table#table_payments').dataset.pathShow.replace('__id__', paymentId)
-            this.ajax.send('GET', path, this.responseAjax)
-        }
-    }
-
     /**
      * Show payment in form.
      * @param {Object} payment
      */
-    showPayment(payment) {
+    show(payment) {
+        this.#resetForm()
+
         this.payment = payment
+
+        this.formPaymentElt.action = this.paymentManager.pathEdit(payment.id)
+
         this.typeSelectElt.value = payment.type
         this.startDateInputElt.value = payment.startDate ? payment.startDate.substring(0, 10) : null
         this.endDateInputElt.value = payment.endDate ? payment.endDate.substring(0, 10) : null
@@ -175,7 +153,7 @@ export default class PaymentForm {
         this.stillToPayAmtInputElt.value = Math.round(payment.stillToPayAmt * 100) / 100
         this.returnAmtInputElt.value = payment.returnAmt
         this.commentInputElt.value = payment.comment
-        this.commentExportInputElt.value = payment.commentExport;
+        this.commentExportInputElt.value = payment.commentExport
 
         const noContribCheckboxElt = this.formPaymentElt.querySelector('#payment_noContrib')
         if (noContribCheckboxElt) {
@@ -183,12 +161,16 @@ export default class PaymentForm {
             this.formPaymentElt.querySelector('#payment_noContribReason').value = payment.noContribReason ?? ''
         }
 
+        this.deleteBtnElt.classList.replace('d-none', 'd-block')
+        this.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'
+
         this.formPaymentElt.querySelector('#payment_contributionRate').value = payment.contributionRate
         this.formPaymentElt.querySelector('#payment_nbConsumUnits').value = payment.nbConsumUnits
 
-        this.infoPaymentDivElt.innerHTML = this.getInfoPaymentElt(payment)
+        this.infoPaymentElt.innerHTML = this.getInfoPaymentElt(payment)
         this.checkType()
         this.checkResources()
+
         if (payment.id) {
             this.editBtnElts.forEach(elt => {
                 elt.classList.remove('d-none')
@@ -196,17 +178,17 @@ export default class PaymentForm {
         }
     }
 
-    newPayment() {
+    new() {
         this.typeSelectElt.value = ''
-        this.initForm()
+        this.#resetForm()
+
+        this.formPaymentElt.action = this.paymentManager.pathCreate()
+
         this.checkType()
         this.deleteBtnElt.classList.replace('d-block', 'd-none')
         this.saveBtnElt.querySelector('span').textContent = 'Enregistrer'
-        this.modalPaymentElt.querySelector('form').action = this.paymentManager.btnNewElt.dataset.path
         document.getElementById('show_calcul_contribution_btn').classList.add('d-none')
-        this.editBtnElts.forEach(elt => {
-            elt.classList.add('d-none')
-        })
+        this.editBtnElts.forEach(elt => elt.classList.add('d-none'))
     }
 
     /**
@@ -221,41 +203,17 @@ export default class PaymentForm {
         return htmlContent
     }
 
-    initForm() {
+    #resetForm() {
         this.formValidator.reinit()
-        this.formPaymentElt.querySelectorAll('input, textarea').forEach(inputElt => {
-            if (inputElt.type !== 'hidden') {
-                inputElt.value = null
-            }
-            if (inputElt.type === 'checkbox') {
-                inputElt.checked = false
+        this.formPaymentElt.querySelectorAll('input:not([type="hidden"]), select:not([id="payment_type"]), textarea').forEach(fieldElt => {
+            fieldElt.value = ''
+            if (fieldElt.type === 'checkbox') {
+                fieldElt.checked = false
             }
         })
-        this.paymentTypeSelectElt.value = ''
-        if (this.noContribReasonSelectElt) {
-            this.noContribReasonSelectElt.value = ''
-        }
-        this.infoPaymentDivElt.innerHTML = ''
+        this.infoPaymentElt.innerHTML = ''
         this.checkResources()
         this.editBtnElts.forEach(elt => elt.classList.add('d-none'))
-    }
-
-    /**
-     * Requête pour obtenir le RDV sélectionné dans le formulaire modal.
-     * @param {String} id
-     */
-    getPayment(id) {
-        this.loader.on()
-
-        this.formPaymentElt.action = this.formPaymentElt.dataset.path.replace('__id__', id)
-
-        this.deleteBtnElt.classList.replace('d-none', 'd-block')
-        this.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'
-
-        this.initForm()
-        this.checkType()
-
-        this.ajax.send('GET', '/payment/' + id + '/show', this.responseAjax)
     }
 
     /**

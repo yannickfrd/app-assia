@@ -16,14 +16,16 @@ class PaymentEndToEndTest extends PantherTestCase
     public const CONTAINER = '#container_payments';
 
     public const BUTTON_NEW = 'button[data-action="new_payment"]';
-    public const BUTTON_SHOW = 'button[data-action="show"]';
-    public const BUTTON_DELETE = 'button[data-action="delete"]';
-    public const BUTTON_RESTORE = 'button[name="restore"]';
+    public const FIRST_BUTTON_SHOW = 'tr button[data-action="show"]';
+    public const FIRST_BUTTON_DELETE = 'tr button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = 'tr button[data-action="restore"]';
 
+    public const FORM_PAYMENT = 'form[name="payment"]';
     public const MODAL_BUTTON_SAVE = 'button[data-action="save"]';
     public const MODAL_BUTTON_CLOSE = 'button[data-action="close"]';
-    public const FORM_PAYMENT = 'form[name="payment"]';
     public const BUTTON_CALCUL_CONTRIBUTION = '#calcul_contribution_btn';
+
+    public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
     public const ALERT_SUCCESS = '.toast.show.alert-success';
     public const ALERT_WARNING = '.toast.show.alert-warning';
@@ -51,14 +53,14 @@ class PaymentEndToEndTest extends PantherTestCase
         $this->deletePaymentByModal();
     }
 
-    // public function testRestorePayment(): void
-    // {
-    //     $this->client = $this->loginUser('user_super_admin');
+    public function testRestorePayment(): void
+    {
+        $this->client = $this->loginUser('user_super_admin');
 
-    //     $this->client->request('GET', '/support/1/payments');
+        $this->client->request('GET', '/support/1/payments');
 
-    //     $this->restorePayment();
-    // }
+        $this->restorePayment();
+    }
 
     private function showPaymentsIndex(): void
     {
@@ -102,7 +104,7 @@ class PaymentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Edit a payment');
 
-        $this->clickElement(self::BUTTON_SHOW);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(2); // transition delay
 
         $year = (new \DateTime())->format('Y');
@@ -129,13 +131,13 @@ class PaymentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a payment');
 
-        $this->clickElement(self::BUTTON_SHOW);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(1); // transition delay
 
-        $this->clickElement(self::FORM_PAYMENT.' '.self::BUTTON_DELETE);
+        $this->clickElement(self::FORM_PAYMENT.' '.self::FIRST_BUTTON_DELETE);
         sleep(1); // transition delay
 
-        $this->clickElement('#modal-block #modal-confirm');
+        $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
         $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
@@ -152,7 +154,7 @@ class PaymentEndToEndTest extends PantherTestCase
         $this->clickElement('button[id="search"]');
 
         $this->client->waitFor('table');
-        $this->clickElement(self::BUTTON_RESTORE);
+        $this->clickElement(self::FIRST_BUTTON_RESTORE);
 
         $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);

@@ -1,0 +1,46 @@
+{% set is_deleted = note.isDeleted %}
+
+<div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}">
+    <div class="card h-100 shadow" {% if not is_deleted %}
+        title="Voir la note" data-bs-toggle="tooltip" data-bs-placement="bottom"{% endif %}>
+        <div class="card-header">
+            <div class="row">
+                <div class="col-11 {{ not is_deleted ? 'cursor-pointer' }}" data-action="show">
+                    <h3 class="card-title h5 text-primary" data-object-key="title">{{ note.title }}</h3>
+                </div>
+                <div class="col-1 d-flex justify-content-end align-items-start">
+                    {% if not is_deleted %}
+                        <button class="btn btn-sm btn-danger shadow" data-action="delete"
+                            title="Supprimer la note" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    {% else %}
+                        {% include 'model/button/_restore_button.html.twig' with {
+                            path: path('note_restore', {id: note.id})} %}
+                    {% endif %}
+                </div>
+            </div>
+            <span data-object-key="type">{{ note.typeToString }}</span>
+            (<span data-object-key="status">{{ note.statusToString }}</span>)
+            <span class="small text-secondary">
+                Créé le <span data-object-key="createdAt">{{ note.createdAt|date('d/m/Y à H:i') }}</span>
+                par <span data-object-key="createdBy">{{ note.updatedBy ? note.createdBy.fullname }}</span>
+            </span>
+            <span class="small text-secondary {{ note.updatedAt == note.createdAt ? 'd-none' }}" data-object-key="updateInfo">
+                (modifié le <span data-object-key="updatedAt">{{ note.updatedAt|date('d/m/Y à H:i') }}</span>
+                par <span data-object-key="updatedBy">{{ note.updatedBy ? note.updatedBy.fullname }}</span>)
+            </span>
+            <div class="mt-2 tags-list" data-object-key="tags">
+                {% for tag in note.tags %}
+                    <span class="badge bg-{{ tag.color }}" data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-body note-content {{ not is_deleted ? 'cursor-pointer' }}" data-action="show">
+            <div class="card-text" data-object-key="content">
+                {{ note.content|u.truncate(600, ' [...]', false)|striptags|raw }}
+            </div>
+            <span class="note-fadeout"></span>
+        </div>
+    </div>
+</div>

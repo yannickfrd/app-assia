@@ -1,5 +1,5 @@
 {% set disabled = disabled is defined and disabled == true ? 'disabled' : '' %}
-<a href="{{ path_route }}"
+<a href="{{ path ?? '' }}"
     class="btn btn-{{ disabled ? 'secondary disabled' : 'primary' }} btn-sm shadow"
     title="{{ show_title is defined ? show_title : 'Voir l\'élément' }}" type="button"
     data-bs-toggle="tooltip" data-bs-placement="bottom" data-action="show">

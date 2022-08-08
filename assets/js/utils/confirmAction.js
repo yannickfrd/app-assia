@@ -13,7 +13,7 @@ export default class ConfirmAction {
      * @param {String} updatedFieldId 
      * @param {Boolean} async 
      */
-    constructor(selectors = '', btnConfirmId = 'modal-confirm', updatedFieldId = null, async = false) {
+    constructor(selectors = '', btnConfirmId = 'modal_confirm_btn', updatedFieldId = null, async = false) {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
         this.trElts = document.querySelectorAll(selectors)
@@ -50,10 +50,10 @@ export default class ConfirmAction {
         this.trElt = trElt
 
         if (false === this.asynch) {
-            return location.assign(btnElt.dataset.url)
+            return location.assign(btnElt.dataset.path)
         }
         
-        return this.ajax.send('GET', btnElt.dataset.url, this.response.bind(this)), {
+        return this.ajax.send('GET', btnElt.dataset.path, this.response.bind(this)), {
             once: true
         }
     }

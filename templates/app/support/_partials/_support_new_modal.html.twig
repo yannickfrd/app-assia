@@ -3,9 +3,11 @@
 
 {% extends 'model/_modal_dialog.html.twig' %}
 
-{% block modal_title %}Nouveau suivi{% endblock %}
-
-{% block modal_body_and_footer %}
-
+{% block modal_content %}
+    <div class="modal-header">
+        <h5 class="modal-title">
+            {% block modal_title %}Nouveau suivi{% endblock %}
+        </h5>
+    </div>
     <div id="container-form-new-support"></div>
 {% endblock %}

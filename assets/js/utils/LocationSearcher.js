@@ -149,7 +149,7 @@ export default class LocationSearcher {
         query = query.replace(/(\s|\t){1,}/g, '+')
         const geo = `&lat=${this.lat}&lon=${this.lon}` // Get the geo priority with lat and lon
         const locationDept = this.containerElt.dataset.locationDept ?? null
-        let url = this.url 
+        let url = this.url
 
         if (locationDept) {
             return 'https://geo.api.gouv.fr/communes?nom=' + query + '&codeDepartement=' + locationDept + '&limit=' + this.limit

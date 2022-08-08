@@ -22,7 +22,7 @@
 					<tbody class="table-group-divider">
 						{% for form_support_pers in form.supportPeople.children %}
 							{% set support_person = form_support_pers.vars.value %}
-							<tr data-support-person="{{ support_person.id }}">
+							<tr data-support-person-id="{{ support_person.id }}">
 								<td class="px-1 align-middle">
 									<div class="form-check ps-2">
 										{{ form_widget(form_support_pers.head) }}
@@ -49,9 +49,9 @@
 								</td>
 								<th scope="row" class="px-1 align-middle">
 									{% if support_person.head == false %}
-										<button class="btn btn-danger btn-sm shadow" data-action="remove" data-url="{{ path('support_peron_delete', 
+										<button class="btn btn-danger btn-sm shadow" data-action="remove" data-path="{{ path('support_peron_delete', 
 											{'id': support_person.id, '_token': csrf_token('remove' ~ support_person.id)}) }}" 
-											data-bs-toggle="modal" data-bs-target="#modal-block" data-bs-toggle="tooltip" data-bs-placement="bottom" 
+											data-bs-toggle="modal" data-bs-target="#modal_confirm" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 											title="Supprimer la personne du suivi">
 											<span class="fas fa-user-times"></span>
 										</button>

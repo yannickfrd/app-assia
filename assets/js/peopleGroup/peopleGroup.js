@@ -7,7 +7,7 @@ import  '../utils/maskNumber'
 
 document.addEventListener('DOMContentLoaded', () => {
     new RadioSelecter('table-people')
-    new ConfirmAction('.js-tr-person', 'modal-confirm')
+    new ConfirmAction('.js-tr-person', 'modal_confirm_btn')
     new NewForm('btn-new-support', 'container-form-new-support', 'modal-new-support') // Formulaire pour la création d'un nouveau suivi
     new changeChecker('group') // form name
     new AutoSizer('textarea')

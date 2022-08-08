@@ -141,7 +141,7 @@ export default class SupportValidator extends FormValidator
      */
     sendAjaxRequest() {
         if (this.serviceSelectElt.value) {
-            const url = this.serviceSelectElt.dataset.url
+            const url = this.serviceSelectElt.dataset.path
             this.ajax.send('POST', url, this.responseAjax.bind(this), new URLSearchParams(this.getData()))
         }
     }

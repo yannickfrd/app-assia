@@ -1,0 +1,105 @@
+{% set person = payment.supportGroup.header %}
+{% set is_deleted = payment.isDeleted %}
+
+<tr data-payment-id="{{ payment.id }}">
+    <td class="align-middle text-center">
+        {% if payment_index %}
+            <a class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow"
+                href="{{ path('support_payments_index', {id: payment.supportGroup.id, 'paymentId': payment.id}) }}"
+                title="Voir {{ payment.typeToString }}" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                <i class="fas fa-eye"></i>
+            </a>
+        {% else %}
+            <button class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow"
+                data-action="show" 
+                title="Voir l'enregistrement" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                <i class="fas fa-eye"></i>
+            </button>
+        {% endif %}
+    </td>
+    {% if payment_index %}
+        <td class="align-middle">{{ person ? person.fullname }}</td>
+    {% endif %}
+    <td class="align-middle" data-object-key="type">{{ payment.typeToString }}
+        <span class="text-secondary">
+            {{ payment.type == constant('RENT', payment) ? '(' ~ payment.rentAmt|amount ~ ')' }}<br/>
+            {{ payment.type == constant('DEPOSIT_REFUNT', payment) ? '(' ~ payment.returnAmt|amount ~ ')' }}
+        </span>
+    </td>
+    <td class="align-middle text-center">
+        {% set nb_days = payment.nbDays %}
+        <span data-object-key="startDate">{{ payment.startDate|date('d/m/Y') }}</span> -    
+        <span data-object-key="endDate">{{ payment.endDate|date('d/m/Y') }}</span>
+        <span class="small secondary" data-object-key="nbDays">
+            {% if nb_days > 0 %}({{ nb_days }}&nbsp;jour{{ nb_days > 1 ? 's'}}){% endif %}            
+        </span>
+    </td>
+    <td class="align-middle text-end" data-object-key="toPayAmt">
+        {{ payment.toPayAmt is not null ? payment.toPayAmt|amount }}
+    </td>
+    <td class="align-middle text-end" data-object-key="paidAmt">
+        {{ payment.paidAmt  is not null ? payment.paidAmt|amount }}
+    </td>
+    <td class="align-middle text-end" data-object-key="stillToPayAmt">
+        {{ payment.stillToPayAmt ? payment.stillToPayAmt|amount }}
+    </td>
+    <td class="align-middle text-center" data-object-key="paymentDate">
+        {{ payment.paymentDate ? payment.paymentDate|date('d/m/Y') }}
+    </td>
+    <td class="align-middle" data-object-key="paymentType">{{ payment.paymentTypeToString }}</td>
+    <td class="align-middle small">
+        <span data-object-key="noContribReason">
+            {{ payment.noContrib ? 'PAF à zéro (' ~ payment.noContribReasonToString ~ ')' }}
+        </span>
+        <span data-object-key="comment">{{ payment.comment|u.truncate(30, ' [...]', false) }}</span>       
+        <br>
+        <span data-object-key="commentExport">{{ payment.commentExport|u.truncate(30, ' [...]', false) }}</span>       
+    </td>
+    {% if payment_index %}
+        <td class="align-middle">
+            <span data-object-key="service">{{ payment.supportGroup.service.name }}</span>
+            <br/>
+            <span class="text-secondary" data-object-key="device">
+                {{ payment.supportGroup.device ? '(' ~ payment.supportGroup.device.name ~ ')' }}
+            </span>
+        </td>
+    {% endif %}
+    {% if is_deleted %}
+        <td class="align-middle" data-object-key="deletedAt">{{ payment.deletedAt|date('d/m/Y H:i') }}</td>
+    {% else %}
+        <td class="align-middle" data-object-key="createdAt">{{ payment.createdAt|date('d/m/Y H:i') }}</td>
+    {% endif %}
+    {% if payment_index %}
+        <td class="align-middle">{{ payment.createdBy.fullname }}</td>
+    {% endif %}
+    {% if not payment_index %}
+        <td class="align-middle text-center">
+            <span class="cursor-pointer" data-action="export_pdf"
+                title="{{ payment.pdfGenerate ? 'PDF généré le ' 
+                    ~ payment.pdfGenerateAt|date('d/m/Y à H:i') : 'Générer un PDF' }}"
+                data-bs-toggle="tooltip" data-bs-placement="bottom">
+                <i class="fas fa-file-pdf text-{{ payment.pdfGenerate ? 'success' : 'secondary' }} fa-lg"></i>
+            </span>
+        </td>
+        <td class="align-middle text-center">
+            <span class="cursor-pointer" data-action="send_email" 
+                title="{{ payment.mailSent ? 'Mail envoyé le ' ~ payment.mailSentAt|date('d/m/Y à H:i') }}"
+                data-bs-toggle="tooltip" data-bs-placement="bottom">
+                <i class="fas fa-envelope text-{{ payment.mailSent ? 'success' : 'secondary' }} fa-lg"></i>
+            </span>
+        </td>
+        <td class="align-middle text-center">
+            {% if not is_deleted %}
+                <button class="btn btn-danger btn-sm shadow my-1" data-action="delete"
+                    title="Supprimer le payment" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            {% else %}
+                <button class="btn btn-success btn-sm shadow" data-action="restore"
+                    title="Restaurer le payment" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <i class="fa-solid fa-trash-arrow-up"></i>
+                </button>
+            {% endif %}
+        </td>
+    {% endif %}
+</tr>

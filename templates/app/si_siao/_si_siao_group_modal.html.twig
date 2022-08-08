@@ -1,9 +1,9 @@
-<div id="modal-si-siao-group" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation" aria-hidden="true">
+<div id="modal_sisiao_group" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal_sisiao_group_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalConfirmation">Importer Fiche groupe SI-SIAO</h5>
+                    <h5 class="modal-title" id="modal_sisiao_group_title">Importer Fiche groupe SI-SIAO</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -15,7 +15,7 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     </div>
                     <div class="float-end">
-                        <a href="#" data-action="import-si-siao-group" data-url="{{ path('api_sisiao_import_group', {id: '__id__'}) }}" 
+                        <a href="#" data-action="import-si-siao-group" data-path="{{ path('api_sisiao_import_group', {id: '__id__'}) }}" 
                             class="btn btn-lg btn-primary w-100 shadow">Importer</a>
                     </div>
                 </div>

@@ -1,21 +1,18 @@
-<div id="modal-task" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal_task_label" aria-hidden="true"
-data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
+<div id="modal_task" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal_task_label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header d-block d-md-flex pb-2">
                 <div class="col-12 col-lg-6">
-                    <h2 class="h3" data-url="{{ path('support_show', {'id': '__id__'} ) }}"></h2>
+                    <h2 class="h3"></h2>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <p class="mb-0 text-end small text-secondary" id="js_task_info"></p>
+                    <p class="mb-0 text-end small text-secondary" data-object-key="info"></p>
                 </div>
             </div>
             
-            {{ form_start(form_task, {attr: {'data-url-task-new': support is defined ? 
-                path('support_task_create', {'id': support.id}) : path('task_create') }}) }}
+            {{ form_start(form_task) }}
 
             <div class="modal-body pb-0">
-            
                 <div class="row mb-3">
                     <div class="col-12">{{ form_widget(form_task.title) }}</div>
                 </div>
@@ -72,11 +69,6 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                         {{ form_label(form_task.supportGroup, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
                         {{ form_widget(form_task.supportGroup) }}
                     </div>
-                    {# <div class="col-md-12">
-                        {{ form_label(form_task.supportPeople, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
-                        {{ form_widget(form_task.supportPeople, {attr: 
-                            {'data-url': path('support_people', {'id': '__id__'}) }}) }}
-                    </div> #}
                 </div>
 
                 <div class="row mb-3">
@@ -106,24 +98,28 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                             data-container-tag="div" data-widget-counter="{{ form_task.alerts|length }}">
                         </div>
                         <button type="button" class="btn btn-primary btn-sm"
-                            data-list-selector="#alerts-fields-list" data-add-widget="alert" data-url="/alert/__id__/toggle-status">
+                            data-list-selector="#alerts-fields-list" data-add-widget="alert">
                             <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
                         </button>
                     </div>
                 </div> 
                 {{ form_row(form_task._token) }}
             </div>
+
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-start">
-                    <button id="modal-btn-delete" class="me-3 btn btn-danger"
-                            data-url="{{ path('task_delete', {'id': '__id__'}) }}">
-                        <i class="fas fa-trash-alt"></i><span class="d-none d-md-inline ms-2">Supprimer</span>
+                    <button class="me-3 btn btn-danger" data-action="delete">
+                        <i class="fas fa-trash-alt"></i>
+                        <span class="d-none d-md-inline ms-2">Supprimer</span>
                     </button>
                 </div>
                 <div class="float-end">
-                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button type="submit" id="js-btn-save" class="btn btn-primary shadow">
-                        <i class="fas fa-save me-2"></i>Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" data-action="close_modal"
+                        data-bs-dismiss="modal">Fermer
+                    </button>
+                    <button type="submit" data-action="save" class="btn btn-primary shadow">
+                        <i class="fas fa-save me-2"></i>Enregistrer
+                    </button>
                 </div>
             </div>
 

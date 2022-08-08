@@ -32,7 +32,7 @@
 						</tr>
 					</thead>
 
-					<tbody class="table-group-divider" id="container-placeGroups" data-support="{{ support.id }}">
+					<tbody class="table-group-divider" id="container_placeGroups">
 						{% for placeGroup in support_group_places|sort ((a, b) => b.startDate <=> a.startDate) %}
 							<tr id="placeGroup-{{ placeGroup.id }}">
 								<td scope="row" class="align-middle text-center">

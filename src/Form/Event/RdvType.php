@@ -23,18 +23,18 @@ use Symfony\Component\Validator\Constraints\Count;
 
 class RdvType extends AbstractType
 {
-    private $tagRepo;
     private $user;
     private $supportGroupRepo;
+    private $tagRepo;
 
     public function __construct(
-        TagRepository $tagRepo,
         Security $security,
+        TagRepository $tagRepo,
         SupportGroupRepository $supportGroupRepo
     ) {
-        $this->tagRepo = $tagRepo;
         $this->user = $security->getUser();
         $this->supportGroupRepo = $supportGroupRepo;
+        $this->tagRepo = $tagRepo;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -42,7 +42,7 @@ class RdvType extends AbstractType
         /** @var Rdv $rdv */
         $rdv = $options['data'];
         /** @var SupportGroup $supportGroup */
-        $supportGroup = $options['support_group'] ?? $options['data']->getSupportGroup();
+        $supportGroup = $options['support_group'] ?? $rdv->getSupportGroup();
         $service = $supportGroup ? $supportGroup->getService() : null;
 
         $builder
@@ -92,9 +92,6 @@ class RdvType extends AbstractType
                     return $supportGroup->getHeader()->getFullname();
                 },
                 'label' => 'event.support_group',
-                'label_attr' => [
-                    'class' => 'col-6 col-md-6',
-                ],
                 'placeholder' => 'event.support_group.placeholder',
                 'required' => false,
             ])
@@ -128,16 +125,14 @@ class RdvType extends AbstractType
                 'prototype' => true,
                 'by_reference' => false,
             ])
-            ->add('_googleCalendar', CheckboxType::class, [
+            ->add('googleCalendar', CheckboxType::class, [
                 'label' => 'rdv.label.google',
                 'attr' => ['class' => 'api-calendar'],
-                'mapped' => false,
                 'required' => false,
             ])
-            ->add('_outlookCalendar', CheckboxType::class, [
+            ->add('outlookCalendar', CheckboxType::class, [
                 'label' => 'rdv.label.outlook',
                 'attr' => ['class' => 'api-calendar'],
-                'mapped' => false,
                 'required' => false,
             ])
         ;

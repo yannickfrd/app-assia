@@ -104,7 +104,7 @@ class SupportPersonControllerTest extends WebTestCase
         $id = $this->fixtures['support_group1']->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/edit");
-        $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-url');
+        $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-path');
         $this->client->request('GET', $url);
 
         $this->assertResponseIsSuccessful();

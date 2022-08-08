@@ -51,6 +51,7 @@ final class ExportController extends AbstractController
         return $this->renderForm('app/admin/export/export_index.html.twig', [
             'form' => $form,
             'exports' => $pagination->paginate($this->exportRepo->findExportsQuery(), $request, 10),
+            'export' => new Export(),
         ]);
     }
 
@@ -160,14 +161,14 @@ final class ExportController extends AbstractController
         $this->denyAccessUnlessGranted('GET', $export);
 
         if (file_exists($export->getFileName())) {
-            return $downloader->send($export->getFileName());
+            return $downloader->send($export->getFileName(), ['action-type' => 'download']);
         }
 
         return $this->redirectToRoute('export_index');
     }
 
     /**
-     * @Route("/export/{id}/delete", name="export_delete", methods="GET")
+     * @Route("/export/{id}/delete", name="export_delete", methods="DELETE")
      */
     public function delete(?Export $export, EntityManagerInterface $em): JsonResponse
     {

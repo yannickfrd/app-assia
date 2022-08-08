@@ -143,6 +143,10 @@ abstract class AbstractEvent
      */
     public function getEndToString(string $format = 'd/m/Y H:i'): ?string
     {
+        if (null === $this->end) {
+            return null;
+        }
+
         if ('00:00' === $this->end->format('H:i')) {
             return $this->end->format('d/m/Y');
         }

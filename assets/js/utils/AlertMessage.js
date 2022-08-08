@@ -1,47 +1,41 @@
 import {Toast} from 'bootstrap'
-import DateFormater from './date/dateFormater'
+import DateFormatter from './date/DateFormatter'
 
 export default class AlertMessage {
 
-    constructor(alert = 'info', message, delay = 8) {
+    constructor(alert, message, delay, autohide) {
         this.alertContainerElt = document.querySelector('.toast-container')
-        this.alert = alert
+        this.alert = alert ?? 'info'
         this.message = message
-        this.delay = delay * 1000
-        this.alertElt = this.#createAlertElt()
-        this.toast = new Toast(this.alertElt)
+        this.delay = delay ??  8 * 1000
+        this.autohide = autohide ?? true
 
         this.#init()
     }
 
     #init() {
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = this.alertContainerElt.dataset.prototype
+        this.alertElt = wrapper.firstChild
+
+        this.#hydrateAlertElt()
+
+        this.toast = new Toast( this.alertElt)
+        
         this.alertContainerElt.appendChild(this.alertElt)
+
         this.toast.show()
 
         this.alertElt.querySelector('.btn-close').addEventListener('click', () => {
-            setTimeout(() => this.alertElt.remove(), 1000)
+            setTimeout(() => this.alertElt.remove(), this.delay)
         })
     }
 
-    /**
-     * @return {HTMLDivElement}
-     */
-    #createAlertElt() {
-        const alertElt = document.createElement('div')
-        alertElt.className = 'toast alert-' + this.alert
-        alertElt.dataset.bsAutohide = 'true'
-        alertElt.dataset.bsDelay = this.delay
-        alertElt.setAttribute('aria-live', 'assertive')
-        alertElt.setAttribute('aria-atomic', 'true')
-        
-        alertElt.innerHTML = `
-            <div class="toast-header">
-                <strong class="me-auto">Notification</strong>
-                <small class="text-muted">${new DateFormater().getTimeNow()}</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">${this.message}</div>
-        `
-        return alertElt
+    #hydrateAlertElt() {
+        this.alertElt.classList.add('alert-' + this.alert)
+        this.alertElt.dataset.bsAutohide = this.autohide
+        this.alertElt.dataset.bsDelay = this.delay
+        this.alertElt.querySelector('small.text-muted').textContent = new DateFormatter().getTimeNow()
+        this.alertElt.querySelector('.toast-body').innerHTML = this.message
     }
 }

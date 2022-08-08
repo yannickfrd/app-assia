@@ -2,6 +2,7 @@
 
 {% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
 {% set title = 'Paiements' ~ (restoration_mode ? ' (Corbeille)') %}
+{% set alert_prototype = true %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -13,12 +14,13 @@
 		<div class="row mb-2">
 			<div class="d-flex col-md-6 align-items-center">
 				<button class="btn btn-primary shadow me-2" data-action="new_payment"
-					data-path="{{ path('payment_create', {'id': support.id}) }}"
 					title="Créer un nouvel enregistrement" data-bs-toggle="tooltip" data-bs-placement="bottom">
 					<i class="fas fa-plus-square me-2"></i>Nouveau</button>
-				<div class="d-inline align-middle">Résultat : <!--
-				--><span id="count_payments">{{ payments.getTotalItemCount|number }}</span><!--
-				-->{% if nbTotalPayments and form_search.deleted.deleted.vars.checked != true %} sur <span id="nb_total_payments">{{ nbTotalPayments }}</span>{% endif %}
+				<div class="d-inline align-middle">Résultat :
+					<span data-counter="payment">{{ payments.getTotalItemCount|number }}</span>
+					{% if nb_total_payments and form_search.deleted.deleted.vars.checked == false %}
+					 	sur <span data-counter="payment">{{ nb_total_payments }}</span>
+					{% endif %}
 				</div>
 			</div>
 			<div class="col-md-6">

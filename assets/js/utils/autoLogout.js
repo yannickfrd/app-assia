@@ -80,7 +80,7 @@ export default class AutoLogout {
         this.clearTimer()
         this.autoLogoutModal.hide();
 
-        const url = document.getElementById('cancel-logout').dataset.url
+        const url = document.getElementById('cancel-logout').dataset.path
         window.location.assign(url)
     }
 }

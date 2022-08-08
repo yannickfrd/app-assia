@@ -89,9 +89,9 @@ final class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/support/{id}/note/new", name="support_note_new", methods="POST")
+     * @Route("/support/{id}/note/new", name="support_note_create", methods="POST")
      */
-    public function new(
+    public function create(
         SupportGroup $supportGroup,
         Request $request,
         EntityManagerInterface $em,
@@ -172,7 +172,7 @@ final class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/note/{id}/delete", name="note_delete", methods="GET")
+     * @Route("/note/{id}/delete", name="note_delete", methods="DELETE")
      * @IsGranted("DELETE", subject="note")
      */
     public function delete(Note $note, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse

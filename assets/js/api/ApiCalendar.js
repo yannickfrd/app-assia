@@ -5,12 +5,12 @@ export default class ApiCalendar {
     constructor() {
         this.ajax = new Ajax
 
-        this.modalRdvElt = document.getElementById('modal-rdv')
-        this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button#modal-btn-delete')
+        this.modalRdvElt = document.getElementById('modal_rdv')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
+        this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button[data-action="delete"]')
 
-        this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_googleCalendar]"]')
-        this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_outlookCalendar]"]')
+        this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[googleCalendar]"]')
+        this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[outlookCalendar]"]')
 
         this.init()
     }

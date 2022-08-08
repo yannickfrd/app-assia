@@ -168,10 +168,10 @@ class ImportHudaData extends ImportDatas
 
     public const END_REASON = [
         'Accès au logement privé' => 100,
-        'Accès au logement/résidence sociale' => 100,
+        'Accès au logement/résidence sociale' => 100,
         'Départ volontaire' => 310,
-        'Fin de prise charge OFII' => 400,
-        'Fin de prise en charge ESPERER 95' => 200,
+        'Fin de prise charge OFII' => 400,
+        'Fin de prise en charge ESPERER 95' => 200,
         'Retour volontaire dans pays d’origine' => 310,
         'SIAO/115' => 97,
         'Transfert Dublin' => 410,
@@ -181,10 +181,10 @@ class ImportHudaData extends ImportDatas
 
     public const END_STATUS = [
         'Accès au logement privé' => 300,
-        'Accès au logement/résidence sociale' => 204,
+        'Accès au logement/résidence sociale' => 204,
         'Départ volontaire' => 97,
-        'Fin de prise charge OFII' => 97,
-        'Fin de prise en charge ESPERER 95' => 97,
+        'Fin de prise charge OFII' => 97,
+        'Fin de prise en charge ESPERER 95' => 97,
         'Retour volontaire dans pays d’origine' => 97,
         'SIAO/115' => 102,
         'Transfert Dublin' => 97,

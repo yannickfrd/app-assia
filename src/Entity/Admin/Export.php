@@ -113,6 +113,18 @@ class Export
         return $this->size;
     }
 
+    /** @Groups("show_export") */
+    public function getSizeKo(): ?string
+    {
+        if (null === $this->size) {
+            return null;
+        }
+
+        $roundedSize = round($this->size / 1_000);
+
+        return number_format($roundedSize, 0, ',', "\xc2\xa0")."\xc2\xa0Ko";
+    }
+
     public function setSize(?float $size): self
     {
         $this->size = $size;
@@ -156,9 +168,10 @@ class Export
         return $this;
     }
 
-    public function getDelay(): string
+    /** @Groups("show_export") */
+    public function getDelay(): ?string
     {
-        return $this->createdAt->diff($this->updatedAt)->format('%im%ss');
+        return $this->createdAt ? $this->createdAt->diff($this->updatedAt)->format('%im%ss') : null;
     }
 
     /** @Groups("show_export") */

@@ -1,9 +1,9 @@
-<div class="toast alert-{{ toast_alert ?? 'light' }}" role="alert" aria-live="assertive" aria-atomic="true" 
+<div class="toast{{ toast_alert is defined ? ' alert-' ~ toast_alert }}" role="alert" aria-live="assertive" aria-atomic="true"
     data-bs-animation="{{ toast_animation ?? 'true' }}" data-bs-delay="{{ toast_delay ?? '10000' }}">
     <div class="toast-header">
         <strong class="me-auto">{{ toast_title is defined ? toast_title|raw : 'Notification' }}</strong>
         <small class="text-muted">{{ toast_date ?? 'now'|date('H:i') }}</small>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
-    <div class="toast-body">{{ toast_message|trans({}, 'app')|raw }}</div>
+    <div class="toast-body">{{ toast_message is defined ? toast_message|trans({}, 'app')|raw }}</div>
 </div>

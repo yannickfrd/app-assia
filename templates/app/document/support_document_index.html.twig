@@ -2,6 +2,7 @@
 
 {% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
 {% set title = 'Documents' ~ (restoration_mode ? ' (Corbeille)') %}
+{% set alert_prototype = true %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -17,7 +18,7 @@
 		<div class="row mb-2">
 			<div class="col-lg-4">
 				{% if not restoration_mode %}
-					<button id="btn-new-files" class="btn btn-primary shadow me-2"
+					<button id="btn_add_files" class="btn btn-primary shadow me-2"
 						title="Ajouter des documents" data-bs-toggle="tooltip" data-bs-placement="bottom">
 						<i class="fas fa-plus-square me-2"></i>Ajouter des documents
 					</button>
@@ -26,8 +27,8 @@
 						id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
 					</a>
 				{% endif %}
-				<div class="d-inline align-middle">Résultat :
-					<span id="count-documents">{{ documents.getTotalItemCount|number }}</span>
+				<div class="d-inline align-middle">Résultat : 
+					<span data-counter="document">{{ documents.getTotalItemCount|number }}</span>
 				</div>
 			</div>
 			<div class="col-lg-8">

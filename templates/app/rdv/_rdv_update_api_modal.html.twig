@@ -1,9 +1,10 @@
 {% extends 'model/_modal_dialog.html.twig' %}
 
 {% block modal_body %}
-    Vous avez apporté des modifications à ce rendez-vous.<br>
-    <strong>Attention</strong>, ces modifications ne sont pas pris en compte dans l'agenda externe.<br><br>
-    Voulez-vous ajouter un nouveau rendez-vous à l'agenda externe ?
+    <p>Vous avez apporté des modifications à ce rendez-vous.<br>
+        <strong>Attention</strong>, ces modifications ne sont pas pris en compte dans l'agenda externe.<br><br>
+        Voulez-vous ajouter un nouveau rendez-vous à l'agenda externe ?
+    </p>
 {% endblock %}
 
-{% block modal_confirm %}Ajouter{% endblock %}
+{% block modal_button_confirm %}Ajouter{% endblock %}

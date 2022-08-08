@@ -1,4 +1,4 @@
-<div id="note-modal" class="modal modal-fullscreen-sm-down fade" tabindex="-1" role="dialog"
+<div id="modal_note" class="modal modal-fullscreen-sm-down fade" tabindex="-1" role="dialog"
     aria-labelledby="modalNoteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-fullscreen modal-xl" role="document">
         <div class="modal-content">
@@ -36,18 +36,18 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="d-flex float-start">
-                    <button id="modal-btn-delete" class="btn btn-danger me-2 me-md-3"
+                    <button class="btn btn-danger me-2 me-md-3" data-action="delete"
                         title="Supprimer la note" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-trash-alt"></i><span class="d-none d-md-inline ms-2">Supprimer</span>
                     </button>
-                    <a id="export-note-word" class="btn btn-primary me-1"
+                    <button class="btn btn-primary me-1" data-action="export_word"
                         title="Exporter la note au format Word" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-file-word bg-primary fa-lg"></i><span class="d-none d-lg-inline ms-2">Word</span>
-                    </a>
-                    <a id="export-note-pdf" class="btn btn-primary"
+                    </button>
+                    <button class="btn btn-primary" data-action="export_pdf"
                         title="Exporter la note au format PDF" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-file-pdf bg-danger fa-lg"></i><span class="d-none d-lg-inline ms-2">PDF</span>
-                    </a>
+                    </button>
                     <div id="js-auto-save" class="text-secondary d-none py-1 ms-2">
                         <i class="fas fa-sync-alt me-2"></i>
                         <span class="d-none d-sm-inline">Sauv. auto.</span>

@@ -74,9 +74,9 @@
                         {% if edit_mode and is_granted('DELETE', place) %}
                             <div class="float-start d-flex">
                                 {% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?"' %}
-                                <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
+                                <a id="modal_delete_btn" class="me-3 btn btn-danger d-block" 
                                     href="{{ path('place_delete', {'id': place.id}) }}"
-                                   title="Supprimer le groupe de places" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                    title="Supprimer le groupe de places" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}">
                                         <span class="fas fa-trash-alt me-2"></span>Supprimer</a>
                                 {% set alert_text = '"Êtes-vous vraiment sûr de vouloir désactiver ce groupe de places ?"' %}

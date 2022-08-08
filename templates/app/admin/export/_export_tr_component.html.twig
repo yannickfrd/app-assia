@@ -1,0 +1,32 @@
+<tr data-export-id="{{ export.id }}">
+    <td scope="row" class="align-middle text-center">
+        <button class="btn btn-primary btn-sm shadow my-1{{ export.size == null ? ' d-none' }}" data-action="download"
+            title="Télécharger l'export" data-bs-toggle="tooltip" data-bs-placement="bottom">
+            <i class="fas fa-file-download"></i>
+        </button>
+        <i class="fas fa-spinner text-primary{{ export.size ? ' d-none' }}" title="Export est en cours de préparation"
+            data-bs-toggle="tooltip" data-bs-placement="right"></i>
+    </td>
+    <td class="align-middle" data-object-key="title">{{ export.title }}</td>
+    <td class="align-middle"  data-object-key="comment">{{ export.comment|raw }}</td>
+    <td class="align-middle text-end"  data-object-key="nbResults">{{ export.nbResults|number }}</td>
+    <td class="align-middle text-end">
+        <span class="{{ export.size == null ? ' d-none' }}" data-object-key="sizeKo">{{ export.sizeKo }}</span>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <br>
+            <span class="text-secondary{{ export.size == null ? ' d-none' }}" data-object-key="delay"
+                title="{{ export.usedMemory }} Mo" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                ({{ export.delay }})
+            </span>
+        {% endif %}
+        <i class="fas fa-spinner text-primary{{ export.size ? ' d-none' }}">
+    </td>  
+    <td class="align-middle" data-object-key="createdAt">{{ export.createdAt|date('d/m/Y H:i') }}</td>
+    <td class="align-middle text-center">
+        <button class="btn btn-danger btn-sm shadow my-1" data-action="delete"
+            title="Supprimer le fichier d'export" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-msg="Êtes-vous vraiment sûr de vouloir supprimer ce fichier d'export ?">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </td>
+</tr>

@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% set alert_prototype = true %}
+
 {% block title %}Export des données{% endblock %}
 
 {% block body %}
@@ -22,6 +24,7 @@
         <hr/>
 
         {% include 'app/admin/export/_export_table.html.twig' %}
+	    {% include 'model/_modal_dialog.html.twig' %}
 
     </div>
 {% endblock %}

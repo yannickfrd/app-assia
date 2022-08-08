@@ -6,12 +6,10 @@ use App\Entity\Event\Task;
 use App\Entity\Organization\Tag;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
 use App\Repository\Support\SupportGroupRepository;
-use App\Repository\Support\SupportPersonRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -21,31 +19,32 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 
 class TaskType extends AbstractType
 {
+    private $user;
     private $supportGroupRepo;
-    private $security;
     private $tagRepo;
 
-    public function __construct(SupportGroupRepository $supportGroupRepo, Security $security, TagRepository $tagRepo)
-    {
+    public function __construct(
+        Security $security,
+        SupportGroupRepository $supportGroupRepo,
+        TagRepository $tagRepo
+    ) {
+        $this->user = $security->getUser();
         $this->supportGroupRepo = $supportGroupRepo;
-        $this->security = $security;
         $this->tagRepo = $tagRepo;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Task $task */
+        $task = $options['data'];
         /** @var SupportGroup $supportGroup */
-        $supportGroup = $options['support_group'] ?? $options['data']->getSupportGroup();
+        $supportGroup = $options['support_group'] ?? $task->getSupportGroup();
         $service = $supportGroup ? $supportGroup->getService() : null;
-
-        /** @var User $user */
-        $user = $this->security->getUser();
 
         $builder
             ->add('title', null, [
@@ -76,8 +75,8 @@ class TaskType extends AbstractType
             ])
              ->add('users', EntityType::class, [
                 'class' => User::class,
-                'query_builder' => function (UserRepository $userRepo) use ($service, $user) {
-                    return $userRepo->findUsersOfCurrentUserQueryBuilder($user, $service);
+                'query_builder' => function (UserRepository $userRepo) use ($service) {
+                    return $userRepo->findUsersOfCurrentUserQueryBuilder($this->user, $service);
                 },
                 'choice_label' => 'fullname',
                 'multiple' => true,
@@ -89,23 +88,13 @@ class TaskType extends AbstractType
             ])
             ->add('supportGroup', EntityType::class, [
                 'class' => SupportGroup::class,
-                'choices' => $this->supportGroupRepo->getSupportsOfUser($user, $supportGroup),
+                'choices' => $this->supportGroupRepo->getSupportsOfUser($this->user, $supportGroup),
                 'choice_label' => function (SupportGroup $supportGroup) {
                     return $supportGroup->getHeader()->getFullname();
                 },
                 'label' => 'event.support_group',
-                'label_attr' => [
-                    'class' => 'col-6 col-md-6',
-                ],
                 'placeholder' => 'event.support_group.placeholder',
                 'required' => false,
-            ])
-            ->add('location', null, [
-                'attr' => [
-                    'class' => 'js-search',
-                    'placeholder' => 'event.location.placeholder',
-                    'autocomplete' => 'off',
-                ],
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
@@ -129,21 +118,6 @@ class TaskType extends AbstractType
                     'placeholder' => 'event.content.placeholder',
                 ],
             ])
-            // ->add('supportPeople', EntityType::class, [
-            //     'class' => SupportPerson::class,
-            //     'choices' => [],
-            //     'choice_label' => function (SupportPerson $supportPerson) {
-            //         return $supportPerson->getPerson()->getFullname();
-            //     },
-            //     'multiple' => true,
-            //     'label' => 'event.support_people',
-            //     'attr' => [
-            //         'class' => 'event-input-select-person d-none',
-            //         'placeholder' => 'event.support_people.placeholder',
-            //         'size' => 1,
-            //     ],
-            //     'required' => false,
-            // ])
             ->add('alerts', CollectionType::class, [
                 'entry_type' => AlertType::class,
                 'allow_add' => true,
@@ -152,13 +126,6 @@ class TaskType extends AbstractType
                 'prototype' => true,
                 'by_reference' => false,
             ])
-
-            // ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) use ($supportGroup) {
-            //     $this->postSetDataForm($formEvent, $supportGroup);
-            // })
-            // ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $formEvent) {
-            //     $this->preSubmitForm($formEvent);
-            // })
         ;
     }
 
@@ -169,54 +136,5 @@ class TaskType extends AbstractType
             'translation_domain' => 'forms',
             'support_group' => null,
         ]);
-    }
-
-    private function postSetDataForm(FormEvent $formEvent, ?SupportGroup $supportGroup): void
-    {
-        if (!$supportGroup) {
-            return;
-        }
-
-        $formEvent->getForm()
-            ->add('supportPeople', EntityType::class, [
-                'class' => SupportPerson::class,
-                'choices' => $supportGroup->getSupportPeople(),
-                'choice_label' => function (SupportPerson $supportPerson) {
-                    return $supportPerson->getPerson()->getFullname();
-                },
-                'multiple' => true,
-                'attr' => ['size' => 1],
-                'required' => false,
-            ])
-        ;
-    }
-
-    private function preSubmitForm(FormEvent $formEvent): void
-    {
-        $supportGroupId = null;
-
-        if (isset($formEvent->getData()['supportGroup'])) {
-            $supportGroupId = $formEvent->getData()['supportGroup'];
-        }
-
-        if (isset($formEvent->getData()['supportPeople'])) {
-            $supportPeopleId = $formEvent->getData()['supportPeople'];
-            $formEvent->getForm()->get('supportPeople')->setData($supportPeopleId);
-        }
-
-        if (!$supportGroupId) {
-            return;
-        }
-
-        $formEvent->getForm()
-            ->add('supportPeople', EntityType::class, [
-                'class' => SupportPerson::class,
-                'query_builder' => function (SupportPersonRepository $supportPersonRepos) use ($supportGroupId) {
-                    return $supportPersonRepos->findPeopleInSupportByIdqueryBuilder($supportGroupId);
-                },
-                'multiple' => true,
-                'required' => false,
-            ])
-        ;
     }
 }

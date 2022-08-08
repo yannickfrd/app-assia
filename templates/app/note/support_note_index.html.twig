@@ -3,6 +3,7 @@
 {% set nb_notes = notes|length %}
 {% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
 {% set title = 'Notes' ~ (restoration_mode ? ' (Corbeille)') %}
+{% set alert_prototype = true %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -14,10 +15,10 @@
         <div class="row mb-2">
             <div class="col-md-12">
                 {% if is_card_view %}
-                    <a href="{{ path('support_note_index_table', {'id': support.id}) }}" id="table-view" class="btn btn-primary shadow me-1"
+                    <a href="{{ path('support_note_index_table', {id: support.id}) }}" id="view_table" class="btn btn-primary shadow me-1"
                         role="button" data-bs-toggle="tooltip" title="Passer en vue liste"><i class="far fa-list-alt"></i></a>
                 {% else %}
-                    <a href="{{ path('support_note_index', {'id': support.id}) }}" id="card-view" class="btn btn-primary shadow me-1"
+                    <a href="{{ path('support_note_index', {id: support.id}) }}" id="card-view" class="btn btn-primary shadow me-1"
                         role="button" data-bs-toggle="tooltip" title="Passer en vue carte"><i class="fa-solid fa-grip-vertical"></i></a>
                 {% endif %}
                 {% if not restoration_mode %}
@@ -31,9 +32,10 @@
 					</a>
 				{% endif %}
                 <div class="d-inline align-middle">Résultat :
-                    <span id="count-notes" data-nb-total-notes="{{ nb_total_notes }}">
-					{{ nb_notes }} note{% if nb_notes > 1 %}s{% endif %}
-                        {{ nb_total_notes and form_search.deleted.deleted.vars.checked != true ? ' sur ' ~ nb_total_notes }}</span>
+                    <span data-counter="note">{{ nb_notes }}</span> note(s)
+                    {% if nb_total_notes and form_search.deleted.deleted.vars.checked == false %}
+                        sur <span data-counter="note">{{ nb_total_notes }}</span>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -41,15 +43,15 @@
         {% include 'app/note/_support_note_search_form.html.twig' %}
 
         {% if is_card_view %}
-            {% include 'app/note/_note_card.html.twig' %}
+            {% include 'app/note/_note_cards_container.html.twig' %}
         {% else %}
             {% include 'app/note/_note_table.html.twig' %}
         {% endif %}
     </div>
 
     {% include 'app/note/_note_form_modal.html.twig' %}
-    {% include 'model/_confirm_modal.html.twig' %}
     {% include 'app/note/_note_delete_modal.html.twig' %}
+    {% include 'app/note/_note_delete_modal.html.twig' with {'modal_id': 'modal_confirm_delete'} %}
 {% endblock %}
 
 {% block javascripts %}

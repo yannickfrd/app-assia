@@ -38,7 +38,7 @@ export default class NewForm {
      */
     sendRequest(btnElt) {
         this.loader.on()
-        this.ajax.send('GET', btnElt.dataset.url, this.response.bind(this)), {
+        this.ajax.send('GET', btnElt.dataset.path, this.response.bind(this)), {
             once: true
         }
     }

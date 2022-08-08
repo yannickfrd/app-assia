@@ -73,6 +73,12 @@ class Rdv extends AbstractEvent
      */
     private $supportGroup;
 
+    /** @var bool */
+    private $googleCalendar;
+
+    /** @var bool */
+    private $outlookCalendar;
+
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Groups("show_rdv")
@@ -117,6 +123,18 @@ class Rdv extends AbstractEvent
         return $this->id;
     }
 
+    /**
+     * @Groups("show_rdv")
+     */
+    public function getFullDateToString(string $format = 'd/m/Y H:i'): ?string
+    {
+        if (null === $this->start) {
+            return null;
+        }
+
+        return $this->start->format($format)."\xc2\xa0-\xc2\xa0".$this->end->format('H:i');
+    }
+
     public function getStatus(): ?int
     {
         return $this->status;
@@ -143,6 +161,30 @@ class Rdv extends AbstractEvent
     public function setSupportGroup(?SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
+
+        return $this;
+    }
+
+    public function getGoogleCalendar(): ?bool
+    {
+        return $this->googleCalendar;
+    }
+
+    public function setGoogleCalendar(?bool $googleCalendar): self
+    {
+        $this->googleCalendar = $googleCalendar;
+
+        return $this;
+    }
+
+    public function getOutlookCalendar(): ?bool
+    {
+        return $this->outlookCalendar;
+    }
+
+    public function setOutlookCalendar(?bool $outlookCalendar): self
+    {
+        $this->outlookCalendar = $outlookCalendar;
 
         return $this;
     }

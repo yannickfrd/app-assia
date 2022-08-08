@@ -38,8 +38,6 @@ final class PaymentController extends AbstractController
     use ErrorMessageTrait;
 
     /**
-     * Liste des participations financières.
-     *
      * @Route("/payments", name="payments_index", methods="GET|POST")
      */
     public function index(Request $request, Pagination $pagination, PaymentRepository $paymentRepo): Response
@@ -68,8 +66,6 @@ final class PaymentController extends AbstractController
     }
 
     /**
-     * Liste des participations financières du suivi social.
-     *
      * @Route("/support/{id}/payments", name="support_payments_index", methods="GET|POST")
      *
      * @param int $id // SupportGroup
@@ -100,7 +96,7 @@ final class PaymentController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nbTotalPayments' => $request->query->count() ? $paymentRepo->count(['supportGroup' => $supportGroup]) : null,
+            'nb_total_payments' => $request->query->count() ? $paymentRepo->count(['supportGroup' => $supportGroup]) : null,
             'payments' => $pagination->paginate(
                 $paymentRepo->findPaymentsOfSupportQuery($supportGroup, $search),
                 $request,
@@ -110,8 +106,6 @@ final class PaymentController extends AbstractController
     }
 
     /**
-     * Nouvelle participation financière.
-     *
      * @Route("/support/{id}/payment/create", name="payment_create", methods="POST")
      */
     public function create(
@@ -149,8 +143,6 @@ final class PaymentController extends AbstractController
     }
 
     /**
-     * Obtenir la redevance.
-     *
      * @Route("/payment/{id}/show", name="payment_show", methods="GET")
      */
     public function show(Payment $payment): JsonResponse
@@ -164,8 +156,6 @@ final class PaymentController extends AbstractController
     }
 
     /**
-     * Modification d'une participation financière.
-     *
      * @Route("/payment/{id}/edit", name="payment_edit", methods="POST")
      */
     public function edit(
@@ -198,9 +188,7 @@ final class PaymentController extends AbstractController
     }
 
     /**
-     * Supprime la participation financière.
-     *
-     * @Route("/payment/{id}/delete", name="payment_delete", methods="GET")
+     * @Route("/payment/{id}/delete", name="payment_delete", methods="DELETE")
      */
     public function delete(Payment $payment, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
     {
@@ -281,8 +269,6 @@ final class PaymentController extends AbstractController
     }
 
     /**
-     * Exporte les données.
-     *
      * @param PaymentSearch|SupportPaymentSearch $search
      *
      * @return Response|RedirectResponse
@@ -305,8 +291,6 @@ final class PaymentController extends AbstractController
     }
 
     /**
-     * Exporte les données.
-     *
      * @return Response|RedirectResponse
      */
     protected function exportAccountingData(
@@ -326,8 +310,6 @@ final class PaymentController extends AbstractController
     }
 
     /**
-     * Exporte les données.
-     *
      * @return Response|RedirectResponse
      */
     protected function exportDeltaData(

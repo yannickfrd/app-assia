@@ -88,6 +88,7 @@ export default class FormValidator {
 
     /**
      * Vérifie les champs à compléter.
+     * 
      * @param {NodeList} elts
      */
     checkFields(elts) {
@@ -106,6 +107,7 @@ export default class FormValidator {
 
     /**
      * Vérifie si au moins un des champs de la catégorie est complété.
+     * 
      * @param {NodeList} elts
      * @return {Boolean}
      */
@@ -121,6 +123,7 @@ export default class FormValidator {
 
     /**
      * Vérfifie si le champ est complété.
+     * 
      * @param {HTMLElement} fieldElt 
      * @return {Boolean}
      */
@@ -134,6 +137,7 @@ export default class FormValidator {
 
     /**
      * Met le champ en valide.
+     * 
      * @param {HTMLElement} fieldElt 
      * @return {Boolean} 
      */
@@ -148,6 +152,7 @@ export default class FormValidator {
 
     /**
      * Met le champ en invalide et indique un message d'erreur.
+     * 
      * @param {HTMLElement} fieldElt 
      * @param {string} msg 
      * @return {Boolean} 
@@ -167,6 +172,7 @@ export default class FormValidator {
 
     /**
      * Crée l'élément avec l'information de l'erreur.
+     * 
      * @param {string} msg 
      * @return {HTMLDivElement}
      */
@@ -181,6 +187,7 @@ export default class FormValidator {
 
     /**
      * Donne le label du champ.
+     * 
      * @param {HTMLElement} fieldElt 
      */
     getlabel(fieldElt) {
@@ -193,6 +200,7 @@ export default class FormValidator {
 
     /**
      * Supprime l'élément d'invalidité du champ.
+     * 
      * @param {HTMLElement} labelElt 
      */
     removeInvalidFeedbackElt(labelElt) {
@@ -204,6 +212,7 @@ export default class FormValidator {
 
     /**
      * Renvoie le nombre de champs invalides.
+     * 
      * @return {Number}
      */
     getNbErrors() {
@@ -231,7 +240,8 @@ export default class FormValidator {
     /**
      * Check if a field is valid or not.
      * @param {HTMLElement} fieldElt 
-     * @param {String} msg 
+     * 
+     * @param {string} msg 
      */
     checkField(fieldElt, msg = 'Saisie obligatoire') {
         if (!this.isFilledField(fieldElt)) {
@@ -243,7 +253,12 @@ export default class FormValidator {
 
     /**
      * Check is a date input is valid.
+     * 
      * @param {HTMLInputElement} inputElt 
+     * @param {number} min 
+     * @param {number} max 
+     * @param {string} msg 
+     * @param {boolean} addClassIsValid 
      * @return {Boolean} 
      */
     checkDate(inputElt, min = -(365 * 99), max = (365 * 99), msg = 'Date invalide.', addClassIsValid = true) {
@@ -259,7 +274,12 @@ export default class FormValidator {
 
     /**
      * Check is a amount input is valid.
+     * 
      * @param {HTMLInputElement} inputElt 
+     * @param {number} min 
+     * @param {number} max 
+     * @param {boolean} resetValue 
+     * @param {string} msg 
      * @return {Boolean} 
      */
     checkAmount(inputElt, min = 0, max = 99999, resetValue = false, msg = 'Montant invalide.') {

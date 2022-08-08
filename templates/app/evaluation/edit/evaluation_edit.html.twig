@@ -16,6 +16,7 @@
 	{% set people_adults = evaluation_people|filter(e => e.vars.value.supportPerson.role != role_child) %}
 	{% set people_over_16 = evaluation_people|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
 	{% set nb_children = nb_people - people_adults|length %}
+	{% set alert_prototype = true %}
 
 	<div class="container pt-3">
 
@@ -60,7 +61,7 @@
 				<div class="float-start d-flex">
 					{% if is_granted('ROLE_ADMIN') %}
 						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer cette évaluation sociale ?"' %}
-						<a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
+						<a id="modal_delete_btn" class="me-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
 							title="Supprimer l'évaluation sociale" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 							onclick="return window.confirm({{ alert_text }});">
 							<i class="fas fa-trash-alt me-2"></i>Supprimer</a>
@@ -74,7 +75,7 @@
 				</div>
 				<div class="mb-4 float-end">
 					<button type="submit" name="send" id="send" class="btn btn-primary shadow" 
-						data-url="{{ path('support_evaluation_edit', {'id': support.id}) }}">
+						data-path="{{ path('support_evaluation_edit', {'id': support.id}) }}">
 						<i class="fas fa-save me-2"></i>Enregistrer</button>
 				</div>
 			</div>

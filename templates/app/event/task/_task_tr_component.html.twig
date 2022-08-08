@@ -1,0 +1,93 @@
+{% set support = task.supportGroup %}
+{% set is_deleted = task.isDeleted %}
+
+<tr data-task-id="{{ task.id }}" {% if task.status == true %}class="text-del text-secondary"{% endif %}>
+    <td class="align-middle text-center">
+        <div class="form-check form-check-{{ is_deleted ? 'secondary disabled' : 'primary'  }}">
+            <input type="checkbox" class="form-check-input ms-0 {{ not is_deleted ? 'cursor-pointer' }}"
+                data-action="toggle_status" data-object-key="status" {% if task.status == 1 %}checked{% endif %}
+                title="{{ not is_deleted ? 'Cliquer pour changer le statut' }}"
+                data-bs-toggle="tooltip" data-bs-placement="right"{{ is_deleted ? 'disabled' }}>
+            <label class="form-check-label" for="toggle_status_{{ task.id }}"></label>
+        </div>  
+    </td>
+    <td class="align-middle text-center">
+        <button class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow my-1"
+            {% if dashboard_index is defined %}
+                    data-path="{% if task.supportGroup %}{#
+                    #}{{ path('support_task_index', {id: task.supportGroup, task_id: task.id}) }}{% else %}{#
+                    #}{{ path('task_index', {task_id: task.id}) }}{% endif %}"
+            {% endif %}
+            {{ is_deleted ? 'disabled' }} data-action="show"
+            title="{{ not is_deleted ? 'Voir/Modifier la tâche' }}"
+            data-bs-toggle="tooltip" data-bs-placement="bottom">
+            <i class="fas fa-eye"></i>
+        </button>
+    </td>
+    <td class="align-middle" data-object-key="title">{{ task.title }}</td>
+    <td class="align-middle {{ task.isLate ? 'text-danger' }}" data-object-key="end">
+        {{ task.endToString }}
+        {% if task.isLate %}
+            <i class="fas fa-exclamation text-danger" title="En retard"
+                data-bs-toggle="tooltip" data-bs-placement="bottom"></i>
+        {% endif %}
+    </td>
+    <td class="align-middle" data-object-key="alerts">
+        {% if task.alerts|length > 0 %}
+            {{ task.alerts.first.date|date('d/m/Y H:i') }}
+            <i class="fas fa-bell text-secondary"></i>
+        {% endif %}
+    </td>
+    {% if dashboard_index is not defined %}
+        <td class="align-middle" data-object-key="level">{{ task.levelToString }}</td>
+        <td class="align-middle" data-object-key="tags">
+            {% for tag in task.tags %}
+                <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
+            {% endfor %}
+        </td>
+        <td class="align-middle" data-object-key="users">{{ task.usersToString }}</td>
+    {% endif %}
+    {% if task_index or dashboard_index is defined %}
+        <td class="align-middle" data-object-key="supportGroup">{{ support ? support.header.fullname }}</td>
+    {% endif %}
+    {% if task_index %}
+        <td class="align-middle">
+            <span data-object-key="service">{{ support ? support.service.name }}</span>
+            <span data-object-key="subService">
+                {{ support and support.subService ? ' | ' ~ support.subService.name }}
+            </span>
+            <br/>
+            <span class="text-secondary" data-object-key="device">
+                {{ support and support.device ? '(' ~ support.device.name ~ ')' }}
+            </span>
+        </td>
+    {% endif %}
+    <td class="align-middle">
+        {% if not is_deleted %}
+            <span data-object-key="createdAt">{{ task.createdAt|date('d/m/Y H:i') }}</span>
+        {% else %}
+            <span data-object-key="deletedAt">{{ task.deletedAt|date('d/m/Y H:i') }}</span>
+        {% endif %}
+    </td>
+    {% if task_index %}
+        <td class="align-middle" data-object-key="createdBy">
+            {{ task.createdBy ? task.createdBy.fullname : 'Auto.' }}
+        </td>
+    {% endif %}
+    {% if dashboard_index is not defined %}   
+        <td class="align-middle text-center">
+            {% if is_granted('DELETE', task) or task.id == null %}
+                {% if not is_deleted %}
+                    <button class="btn btn-danger btn-sm shadow" data-action="delete"
+                        title="Supprimer la tâche" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                {% else %}
+                    <button class="btn btn-success btn-sm shadow" data-action="restore"
+                        title="Restaurer la tâche" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <i class="fa-solid fa-trash-arrow-up"></i>
+                {% endif %}
+            {% endif %}
+        </td>
+    {% endif %}
+</tr>

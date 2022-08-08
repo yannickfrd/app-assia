@@ -1,23 +1,20 @@
-{% set support_is_defined = support is defined %}
+{% set payment_index = support is not defined %}
 
 <div class="table-responsive">
-    <table id="table_payments" class="table table-striped table-bordered table-hover text-dark"
-        data-path-show="{{ path('payment_show', {'id': '__id__'}) }}" 
-        data-path-send-mail="{{ path('payment_send_pdf', {'id': '__id__'}) }}"
-    >
+    <table id="table_payments" class="table table-striped table-bordered table-hover text-dark">
         <thead>
-            {% if support_is_defined %}
+            {% if not payment_index %}
                 <tr class="fw-bold">
                     <td colspan="3" class="align-middle text-end">Total</td>
-                    <td class="align-middle text-end" data-payment="sumToPayAmt"></td>
-                    <td class="align-middle text-end" data-payment="sumPaidAmt"></td>
-                    <td class="align-middle text-end" data-payment="sumStillToPayAmt"></td>
+                    <td class="align-middle text-end" data-sum="sumToPayAmt"></td>
+                    <td class="align-middle text-end" data-sum="sumPaidAmt"></td>
+                    <td class="align-middle text-end" data-sum="sumStillToPayAmt"></td>
                     <td colspan="7" class="align-middle text-center"></td>
                 </tr>
             {% endif %}
             <tr>
                 <th scope="col" class="align-middle th-w-20"></th>
-                {% if not support_is_defined %}
+                {% if payment_index %}
                     <th scope="col" class="align-middle th-w-100">
                         {{ knp_pagination_sortable(payments, 'Suivi', 'person.lastname') }}
                     </th>
@@ -46,7 +43,7 @@
                 <th scope="col" class="align-middle th-w-120">
                     {{ knp_pagination_sortable(payments, 'Commentaire', 'p.comment') }}
                 </th>
-                {% if not support_is_defined %}
+                {% if payment_index %}
                     <th scope="col" class="align-middle th-w-100">
                         {{ knp_pagination_sortable(payments, 'Service (Dispositif)', 's.name') }}
                     </th>
@@ -61,7 +58,7 @@
                         {{ knp_pagination_sortable(payments, 'Créé le', 'p.createdAt') }}
                     </th>
                 {% endif %}
-                {% if support_is_defined %}
+                {% if not payment_index %}
                     <th scope="col" class="align-middle th-w-20">
                         {{ knp_pagination_sortable(payments, 'PDF', 'p.pdfGenerateAt') }}
                     </th>
@@ -76,111 +73,28 @@
                 {% endif %}
             </tr>
         </thead>
-        <tbody class="table-group-divider" id="container_payments">
+        <tbody id="container_payments" class="table-group-divider" 
+            {% if not payment_index %}
+                data-prototype="{{ include('app/payment/_payment_tr_component.html.twig', {payment: form.vars.value})|spaceless|e }}"
+                data-container-tag="tr"
+                data-path-create="{{ path('payment_create', {id: support.id}) }}"
+                data-path-show="{{ path('payment_show', {id: '__id__'}) }}"
+                data-path-edit="{{ path('payment_edit', {id: '__id__'}) }}"
+                data-path-delete="{{ path('payment_delete', {id: '__id__'}) }}"
+                data-path-restore="{{ path('payment_restore', {id: '__id__'}) }}"
+                data-path-export-pdf="{{ path('payment_export_pdf', {id: '__id__'}) }}"
+                data-path-send-email="{{ path('payment_send_pdf', {id: '__id__'}) }}"
+            {% endif %}
+        >
             {% set to_pay_amt = 0 %}
             {% set paid_amt = 0 %}
             {% for payment in payments %}
-                {% set is_deleted = payment.deletedAt is not null %}
-                {% set person = (payment.supportGroup.supportPeople|first).person %}
-                <tr id="payment-{{payment.id}}">
-                    <td class="align-middle text-center">
-                        {% if not support_is_defined %}
-                            <a class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow"
-                                href="{{ path('support_payments_index', {'id': payment.supportGroup.id, 'paymentId': payment.id}) }}"
-                                title="Voir {{ payment.typeToString }}" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                        {% else %}
-                            <button class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow"
-                                data-action="show" data-id="{{ payment.id }}" 
-                                data-path="{{ path('payment_show', {'id': payment.id}) }}"
-                                title="Voir l'enregistrement" data-bs-toggle="tooltip" data-bs-placement="bottom" >
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        {% endif %}
-                    </td>
-                    {% if not support_is_defined %}
-                        <td class="align-middle">{{ person ? person.fullname }}</td>
-                    {% endif %}
-                    <td class="align-middle" data-payment="type">{{ payment.typeToString }}
-                        <span class="text-secondary">
-                            {{ payment.type == constant('RENT', payment) ? '(' ~ payment.rentAmt|amount ~ ')' }}<br/>
-                            {{ payment.type == constant('DEPOSIT_REFUNT', payment) ? '(' ~ payment.returnAmt|amount ~ ')' }}
-                        </span>
-                    </td>
-                    <td class="align-middle text-center" data-payment="startDate">
-                        {% if payment.startDate %}
-                            {% set nb_days = payment.nbDays %}
-                            {{ payment.startDate|date('d/m/Y') }} - {{ payment.endDate|date('d/m/Y') }}
-                            <span class="small secondary">({{ nb_days }}&nbsp;jour{{ nb_days > 1 ? 's'}})</span>
-                        {% endif %}
-                    </td>
-                    <td class="align-middle text-end" data-payment="toPayAmt">
-                        {{ payment.toPayAmt is not null ? payment.toPayAmt|amount }}
-                    </td>
-                    <td class="align-middle text-end" data-payment="paidAmt">
-                        {{ payment.paidAmt  is not null ? payment.paidAmt|amount }}
-                    </td>
-                    <td class="align-middle text-end" data-payment="stillToPayAmt">
-                        {{ payment.stillToPayAmt ? payment.stillToPayAmt|amount }}
-                    </td>
-                    <td class="align-middle text-center" data-payment="paymentDate">
-                        {{ payment.paymentDate ? payment.paymentDate|date('d/m/Y') }}
-                    </td>
-                    <td class="align-middle" data-payment="paymentType">{{ payment.paymentTypeToString }}</td>
-                    <td class="align-middle small" data-payment="comment">
-                        {{ payment.noContrib ? 'PAF à zéro (' ~ payment.noContribReasonToString ~ ')' }}
-                        {{ (payment.comment ~ '\n' ~ payment.commentExport)|u.truncate(60, ' [...]', false) }}</td>
-                    {% if not support_is_defined %}
-                        <td class="align-middle">{{ payment.supportGroup.service ? payment.supportGroup.service.name }}<br/>
-                            <span class="text-secondary">
-                                {{ payment.supportGroup.device ? '(' ~ payment.supportGroup.device.name ~ ')' }}
-                            </span>
-                        </td>
-                    {% endif %}
-                    {% if is_deleted %}
-                        <td class="align-middle" data-payment="deletedAt">{{ payment.deletedAtToString }}</td>
-                    {% else %}
-                        <td class="align-middle" data-payment="createdAt">{{ payment.createdAt|date('d/m/Y') }}</td>
-                    {% endif %}
-                    {% if not support_is_defined %}
-                        <td class="align-middle">{{ payment.createdBy.fullname }}</td>
-                    {% endif %}
-                    {% if support_is_defined %}
-                        <td class="align-middle text-center" data-payment="pdfGenerate">
-                            <a href="{{ path('payment_export_pdf', {'id': payment.id}) }}" data-action="generate-pdf" 
-                                title="{{ payment.pdfGenerate ? 'PDF généré le ' 
-                                    ~ payment.pdfGenerateAt|date('d/m/Y à H:i') : 'Générer un PDF' }}"
-                                data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                <i class="fas fa-file-pdf text-{{ payment.pdfGenerate ? 'success' : 'secondary' }} fa-lg"></i>
-                            </a>
-                        </td>
-                        <td class="align-middle text-center" data-payment="mailSent">
-                            <a href="{{ path('payment_send_pdf', {'id': payment.id}) }}" data-action="send-mail" 
-                                title="{{ payment.mailSent ? 'Mail envoyé le ' ~ payment.mailSentAt|date('d/m/Y à H:i') }}"
-                                data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                <i class="fas fa-envelope text-{{ payment.mailSent ? 'success' : 'secondary' }} fa-lg"></i>
-                            </a>
-                        </td>
-                        <td class="align-middle text-center">
-                            {% if is_deleted %}
-                                {% include 'model/button/_restore_button.html.twig' with {
-                                        path_route: path('payment_restore', {'id': payment.id})} %}
-                            {% else %}
-                                <button class="btn btn-danger btn-sm shadow my-1" data-action="delete"
-                                    data-path="{{ path('payment_delete', {'id':payment.id}) }}"
-                                    title="Supprimer"  data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            {% endif %}
-                        </td>
-                    {% endif %}
-                </tr>
+                {{ include('app/payment/_payment_tr_component.html.twig') }}
                 {% set to_pay_amt = to_pay_amt + payment.toPayAmt %}
                 {% set paid_amt = paid_amt + payment.paidAmt %}
             {% endfor %}
         </tbody>
-        {% if not support_is_defined %}
+        {% if payment_index %}
             <tfoot class="table-group-divider">
                 <tr class="fw-bold">
                     <td colspan="4" class="align-middle text-end">Sous-total (page)</td>

@@ -1,16 +1,16 @@
-<div id="document-modal" class="modal fade" tabindex="-1" role="dialog" 
+<div id="modal_document" class="modal fade" tabindex="-1" role="dialog" 
     aria-labelledby="documentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            {{ form_start(documentForm, {
-                'action': path('document_edit', {'id': '__id__'}),
-                'attr': {'data-url': path('document_edit', {'id': '__id__'})}
+            {{ form_start(form_document, {
+                'action': path('document_edit', {id: '__id__'}),
+                'attr': {'data-path': path('document_edit', {id: '__id__'})}
             }) }}
             <div class="modal-body pb-0">
                 <div class="row mb-3">
                     <div class="col-12">
-                        {{ form_label(documentForm.name, null, {label_attr: {class: 'visually-hidden'}}) }}
-                        {{ form_widget(documentForm.name) }}
+                        {{ form_label(form_document.name, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(form_document.name) }}
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -19,21 +19,21 @@
                             <span class="input-group-text" title="Étiquettes" data-bs-toggle="tooltip" 
                                 data-bs-placement="bottom"><i class="fas fa-tag text-black-50"></i>
                             </span>
-                            {{ form_widget(documentForm.tags) }}
+                            {{ form_widget(form_document.tags) }}
                         </div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12">
-                        {{ form_label(documentForm.content, null, {label_attr: {class: 'visually-hidden'}}) }}
-                        {{ form_widget(documentForm.content) }}
+                        {{ form_label(form_document.content, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(form_document.content) }}
                     </div>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-start">
                     <button type="button" class="me-3 btn btn-danger shadow d-block" data-action="delete"
-                        data-url-document-delete="{{ path('document_delete', {'id': '__id__'}) }}"
+                        data-path-document-delete="{{ path('document_delete', {id: '__id__'}) }}"
                         title="Supprimer le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-trash-alt"></i>
                         <span class="d-none d-md-inline ms-2">Supprimer</span>
@@ -45,8 +45,8 @@
                         data-action="update"><i class="fas fa-save me-2"></i>Mettre à jour</button>
                 </div>
             </div>
-            {{ form_row(documentForm._token) }}
-            {{ form_end(documentForm) }}
+            {{ form_row(form_document._token) }}
+            {{ form_end(form_document) }}
         </div>
     </div>
 </div>

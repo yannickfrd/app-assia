@@ -1,163 +1,91 @@
-import Ajax from '../utils/ajax'
+import AbstractManager from '../AbstractManager'
 import AlertMessage from '../utils/AlertMessage'
-import Loader from '../utils/loader'
-import {Tooltip} from 'bootstrap'
 
-export default class ExportManager {
+export default class ExportManager extends AbstractManager {
 
     constructor() {
+        super('export')
+
         this.formElt = document.querySelector('#accordion_search>form')
-        this.resultsElt = document.getElementById('results')
-        this.loader = new Loader()
-        this.ajax = new Ajax(this.loader, 30 * 60)
+        this.ajax.delayError = 30 * 60
+
         this.init()
     }
 
     init() {
-        this.formElt.querySelectorAll('button[type="submit"]').forEach(btnElt => {
-            btnElt.addEventListener('click', e => {
-                this.loader.on()
-                e.preventDefault()
-                this.ajax.send('POST', btnElt.dataset.path, this.response.bind(this), new FormData(this.formElt))
-            })
+        document.querySelector('button#count').addEventListener('click', e => {
+            e.preventDefault()
+            this.ajax.send('POST', this.getPath('count'), this.responseAjax.bind(this), new FormData(this.formElt))
         })
 
-        document.querySelectorAll('button[data-action="delete_export"]').forEach(btnElt => this.initBtnDelete(btnElt))
+        document.querySelector('button#export').addEventListener('click', e => {
+            e.preventDefault()
+            this.ajax.send('POST', this.getPath('new'), this.responseAjax.bind(this), new FormData(this.formElt))
+        })
     }
 
     /**
+     * Addionnal event listeners to the object element.
      * 
-     * @param {HTMLButtonElement} btnElt 
+     * @param {HTMLTableRowElement} trElt 
      */
-    initBtnDelete(btnElt) {
-        btnElt.addEventListener('click', () => {
-            if (window.confirm(btnElt.dataset.msg)) {
-                this.ajax.send('GET', btnElt.dataset.path, this.response.bind(this))
-            }
-        })
+     extraListenersToElt(trElt) {
+        const id = trElt.dataset.exportId
+       // Download export
+       trElt.querySelector('[data-action="download"]')?.addEventListener('click', () => this.request('download', id))
     }
 
     /**
-     * Réponse du serveur.
-     * @param {Object} data 
+     * Actions after Ajax response.
+     * 
+     * @param {Object} response 
      */
-    response(data) {
-        switch (data.action) {
-            case 'count':
-                this.updateResultsCounter(data.nbResults)
+     responseAjax(response) {
+        console.log(response)
+        switch (response.action) {
+            case 'export':
+                this.updateElt(response.export)
                 break
             case 'create':
-                this.createTr(data.export, data.path)
+                this.create(response.path)
                 break
-            case 'export':
-                this.editTr(data.export, data.path)
-                break
-            case 'delete':
-                this.deleteTr(data.export)
-                break
+            case 'download':
+                return this.getFile(response.data)
         }
 
-        this.loader.off()
-
-        if (data.msg) {
-            new AlertMessage(data.alert, data.msg)
+        if (response.export) {
+            this.checkActions(response, response.export)
         }
 
-        if (data.alert === 'danger') {
-            console.error(data.error)
+        if (response.msg) {
+            new AlertMessage(response.alert, response.msg)
         }
+
+        this.objectModal?.hide()
     }
 
     /**
-     * Ajoute la ligne d'export dans le corps <tbody> du tableau.
-     * 
-     * @param {object} exportObject
-     * @param {string} path
+     * @param {path} path 
      */
-    createTr(exportObject, path) {
-        const tbodyElt = document.querySelector('#table_exports>tbody')
-        const rowElt = document.createElement('tr')
-
-        let htmlContent = `
-            <td scope="row" class="align-middle text-center" data-cell="export_download">
-                <i class="fas fa-spinner text-dark" title="Export en cours de préparation"
-                    data-bs-toggle="tooltip" data-bs-placement="right"></i>
-            </td>
-            <td class="align-middle" data-cell="export_title">${exportObject.title}</td>
-            <td class="align-middle" data-cell="export_comment">${exportObject.comment}</td>
-            <td class="align-middle text-end" data-cell="export_nbResults">
-                ${parseInt(exportObject.nbResults).toLocaleString('fr')}
-            </td>
-            <td class="align-middle text-end" data-cell="export_size"><i class="fas fa-spinner text-dark"></i></td>
-            <td class="align-middle">${exportObject.createdAtToString}</td>
-            <td class="align-middle text-center">
-                <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_export"
-                    data-path="/export/${exportObject.id}/delete"
-                    title="Supprimer le fichier d'export" data-bs-toggle="tooltip" data-bs-placement="bottom" 
-                    data-msg="Êtes-vous vraiment sûr de vouloir supprimer ce fichier d\'export ?">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </td>`
-
-        rowElt.id = 'export_' + exportObject.id
-        rowElt.innerHTML = htmlContent
-
-        tbodyElt.insertBefore(rowElt, tbodyElt.firstChild)
-
-        this.initBtnDelete(rowElt.querySelector('button[data-action="delete_export"]'))
-
-        rowElt.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(elt => new Tooltip(elt))
-        
-        this.updateExportCounter(+1)
-
-        this.ajax.send('POST', path, this.response.bind(this), new FormData(this.formElt))
+    create(path) {
+        this.ajax.send('POST', path, this.responseAjax.bind(this), new FormData(this.formElt))
     }
 
     /**
-     * @param {object} exportObject
-     * @param {string} path
+     * @param {Object} exportObject
+     * @param {HTMLElement} trElt
      */
-    editTr(exportObject, path) {
-        const rowElt = document.querySelector('tr#export_' + exportObject.id)  
-
-        rowElt.querySelector('td[data-cell="export_download"]').innerHTML = `
-            <a href="${path}" class="btn btn-primary btn-sm shadow my-1" 
-            title="Télécharger l'export" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-file-download"></i>
-            </a>`
-        rowElt.querySelector('td[data-cell="export_size"]').textContent = Math.round(exportObject.size / 1000) + ' Ko'
-
-        rowElt.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(elt => new Tooltip(elt))
-    }
-
-    /**
-     * Supprime la ligne <tr> correspondant à l'eeport.
-     * @param {Object} exportObject 
-     */
-    deleteTr(exportObject) {
-        const rowElt = document.getElementById(`export_${exportObject.id}`)
-        
-        if (rowElt) {
-            rowElt.remove()
+     extraUpdatesElt(exportObject, trElt) {
+        if (exportObject.size > 0) {
+            trElt.querySelectorAll('.fas.fa-spinner').forEach(elt => elt.classList.add('d-none'))
+            trElt.querySelector('button[data-action="download"]').classList.remove('d-none')
+            this.findEltByDataObjectKey(trElt, 'sizeKo').classList.remove('d-none')
+            this.findEltByDataObjectKey(trElt, 'delay').classList.remove('d-none')
         } else {
-            console.error('No row export ' + exportObject.id + ' in this page.')
+            trElt.querySelectorAll('.fas.fa-spinner').forEach(elt => elt.classList.remove('d-none'))
+            trElt.querySelector('button[data-action="download"]').classList.add('d-none')
+            this.findEltByDataObjectKey(trElt, 'sizeKo').classList.add('d-none')
+            this.findEltByDataObjectKey(trElt, 'delay').classList.add('d-none')
         }
-
-        this.updateExportCounter(-1)
-    }
-
-    /**
-     * @param {number} value 
-     */
-    updateExportCounter(value) {
-        const exportCounterElt = document.getElementById('export_counter')
-        exportCounterElt.textContent = parseInt(exportCounterElt.textContent) + value
-    }
-
-
-    /**
-     * @param {number} nbResults 
-     */
-    updateResultsCounter(nbResults) {
-        this.resultsElt.textContent = parseInt(nbResults).toLocaleString('fr') + ' résultat' + (nbResults > 0 ? 's' : '') + '.'
     }
 }

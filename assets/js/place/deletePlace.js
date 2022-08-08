@@ -1,17 +1,17 @@
 export default class DeletePlace {
 
     constructor() {
-        this.btnDeleteElt = document.getElementById('modal-btn-delete')
-        this.modalConfirmElt = document.getElementById('modal-confirm')
+        this.deleteBtnElt = document.getElementById('modal_delete_btn')
+        this.modalConfirmElt = document.getElementById('modal_confirm_btn')
         this.init()
     }
 
     init() {
-        if (this.btnDeleteElt) {
-            this.btnDeleteElt.addEventListener('click', () => {
+        if (this.deleteBtnElt) {
+            this.deleteBtnElt.addEventListener('click', () => {
                 this.modalConfirmElt.removeAttribute('data-dismiss')
                 this.modalConfirmElt.removeAttribute('type')
-                this.modalConfirmElt.setAttribute('href', this.btnDeleteElt.dataset.url)
+                this.modalConfirmElt.setAttribute('href', this.deleteBtnElt.dataset.path)
             })
         }
     }

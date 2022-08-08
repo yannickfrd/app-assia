@@ -30,19 +30,19 @@ class AppExtension extends AbstractExtension
 
     public function formatNumber(int|float|null $value, int $decimals = 0): string
     {
-        return number_format($value ?? 0, $decimals, ',', ' ');
+        return number_format($value ?? 0, $decimals, ',', "\xc2\xa0");
     }
 
     public function formatPercentage(int|float|null $value, int $decimals = 2): string
     {
         $value = round($value ?? 0, $decimals);
 
-        return number_format($value, $decimals, ',', ' ').'%';
+        return number_format($value, $decimals, ',', "\xc2\xa0").'%';
     }
 
     public function formatAmount(int|float|null $value, int $decimals = 2): string
     {
-        return number_format($value ?? 0, $decimals, ',', ' ').' €';
+        return number_format($value ?? 0, $decimals, ',', "\xc2\xa0")."\xc2\xa0€";
     }
 
     public function roundNumber(int|float|null $value, int $decimals = 0, $mode = 1): string
@@ -53,7 +53,7 @@ class AppExtension extends AbstractExtension
             $decimals = 0;
         }
 
-        return number_format($value, $decimals, ',', ' ');
+        return number_format($value, $decimals, ',', "\xc2\xa0");
     }
 
     /**

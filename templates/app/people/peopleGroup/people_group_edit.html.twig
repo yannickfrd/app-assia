@@ -96,7 +96,7 @@
                                         <td class="px-1 align-middle">
                                             {% if false == form_person.vars.value.head %}
                                                 <button class="btn btn-danger shadow" data-action="remove"
-                                                    data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
+                                                    data-path="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
                                                         '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
                                                     data-bs-toggle="modal" data-bs-target="#modal-remove-person"
                                                     title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
@@ -139,7 +139,7 @@
                     {% if is_granted_ROLE_ADMIN %}
                         <div class="float-start d-flex">
                         {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?' %}
-                            <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
+                            <a id="modal_delete_btn" class="me-3 btn btn-danger d-block" 
                                 href="{{ path('people_group_delete', {'id': people_group.id}) }}"
                                 data-bs-toggle="tooltip" title="Supprimer le groupe" data-bs-placement="bottom"
                                 onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span

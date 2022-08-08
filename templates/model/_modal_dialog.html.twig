@@ -1,33 +1,43 @@
-<div id="{{ modal_id ?? 'modal-block' }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation" aria-hidden="true">
+{% set modal_id = modal_id ?? 'modal_confirm' %}
+{% set modal_title = modal_id ~ '_title' %}
+{% set modal_btn_confirmation = modal_id ~ '_btn' %}
+
+<div id="{{ modal_id }}" class="modal fade" tabindex="-1" role="dialog" 
+    aria-labelledby="{{ modal_title }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content {% block modal_bg %}{% endblock %}">
 
             {% block modal_content %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalConfirmation">
+                    <h5 class="modal-title" id="{{ modal_title }}">
                         {% block modal_title %}Demande de confirmation{% endblock %}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                {% block modal_body_and_footer %}
-                    <div class="modal-body">
-                        {% block modal_body %}Êtes-vous vraiment sûr ?{% endblock %}
-                    </div>
+                <div class="modal-body">
+                    {% block modal_body %}
+                        <p>Êtes-vous vraiment sûr ?</p>
+                    {% endblock %}
+                </div>
 
-                    <div class="modal-footer d-flex justify-content-between">
-                        {% block modal_footer %}
-                            <div class="float-start">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}</button>
-                            </div>
-                            <div class="float-end">
-                                <button type="button" id="modal-confirm" class="btn btn-{% block modal_alert %}primary{% endblock %}"
-                                    href="{% block modal_href %}{% endblock %}" data-bs-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
-                            </div>
-                        {% endblock %}
-                    </div>
-                {% endblock %}  
+                <div class="modal-footer d-flex justify-content-between">
+                    {% block modal_footer %}
+                        <div class="float-start">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            {% block modal_cancel %}Annuler{% endblock %}
+                        </button>
+                        </div>
+                        <div class="float-end">
+                            <button type="button" class="btn btn-{% block modal_alert %}primary{% endblock %}"
+                                id="{{ modal_btn_confirmation }}" data-action="confirm" data-bs-dismiss="modal">
+                                {% block modal_button_confirm %}Confirmer{% endblock %}
+                            </button>
+                        </div>
+                    {% endblock %}
+                </div>
             {% endblock %}
+
         </div>
     </div>
 </div>

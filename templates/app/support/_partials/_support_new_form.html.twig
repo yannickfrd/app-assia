@@ -4,7 +4,7 @@
 
 <div class="modal-body">
         {{ form_row(form.service, {
-            'attr': {'data-url': path('support_switch_service')}
+            'attr': {'data-path': path('support_switch_service')}
         }) }}
     <div data-parent-field="service">
         <div id="sub-service-block">{{ form_row(form.subService) }}</div>

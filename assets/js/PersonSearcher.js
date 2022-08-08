@@ -11,7 +11,7 @@ export default class PersonSearcher {
      * @param {number} minSearchLength 
      */
     constructor(selector, minLength = 3) {
-        this.url = '/search/person/'
+        this.path = '/search/person/'
         this.showPersonUrl = '/person/'
         this.searchPersonUrl = '/people/'
 
@@ -101,7 +101,7 @@ export default class PersonSearcher {
      * @returns {string}
      */
      #getUrl(query) {
-        return this.url + this.#cleanQuery(query)
+        return this.path + this.#cleanQuery(query)
     }
     
     /**

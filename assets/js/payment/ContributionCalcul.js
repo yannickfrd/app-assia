@@ -21,8 +21,6 @@ export default class ContributionCalcul {
         this.showCalculContribBtnElt = document.getElementById('show_calcul_contribution_btn')
         this.contribCalculModal = new Modal(document.getElementById('contribution_calcul_modal'))
 
-        this.paymentFormElt = document.querySelector('form[name=payment]')
-
         this.resourcesChecked = false // Ressources vérifiées dans la base de données
         this.resourcesAmt = null
         this.contributionAmt = null
@@ -35,7 +33,7 @@ export default class ContributionCalcul {
     init() {
         this.calculContribBtnElt.addEventListener('click', e => {
             e.preventDefault()
-            if (false === this.loader.isActive()) {
+            if (this.loader.isActive() === false) {
                 if (null === this.ajax) {
                     this.ajax = new Ajax(this.loader)
                 }

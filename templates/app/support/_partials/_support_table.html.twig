@@ -1,10 +1,11 @@
 
 <div class="row align-items-baseline">
     <div class="col-md-4 count align-middle mb-2">
-        {% set nb_supports = supports.getTotalItemCount %}
-        <span id="count-supports" class="align-middle"
-            data-count-supports="{{ nb_supports }}">Résultat : {{ nb_supports|number }}
-            {% if only_headers == true %}ménage{% else %}personne{% endif %}{{ nb_supports > 1 ? 's' }}</span>
+        {% set nb_supports = supports.getTotalItemCount|number %}
+        <span class="align-middle">Résultat : </span>
+        <span class="align-middle" data-counter="support">{{ nb_supports }}
+            {% if only_headers == true %}ménage{% else %}personne{% endif %}{{ nb_supports > 1 ? 's' }}
+        </span>
     </div>
     <div class="col-md-8">
         <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -12,7 +13,7 @@
 </div>
 
 <div class="table-responsive">
-    <table id="table-supports" class="table table-bordered table-striped table-hover text-dark shadow-sm">
+    <table id="table_supports" class="table table-bordered table-striped table-hover text-dark shadow-sm">
         <thead>
             <tr>
                 <th scope="col" class="align-middle th-w-20"></th>
@@ -66,11 +67,11 @@
                 {% set person = support_person.person %}
                 {% set is_deleted = support_person.deletedAt is not null %}
                 <tr class="{% if only_headers == false and support_person.head %}fw-bold{% endif %}"
-                    data-support="support-{{ support_group.id }}">
+                    data-support-id="{{ support_group.id }}">
                     <td class="align-middle text-center">
                         {% if is_granted('VIEW', support_group) %}
                             {% include 'model/button/_show_button.html.twig' with {
-                                'path_route': path('support_show', {'id': support_group.id}),
+                                'path': path('support_show', {'id': support_group.id}),
                                 'disabled': support_person.head == false and support_group.deletedAt is null ? false : is_deleted
                             } %}
                         {% endif %}

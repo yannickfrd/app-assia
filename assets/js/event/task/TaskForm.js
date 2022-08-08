@@ -1,5 +1,6 @@
+import TaskManager from "./TaskManager"
 import AlertMessage from '../../utils/AlertMessage'
-import DateFormater from '../../utils/date/dateFormater'
+import DateFormatter from '../../utils/date/DateFormatter'
 import SelectManager from '../../utils/form/SelectManager'
 import WidgetCollectionManager from '../../utils/form/WidgetCollectionManager'
 import FormValidator from '../../utils/form/formValidator'
@@ -14,89 +15,145 @@ export default class TaskForm
         this.loader = taskManager.loader
         this.ajax = taskManager.ajax
         this.supportId = taskManager.supportId
+        
+        // Modal element
+        this.taskModalElt = document.getElementById('modal_task')
+        this.taskModal = this.taskManager.objectModal
 
-        this.modalTaskElt = document.querySelector('#modal-task')
+        // Form fields
+        this.formTaskElt = this.taskModalElt.querySelector('form[name=task]')
+        this.titleInputElt = this.formTaskElt.querySelector('#task_title')
+        this.endInputElt = this.formTaskElt.querySelector('#task_end')
+        this.endDateInputElt = this.formTaskElt.querySelector('#task__endDate')
+        this.endTimeInputElt = this.formTaskElt.querySelector('#task__endTime')
+        this.levelSelectElt = this.formTaskElt.querySelector('#task_level')
+        this.statusCheckboxElt = this.formTaskElt.querySelector('#task_status')
+        this.supportSelectElt = this.formTaskElt.querySelector('#task_supportGroup')
+        this.usersSelecElt = this.formTaskElt.querySelector('#task_users')
+        this.tagsSelecElt = this.formTaskElt.querySelector('#task_tags')
+        this.contentTextAreaElt = this.formTaskElt.querySelector('#task_content')
 
-        this.formTaskElt = document.querySelector('form[name=task]')
-        this.titleInputElt = document.getElementById('task_title')
-        this.endInputElt = document.getElementById('task_end')
-        this.endDateInputElt = document.getElementById('task__endDate')
-        this.endTimeInputElt = document.getElementById('task__endTime')
-        this.levelSelectElt = document.getElementById('task_level')
-        this.statusCheckboxElt = document.getElementById('task_status')
-        this.supportSelectElt = document.getElementById('task_supportGroup')
-        this.usersSelecElt = document.getElementById('task_users')
-        this.tagsSelecElt = document.getElementById('task_tags')
-        this.contentTextAreaElt = document.getElementById('task_content')
-
-        this.taskTitleElt = this.modalTaskElt.querySelector('.modal-header h2')
-        this.infoTaskElt = document.getElementById('js_task_info')
-        this.btnSaveElt = document.getElementById('js-btn-save')
-        this.btnDeleteElt = document.getElementById('modal-btn-delete')
-        this.btnAddAlertElt = document.querySelector('button[data-add-widget]')
+        // Others elements
+        this.taskTitleElt = this.taskModalElt.querySelector('.modal-header h2')
+        this.infoTaskElt = this.taskModalElt.querySelector('p[data-object-key="info"]')
+        this.btnSaveElt = this.taskModalElt.querySelector('button[data-action="save"]')
+        this.btnDeleteElt = this.taskModalElt.querySelector('button[data-action="delete"]')
+        this.btnAddAlertElt = this.taskModalElt.querySelector('button[data-add-widget]')
 
         this.currentUserId = document.getElementById('user-name').dataset.userId
 
         this.usersSelectManager = new SelectManager(this.usersSelecElt)
         this.tagsSelectManager = new SelectManager(this.tagsSelecElt)
-
-        this.alertsCollectionManager = new WidgetCollectionManager(this.afterToAddAlert.bind(this), null, 3)
-
+        this.alertsCollectionManager = new WidgetCollectionManager(this.#afterToAddAlert.bind(this), null, 3)
         this.formValidator = new FormValidator(this.formTaskElt)
-
-        // this.supportPeopleSelectElt = document.getElementById('task_supportPeople')
-        // this.supportPeopleSelect = new SelectManager('#task_supportPeople')
-        this.init()
+       
+        this.#init()
     }
 
-    init() {
-        this.endDateInputElt.addEventListener('focusout', e => this.isValidDate(e.target))
+    #init() {
+        this.endDateInputElt.addEventListener('focusout', e => this.#isValidDate(e.target))
 
-        this.btnSaveElt.addEventListener('click', e => this.requestSaveTask(e))
-        // this.supportSelectElt.addEventListener('change', () => this.requestGetSupportPeople())
+        this.btnSaveElt.addEventListener('click', e => this.#requestSave(e))
+
+        this.btnDeleteElt.addEventListener('click', e => {
+            e.preventDefault()
+            this.taskManager.showModalConfirm()
+        })
+    }
+
+    new() {
+        this.#resetForm()
+
+        this.taskTitleElt.textContent = 'Nouvelle tâche'  
+
+        this.formTaskElt.action = this.taskManager.pathCreate()
     }
 
     /**
-     * Initialise les champs du formulaire.
+     * Show the task in th modal.
+     * 
+     * @param {Object} task
      */
-    resetForm() {
-        this.formValidator.reinit()
-        this.formTaskElt.action = this.formTaskElt.dataset.urlTaskNew
+     show(task) {
+        this.taskModalElt.querySelector('form').action = this.taskManager.pathEdit(task.id)
+        this.titleInputElt.value = task.title
+        this.endDateInputElt.value = task.end.substr(0, 10)
+        this.endTimeInputElt.value = task.end.substr(11, 5)
+        this.endInputElt.value = task.end.substr(0, 16)
 
-        this.taskTitleElt.textContent = 'Nouvelle tâche'
+        this.levelSelectElt.value = task.level
+        this.statusCheckboxElt.value = task.status
+        this.statusCheckboxElt.checked = task.status
+        this.contentTextAreaElt.value = task.content ?? ''
+
+        this.taskTitleElt.innerHTML = this.#getTitleModal(task)
+        this.infoTaskElt.innerHTML = this.#getInfoTaskElt(task)
+
+        const userIds = []
+        task.users.forEach(user => userIds.push(user.id))
+        this.usersSelectManager.updateItems(userIds)
+
+        const tagsIds = []
+        task.tags.forEach(tags => tagsIds.push(tags.id))
+        this.tagsSelectManager.updateItems(tagsIds)
+        
+        this.supportSelectElt.disabled = task.supportGroup !== null
+
+        if (task.supportGroup) {
+            if (this.supportSelectElt.value === '') {
+                const optionElt = document.createElement('option')
+                optionElt.value = task.supportGroup.id
+                optionElt.textContent = task.supportGroup.header.fullname
+                this.supportSelectElt.appendChild(optionElt)
+                this.supportSelectElt.value = task.supportGroup.id
+            }
+            this.supportSelectElt.value = task.supportGroup.id
+        }
+
+        this.#initAlerts(task)
+
+        this.btnDeleteElt.classList.remove('d-none')
+    }
+
+    /**
+     * Reinitialize the fields of form.
+     */
+    #resetForm() {
+        this.formValidator.reinit()
+
+        this.formTaskElt.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(fieldElt => {
+            fieldElt.value = ''
+        })
+
         this.infoTaskElt.textContent = ''
 
-        const dateFormater = new DateFormater()
-        this.endDateInputElt.value = dateFormater.getDateNow()
-        this.endTimeInputElt.value = dateFormater.getHour()
-        this.updateEndDate()
+        const dateFormatter = new DateFormatter()
+        this.endDateInputElt.value = dateFormatter.getDateNow()
+        this.endTimeInputElt.value = dateFormatter.getHour()
+        this.#updateEndDate()
 
-        this.titleInputElt.value = ''
         this.statusCheckboxElt.value = false
         this.statusCheckboxElt.checked = false
-        this.supportSelectElt.value = this.supportId ?? ''
-        this.supportSelectElt.disabled = this.supportId !== null
-        this.contentTextAreaElt.value = ''
+
         this.levelSelectElt.value = this.levelSelectElt.dataset.defaultLevel
 
         this.usersSelectManager.updateItems(this.currentUserId)
 
-        // this.supportPeopleId = []
-        // this.supportPeopleSelectElt.value = ''
-        // this.supportPeopleSelectElt.parentNode.classList.add('d-none')
+        this.supportSelectElt.value = this.supportId ?? ''
+        this.supportSelectElt.disabled = this.supportId !== null
 
         this.tagsSelectManager.clearItems()
 
-        this.resetAlerts()
+        this.#resetAlerts()
 
         this.btnDeleteElt.classList.add('d-none')
         this.btnSaveElt.classList.remove('d-none')
     }
 
     /**
-     * Réinitialise les alertes du formulaire.
+     * Reinitialize the alert elements of form.
      */
-    resetAlerts() {
+    #resetAlerts() {
         const alertprototype = document.querySelector('#alerts-fields-list')
         alertprototype.innerHTML = ''
         alertprototype.dataset.widgetCounter = 0
@@ -104,18 +161,19 @@ export default class TaskForm
     }
 
     /**
-     * Requête pour enregistrer la tâche.
+     * Try to save the task.
+     * 
      * @param {Event} e
      */
-    requestSaveTask(e) {
+    #requestSave(e) {
         e.preventDefault()
-        this.updateEndDate()
+        this.#updateEndDate()
 
         if (this.loader.isActive()) {
             return
         }
 
-        if (!this.isValidForm()) {
+        if (!this.#isValidForm()) {
             return new AlertMessage('danger', 'Une ou plusieurs informations sont invalides.')
         }
 
@@ -127,83 +185,27 @@ export default class TaskForm
     }
 
     /**
-     * Affiche la tâche dans le formulaire modal.
-     * @param {Object} task
-     */
-    showTask(task) {
-        this.modalTaskElt.querySelector('form').action = '/task/' + task.id + '/edit'
-        this.titleInputElt.value = task.title
-        this.endDateInputElt.value = task.end.substr(0, 10)
-        this.endTimeInputElt.value = task.end.substr(11, 5)
-        this.endInputElt.value = task.end.substr(0, 16)
-
-        this.levelSelectElt.value = task.level
-        this.statusCheckboxElt.value = task.status
-        this.statusCheckboxElt.checked = task.status
-        this.contentTextAreaElt.value = task.content ?? ''
-
-        this.taskTitleElt.innerHTML = this.getTitleModal(task)
-        this.infoTaskElt.innerHTML = this.getInfoTaskElt(task)
-
-        this.btnDeleteElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.taskManager.confirmDeleteModal.show()
-            this.taskManager.btnConfirmDeleteElt.dataset.url = this.btnDeleteElt.dataset.url.replace('__id__', task.id)
-        })
-
-        const userIds = []
-        task.users.forEach(user => userIds.push(user.id))
-        this.usersSelectManager.updateItems(userIds)
-
-        const tagsIds = []
-        task.tags.forEach(tags => tagsIds.push(tags.id))
-        this.tagsSelectManager.updateItems(tagsIds)
-
-        this.supportSelectElt.value = ''
-        this.supportSelectElt.disabled = task.supportGroup !== null
-        if (task.supportGroup) {
-            this.supportSelectElt.value = task.supportGroup.id
-            if (this.supportSelectElt.value === '') {
-                const optionElt = document.createElement('option')
-                optionElt.value = task.supportGroup.id
-                optionElt.textContent = task.supportGroup.header.fullname
-                this.supportSelectElt.appendChild(optionElt)
-                this.supportSelectElt.value = task.supportGroup.id
-            }
-            // this.changeSupportPeopleSelect(task.supportGroup.supportPeople)
-        }
-        // if (task.supportPeople) {
-        //     const supportPeopleIds = new Array()
-        //     task.supportPeople.forEach(supportPerson => supportPeopleIds.push(supportPerson.id + ''))
-        //     this.supportPeopleSelect.updateItems(supportPeopleIds)
-        // }
-
-        this.initAlerts(task)
-
-        this.btnDeleteElt.classList.remove('d-none')
-    }
-
-    /**
      * @param {Object} task
      * @returns {string}
      */
-    getTitleModal(task) {
+    #getTitleModal(task) {
         if (this.supportId || task.supportGroup == null) {
             return 'Tâche'
         }
 
-        return `<a href="${this.taskTitleElt.dataset.url.replace('__id__', task.supportGroup.id)}" 
+        return `<a href="${this.taskManager.pathShowSupport(task.supportGroup.id)}" 
             class="text-primary" title="Accéder au suivi" data-bs-toggle="tooltip" 
             data-bs-placement="bottom">Tâche | ${task.supportGroup.header.fullname}</a>
         `
     }
 
     /**
-     * Donnes les informations sur l'enregistrement (créé le, créé par).
+     * Get the event informations (created at, created by...).
+     * 
      * @param {Object} task
      * @returns {HTMLElement}
      */
-    getInfoTaskElt(task) {
+    #getInfoTaskElt(task) {
         let htmlContent = `Créé le ${task.createdAtToString} `
 
         if (task.createdBy) {
@@ -218,18 +220,19 @@ export default class TaskForm
         return htmlContent
     }
 
-    updateEndDate() {
+    #updateEndDate() {
         if (isNaN(this.endDateInputElt.value) && isNaN(this.endTimeInputElt.value)) {
             this.endInputElt.value = this.endDateInputElt.value + 'T' + this.endTimeInputElt.value
         }
     }
 
     /**
-     * Initialise les rappels du formulaire.
+     * Initialize the alert elements of form.
+     * 
      * @param {Object} task
      */
-    initAlerts(task) {
-        this.resetAlerts()
+    #initAlerts(task) {
+        this.#resetAlerts()
 
         task.alerts.forEach(alert => {
             const alertElt = this.alertsCollectionManager.addElt(this.btnAddAlertElt)
@@ -239,24 +242,25 @@ export default class TaskForm
     }
 
     /**
-     * Définit une date et heure par défaut après l'ajout d'une alerte.
+     * Define a default datetime after to add a alert.
      */
-    afterToAddAlert() {
-        this.updateEndDate()
+    #afterToAddAlert() {
+        this.#updateEndDate()
         const elt = this.alertsCollectionManager.listElt.lastElementChild
         const defaultDate = new Date(this.endInputElt.value)
         defaultDate.setDate(defaultDate.getDate() - 1)
 
         const inputDateElt = elt.querySelector('input')
-        inputDateElt.value = new DateFormater().getDate(defaultDate, 'datetimeInput')
-        inputDateElt.addEventListener('focusout', e => this.isValidDate(e.target))
+        inputDateElt.value = new DateFormatter().format(defaultDate, 'datetimeInput')
+        inputDateElt.addEventListener('focusout', e => this.#isValidDate(e.target))
     }
 
     /**
-     * Vérifie si les champs du formulaire sont valides.
-     * @returns {Boolean}
+     * Check if the form fields are valids.
+     * 
+     * @returns {boolean}
      */
-    isValidForm() {
+    #isValidForm() {
         let isValid = true
         const fieldElts = [
             this.titleInputElt,
@@ -285,7 +289,7 @@ export default class TaskForm
 
             this.formValidator.validField(fieldElt, false)
 
-            if (fieldElt.type.includes('date') && this.isValidDate(fieldElt) == false) {
+            if (fieldElt.type.includes('date') && this.#isValidDate(fieldElt) == false) {
                 isValid = false
             }
         })
@@ -294,40 +298,13 @@ export default class TaskForm
     }
 
     /**
-     *
      * @param {HTMLInputElement} inputDateElt
-     * @returns {Boolean}
+     * @returns {boolean}
      */
-    isValidDate(inputDateElt) {
+    #isValidDate(inputDateElt) {
         if (this.formValidator.checkDate(inputDateElt, -(10 * 365), (2 * 365), 'Date incorrecte', false) == false) {
             return false
         }
         return true
     }
-
-
-    // requestGetSupportPeople() {
-    //     if (this.supportSelectElt.value) {
-    //         const url = this.supportPeopleSelectElt.dataset.url.replace('__id__', this.supportSelectElt.value)
-    //         this.ajax.send('GET', url, this.taskManager.responseAjax.bind(this.taskManager))
-    //     } else {
-    //         this.changeSupportPeopleSelect()
-    //     }
-    // }
-
-    // /**
-    //  * @param {Array} supportPeople 
-    //  */
-    // changeSupportPeopleSelect(supportPeople = []) {
-    //     this.supportPeopleSelectElt.parentNode.classList.remove('d-none')
-    //     this.supportPeopleSelectElt.textContent = ''
-    //     supportPeople.forEach(supportPerson => {
-    //         const optionElt = document.createElement('option')
-    //         optionElt.value = supportPerson.id
-    //         optionElt.textContent = supportPerson.person.fullname
-    //         this.supportPeopleSelectElt.add(optionElt)
-    //     })
-
-    //     this.supportPeopleSelect.checkSelect2Style()
-    // }
 }

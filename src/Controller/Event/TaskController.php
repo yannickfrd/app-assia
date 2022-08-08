@@ -93,11 +93,11 @@ final class TaskController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         TranslatorInterface $translator,
-        ?int $id = null
+        ?int $id,
     ): JsonResponse {
         $task = new Task();
 
-        // If new task with supportGroup
+        // Add SupportGroup to Task if id exists
         if ($id) {
             /** @var SupportGroupRepository $supportGroupRepo */
             $supportGroupRepo = $em->getRepository(SupportGroup::class);
@@ -170,7 +170,7 @@ final class TaskController extends AbstractController
             TaskManager::deleteCacheItems($task);
 
             return $this->json([
-                'action' => 'edit',
+                'action' => 'update',
                 'alert' => 'success',
                 'msg' => $translator->trans('task.updated_successfully', ['task_title' => $task->getTitle()], 'app'),
                 'task' => $task,

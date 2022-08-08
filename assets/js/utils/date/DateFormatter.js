@@ -1,12 +1,14 @@
 /**
- * Tool to format date
+ * Tool to format date.
  */
-export default class DateFormater {
+export default class DateFormatter {
 
     /**
      * Return the current date.
-     * @param {String} separator 
-     * @returns {String}
+     * 
+     * @param {string} separator 
+     * 
+     * @returns {string}
      */
     getDateNow(separator = '-') {
         const now = new Date()
@@ -17,7 +19,8 @@ export default class DateFormater {
 
     /**
      * Return the current time.
-     * @returns {String}
+     * 
+     * @returns {string}
      */
     getTimeNow() {
         const now = new Date()
@@ -27,7 +30,8 @@ export default class DateFormater {
 
     /**
      * Return the current hour.
-     * @returns {String}
+     * 
+     * @returns {string}
      */
     getHour() {
         const now = new Date()
@@ -37,13 +41,15 @@ export default class DateFormater {
 
     /**
      * Return a locale formated date from a string date.
-     * @param {String} date
-     * @param {String} type
-     * @param {String} separator
-     * @param {String} locale
-     * @returns {String}
+     * 
+     * @param {string} date
+     * @param {string} type
+     * @param {string} separator
+     * @param {string} locale
+     * 
+     * @returns {string}
      */
-    getDate(date, type = 'datetime', separator = '-', locale = 'fr') {
+    format(date, type = 'datetime', separator = '-', locale = 'fr') {
         if (date === null) {
             return ''
         }

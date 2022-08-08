@@ -93,7 +93,7 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->outputMsg('Delete a support');
 
-        $this->clickElement('a#modal-btn-delete');
+        $this->clickElement('#modal_delete_btn');
 
         $this->acceptWindowConfirm();
     }

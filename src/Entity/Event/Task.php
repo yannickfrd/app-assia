@@ -6,6 +6,7 @@ use App\Entity\Organization\Traits\TagTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Event\TaskRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -100,6 +101,9 @@ class Task extends AbstractEvent
      */
     protected $alerts;
 
+    /** @var ?bool */
+    private $isLate = null;
+
     public function __construct()
     {
         parent::__construct();
@@ -126,6 +130,7 @@ class Task extends AbstractEvent
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+        $this->isLate = null;
 
         return $this;
     }
@@ -181,5 +186,10 @@ class Task extends AbstractEvent
         $this->supportGroup = $supportGroup;
 
         return $this;
+    }
+
+    public function isLate(): bool
+    {
+        return $this->isLate ?? self::TASK_IS_NOT_DONE == $this->status && $this->end < new DateTime();
     }
 }

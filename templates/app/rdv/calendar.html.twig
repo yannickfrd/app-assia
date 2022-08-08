@@ -8,7 +8,7 @@
 
 {% block body %}
     <section class="my-0">
-        <div class="container pt-3" id="calendar-container">
+        <div class="container pt-3">
             {% if support is defined %}
                 {% set title = 'Rendez-vous' %}
                 {% include 'app/support/_partials/_support_nav.html.twig' %}
@@ -18,14 +18,13 @@
                     <h2 class="h2 ms-1 me-3 mb-0 d-none d-sm-block">Agenda</h2>
                     <a class="btn btn-primary btn-sm shadow me-2" id="btn_show_rdv_index"
                         data-bs-toggle="tooltip" data-bs-placement="bottom" title="Passer en vue liste"
-                        href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}
+                        href="{% if support is defined %}{{ path('support_rdv_index', {id: support.id}) }}
                         {% else %}{{ path('rdv_index', {'date[start]': 'now'|date('Y-m-d') }) }}{% endif %}">
                         <i class="far fa-list-alt"></i>
                         <span class="d-none d-lg-inline ms-1">Vue liste</span>
                     </a>
-                    <button id="js-new-rdv" class="btn btn-primary btn-sm shadow me-2"
-                        data-url="{{ path('rdv_create') }}" title="Créer un nouveau rendez-vous" 
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                    <button class="btn btn-primary btn-sm shadow me-2" data-action="new_rdv"
+                        title="Créer un nouveau rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="far fa-calendar-plus"></i>
                         <span class="d-none d-lg-inline ms-1">Nouveau RDV</span>
                     </button>
@@ -47,20 +46,20 @@
                             <label class="form-check-label" for="show-weekend">WE</label>
                         </div>
                     </div>
-                    <a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}"
+                    <a href="{% if support is defined %}{{ path('support_calendar', {id: support.id}) }}{% else %}{{ path('calendar') }}{% endif %}"
                        class="btn btn-primary btn-sm mb-1 shadow" data-bs-toggle="tooltip"
                        data-bs-placement="bottom" title="Mois actuel">
                         <i class="fas fa-calendar-day"></i>
                         <span class="d-none d-md-inline ms-1">Mois actuel</span></a>
                     <a href="{% if support is defined %}{{ path('support_calendar_show',
-                        {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
+                        {id: support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}{% endif %}"
                         class="btn btn-primary btn-sm mb-1 shadow"
                         data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois précédent">
                             <i class="fas fa-angle-left"></i>
                     </a>
                     <a href="{% if support is defined %}{{ path('support_calendar_show',
-                        {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}
+                        {id: support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}{% endif %}"
                         class="btn btn-primary btn-sm mb-1 shadow"
                         data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois suivant">
@@ -71,10 +70,17 @@
 
             {% set start_day = calendar.firstMonday %}
 
-            <div class="calendar-table calendar-{{ calendar.weeks }}weeks">
+            <div id="container_events" class="calendar-table calendar-{{ calendar.weeks }}weeks"
+                data-prototype="{{ include('app/rdv/_rdv_event_component.html.twig', {rdv: form_rdv.vars.value})|e }}"
+                data-container-tag="div"
+                data-path-create="{{ support is defined ? path('support_rdv_create', {id: support.id}) : path('rdv_create') }}"
+                data-path-show="{{ path('rdv_show', {id: '__id__'}) }}"
+                data-path-edit="{{ path('rdv_edit', {id: '__id__'}) }}"
+                data-path-delete="{{ path('rdv_delete', {id: '__id__'}) }}"
+                data-path-show-support="{{ path('support_show', {id: '__id__'}) }}" 
+            >
                 <div class="calendar-header text-secondary">
-                    <div class="calendar-week-number"
-                         data-path-edit-rdv="{{ path('rdv_edit', {'id': '__id__'}) }}"></div>
+                    <div class="calendar-week-number"></div>
                     {% for key, day in calendar.daysList %}
                         {% if key < 7 %}
                             <div class="calendar-header-col week-5days"
@@ -98,18 +104,14 @@
                                 {% if key < 7 %}
                                     {% set day = start_day|date_modify('+' ~ (day + week * 7) ~ ' day') %}
                                     <div class="calendar-day-block week-5days {{ calendar.withinMonth(day) == false ? 'calendar-other-month' }}
-										{{ calendar.isToday(day) ? 'calendar-today' }}" id="{{ day|date('Y-m-d') }}"
+										{{ calendar.isToday(day) ? 'calendar-today' }}" id="{{ day|date('Y-m-d') }}" data-action="new_rdv"
                                         title="Ajouter un rendez-vous" {% if key >= 5 %}data-weekend="true"{% endif %}>
                                         <div class="text-dark calendar-day">{{ day|date('d') }}
                                             {{ calendar.otherMonth(day) }}
                                         </div>
                                         {% if day|date('Y-m-d') in rdvs %}
                                             {% for rdv in rdvs[day|date('Y-m-d')] %}
-                                                <a class="calendar-event bg-primary text-light"
-                                                    id="rdv-{{ rdv.id }}" href="{{ path('rdv_show', {'id': rdv.id}) }}"
-                                                    title="Voir le rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                                    {{ rdv.start|date('H:i') }} {{ rdv.title }}
-                                                </a>
+                                                {{ include('app/rdv/_rdv_event_component.html.twig') }}
                                             {% endfor %}
                                         {% endif %}
                                     </div>
@@ -123,7 +125,7 @@
     </section>
 
     {% include 'app/rdv/_rdv_form_modal.html.twig' %}
-    {% include 'app/rdv/_rdv_update_api_modal.html.twig' with {'modal_id': 'modal-update'} %}
+    {% include 'app/rdv/_rdv_update_api_modal.html.twig' with {'modal_id': 'update_api_modal'} %}
     {% include 'app/rdv/_rdv_delete_modal.html.twig' %}
 {% endblock %}
 

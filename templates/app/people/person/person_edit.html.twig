@@ -4,6 +4,7 @@
 {% set edit_mode = person.id != null %}
 {% set title = edit_mode ? person.fullname ~ (person.usename ? ' (' ~ person.usename ~ ')') : 'Création d\'une personne' %}
 {% set form_person = edit_mode ? form : form.person %}
+{% set alert_prototype = true %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -90,7 +91,7 @@
                         {% if true == edit_mode and is_granted('ROLE_ADMIN') %}
                             <div class="float-start d-flex">
                             {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer cette personne ?' %}
-                                <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
+                                <a id="modal_delete_btn" class="me-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
                                     data-bs-toggle="tooltip" title="Supprimer la personne" data-bs-placement="bottom"
                                     onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
                                     class="fas fa-trash-alt me-2"></span>Supprimer</a>
@@ -99,7 +100,7 @@
                         <div class="mb-4 float-end">
                             {% if true == edit_mode %}
                                 <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-primary shadow"
-                                    data-url="{{ path('person_edit_ajax', {'id': person.id}) }}">
+                                    data-path="{{ path('person_edit_ajax', {'id': person.id}) }}">
                                     <span class="fas fa-save me-2"></span>Mettre à jour
                                 </button>
                             {% else %}

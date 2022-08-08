@@ -72,7 +72,6 @@ class Document
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("show_document")
      */
     private $size;
 
@@ -144,6 +143,18 @@ class Document
     public function getSize(): ?float
     {
         return $this->size;
+    }
+
+    /** @Groups("show_document") */
+    public function getSizeMo(): ?string
+    {
+        if (null === $this->size) {
+            return null;
+        }
+
+        $roundedSize = round($this->size / 1_000_000, 2);
+
+        return number_format($roundedSize, 2, ',', "\xc2\xa0")."\xc2\xa0Mo";
     }
 
     public function setSize(?float $size): self

@@ -2,6 +2,7 @@
 
 {% set title = 'Tableau de bord' %}
 {% set is_social_worker = app.user.status == constant('STATUS_SOCIAL_WORKER', app.user) %}
+{% set dashboard_index = true %}
 
 {% block title %}{{ title }}{% endblock %}
 

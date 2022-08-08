@@ -1,0 +1,83 @@
+{% set support = rdv.supportGroup %}
+{% set is_deleted = rdv.isDeleted ?? false %}
+
+<tr data-rdv-id="{{ rdv.id }}">
+    <td class="align-middle text-center">
+        <a class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow my-1"
+            data-action="show" {{ is_deleted ? 'disabled' }}
+            {% if dashboard_index is defined %}
+                href="{{ path('calendar_show', {'year': rdv.start|date('Y'), 'month': rdv.start|date('m'), 'rdv_id': rdv.id}) }}"
+            {% endif %}
+            title="{{ is_deleted == false ? 'Voir/Modifier le rendez-vous' }}"
+            data-bs-toggle="tooltip" data-bs-placement="bottom">
+            <i class="fas fa-eye"></i>
+        </a>
+    </td>
+    <td class="align-middle justify">
+        <span class="fw-bold me-1" data-object-key="title">{{ rdv.title }}{% if rdv.content %} : {% endif %}</span>
+        <span data-object-key="content">{{ rdv.content|u.truncate(200, ' [...]', false)|striptags|raw }}</span>
+    </td>
+    <td class="align-middle">
+        <span data-object-key="fullDate">{{ rdv.fullDateToString }}</span>
+    </td>
+    <td class="align-middle" data-object-key="alerts">
+        {% if rdv.alerts|length > 0 %}
+            {{ rdv.alerts.first.date|date('d/m/Y H:i') }}
+            <i class="fas fa-bell text-secondary"></i>
+        {% endif %}
+    </td>
+    {% if dashboard_index is not defined %}
+        <td class="align-middle" data-object-key="status">{{ rdv.statusToString }}</td>
+    {% endif %}
+    <td class="align-middle" data-object-key="location">{{ rdv.location }}</td>
+    {% if dashboard_index is not defined %}
+        <td class="align-middle" data-object-key="tags">
+            {% for tag in rdv.tags %}
+                <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
+            {% endfor %}
+        </td>
+        <td class="align-middle" data-object-key="users">{{ rdv.usersToString }}</td>
+    {% endif %}
+    {% if rdv_index or dashboard_index is defined %}
+        <td class="align-middle" data-object-key="supportGroup">{{ support ? support.header.fullname }}</td>
+    {% endif %}
+    {% if rdv_index %}
+        <td class="align-middle">
+            <span data-object-key="service">{{ support ? support.service.name }}</span>
+            <span data-object-key="subService">
+                {{ support and support.subService ? ' | ' ~ support.subService.name }}
+            </span>
+            <br/>
+            <span class="text-secondary" data-object-key="device">
+                {{ support and support.device ? '(' ~ support.device.name ~ ')' }}
+            </span>
+        </td>
+    {% endif %}
+    <td class="align-middle" data-object-key="createdAt">
+        {% if is_deleted %}
+            {{ rdv.deletedAt|date('d/m/Y H:i') }}
+        {% else %}
+            {{ rdv.createdAtToString }}
+        {% endif %}
+    </td>
+    {% if rdv_index %}
+        <td class="align-middle"  data-object-key="createdBy">{{ rdv.createdBy ? rdv.createdBy.fullname }}</td>
+    {% endif %}
+    {% if dashboard_index is not defined %}   
+        <td class="align-middle text-center">
+            {% if is_granted('DELETE', rdv) %}
+                {% if not is_deleted %}
+                    <button class="btn btn-danger btn-sm shadow" data-action="delete"
+                        title="Supprimer le rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                {% else %}
+                    <button class="btn btn-success btn-sm shadow" data-action="restore"
+                        title="Restaurer le rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <i class="fa-solid fa-trash-arrow-up"></i>
+                    </button>
+                {% endif %}
+            {% endif %}
+        </td>
+    {% endif %}
+</tr>

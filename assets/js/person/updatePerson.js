@@ -30,7 +30,7 @@ export default class UpdatePerson {
                 e.preventDefault()
                 if (validationPerson.getNbErrors() === 0) {
                     this.loader.on()
-                    const url = this.updatePersonBtnElt.dataset.url
+                    const url = this.updatePersonBtnElt.dataset.path
                     this.ajax.send('POST', url, this.response.bind(this), new FormData(this.personFormElt))
                 }
             })

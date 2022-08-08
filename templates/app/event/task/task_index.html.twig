@@ -2,6 +2,7 @@
 
 {% set restoration_mode = null %}
 {% set title = 'Tâches' %}
+{% set alert_prototype = true %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -17,20 +18,18 @@
             <div class="row align-items-baseline">
                 <div class="col-md-6 align-middle mb-2">
                     {% if not restoration_mode %}
-                        <button id="js_new_task" class="btn btn-primary shadow align-middle me-2"
+                        <button class="btn btn-primary shadow align-middle me-2" data-action="new_task"
                             title="Ajouter une tâche" data-bs-toggle="modal" data-bs-placement="bottom"
-                            data-bs-target="#modal-task">
-                            <span class="fas fa-plus-square me-2"></span>Nouvelle tâche
+                            data-bs-target="#modal_task">
+                            <i class="fas fa-plus-square me-2"></i>Nouvelle tâche
                         </button>
                     {% else %}
                         <a href="{{ app.request.pathInfo }}" class="btn btn-primary btn-sm shadow me-2" 
                             id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
                         </a>
                     {% endif %}
-                    <span>
-                        Résultat : <span id="count_tasks" data-count-tasks="{{ tasks.getTotalItemCount }}">
-                        {{ tasks.getTotalItemCount|number }}</span>
-                    </span>
+                    <span>Résultat : </span>
+                    <span data-counter="task">{{ tasks.getTotalItemCount|number }}</span>
                 </div>
                 <div class="col-md-6">
                     <div class="navigation">{{ knp_pagination_render(tasks) }}</div>

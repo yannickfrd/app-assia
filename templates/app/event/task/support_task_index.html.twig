@@ -2,6 +2,7 @@
 
 {% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
 {% set title = 'Tâches' ~ (restoration_mode ? ' (Corbeille)') %}
+{% set alert_prototype = true %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -13,19 +14,17 @@
         <div class="row mb-2">
             <div class="d-flex col-md-6 align-items-center">
                 {% if not restoration_mode %}
-                    <button id="js_new_task" class="btn btn-primary shadow me-2"
+                    <button class="btn btn-primary shadow me-2" data-action="new_task"
                         title="Ajouter une tâche" data-bs-toggle="modal" data-bs-placement="bottom"
-                        data-bs-target="#modal-task"><i class="fas fa-plus-square me-2"></i>Nouvelle tâche
+                        data-bs-target="#modal_task"><i class="fas fa-plus-square me-2"></i>Nouvelle tâche
                     </button>
 				{% else %}
 					<a href="{{ app.request.pathInfo }}" class="btn btn-primary btn-sm shadow me-2" 
                         id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
 					</a>
 				{% endif %}
-                <span>
-                    Résultat : <span id="count_tasks" data-count-tasks="{{ tasks.getTotalItemCount }}">
-                    {{ tasks.getTotalItemCount|number }}</span>
-                </span>
+                <span class="me-1">Résultat :</span>
+                <span data-counter="task">{{ tasks.getTotalItemCount|number }}</span>
             </div>
             <div class="col-md-6">
                 <div class="navigation">{{ knp_pagination_render(tasks) }}</div>

@@ -10,15 +10,21 @@ class NoteEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    public const CONTAINER_NOTES = '#container-notes';
+    public const CONTAINER_NOTES = '#container_notes';
 
-    public const BUTTON_NEW_NOTE = 'button[data-action="new_note"]';
-    public const MODAL_BUTTON_SAVE = 'button[data-action="save"]';
-    public const MODAL_BUTTON_CLOSE = 'button[data-action="close"]';
+    public const BUTTON_NEW_NOTE = '#modal_note button[data-action="new_note"]';
+
     public const FORM_NOTE = 'form[name="note"]';
+    public const MODAL_BUTTON_SAVE = '#modal_note button[data-action="save"]';
+    public const MODAL_BUTTON_CLOSE = '#modal_note button[data-action="close"]';
+    public const MODAL_BUTTON_DELETE = '#modal_note button[data-action="delete"]';
 
-    public const NOTES_TABLE = '#table-notes';
-    public const BUTTON_SHOW_NOTE = '#table-notes a[data-action="show"]';
+    public const NOTES_TABLE = '#table_notes';
+    public const FIRST_BUTTON_SHOW = '#table_notes a[data-action="show"]';
+    public const FIRST_BUTTON_RESTORE = 'button[data-action="restore"]';
+
+    public const MODAL_CONFIRM = '#modal_confirm';
+    public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
     public const ALERT_SUCCESS = '.toast.show.alert-success';
     public const ALERT_WARNING = '.toast.show.alert-warning';
@@ -81,7 +87,7 @@ class NoteEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Show the notes by table-view');
 
-        $this->clickElement('a#table-view');
+        $this->clickElement('a#view_table');
 
         $this->client->waitFor(self::CONTAINER_NOTES.'.table-responsive');
         $this->assertSelectorTextContains('h1', 'Notes');
@@ -143,10 +149,11 @@ class NoteEndToEndTest extends PantherTestCase
 
         $this->clickElement(self::CONTAINER_NOTES.' div[data-note-id]');
         sleep(1); // transition delay
-        $this->client->waitFor('#confirm-modal');
-        $this->clickElement('#modal-btn-delete');
+        $this->client->waitFor(self::MODAL_CONFIRM);
+        $this->clickElement('#modal_delete_btn');
         sleep(1); // transition delay
-        $this->clickElement('#modal-confirm-btn');
+
+        $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
         $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
@@ -173,7 +180,7 @@ class NoteEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Edit a note by table-view');
 
-        $this->clickElement(self::BUTTON_SHOW_NOTE);
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
 
         $this->setNoteForm();
 
@@ -202,7 +209,7 @@ class NoteEndToEndTest extends PantherTestCase
 
         $this->clickElement(self::CONTAINER_NOTES.' tbody>tr button[data-action="delete-note"]');
         sleep(1); // transition delay
-        $this->clickElement('#modal-confirm');
+        $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
         $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
@@ -225,7 +232,7 @@ class NoteEndToEndTest extends PantherTestCase
     private function restoreNote(): void
     {
         sleep(1); // transition delay
-        $this->clickElement('button[name="restore"]');
+        $this->clickElement(self::FIRST_BUTTON_RESTORE);
 
         $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);

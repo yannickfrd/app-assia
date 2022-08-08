@@ -14,11 +14,8 @@ export default class NoteForm {
         this.noteManager = noteManager
         this.loader = noteManager.loader
         this.ajax = noteManager.ajax
-        this.noteModalElt = noteManager.noteModalElt
-        this.noteModal = noteManager.noteModal
-        this.supportId = noteManager.supportId
-        this.confirmModal = noteManager.confirmModal
-        this.confirmModalElt = noteManager.confirmModalElt
+        this.noteModalElt = noteManager.modalElt
+        this.noteModal = noteManager.objectModal
         this.responseAjax = this.noteManager.responseAjax.bind(this.noteManager)
 
         this.parametersUrl = new ParametersUrl()
@@ -26,9 +23,9 @@ export default class NoteForm {
 
         this.formNoteElt = this.noteModalElt.querySelector('form[name=note]')
         this.contentElt = this.noteModalElt.querySelector('#note_content')
-        this.btnExportWordElt = this.noteModalElt.querySelector('#export-note-word')
-        this.btnExportPdfElt = this.noteModalElt.querySelector('#export-note-pdf')
-        this.btnDeleteElt = this.noteModalElt.querySelector('#modal-btn-delete')
+        this.btnExportWordElt = this.noteModalElt.querySelector('[data-action="export_word"]')
+        this.btnExportPdfElt = this.noteModalElt.querySelector('[data-action="export_pdf"]')
+        this.btnDeleteElt = this.noteModalElt.querySelector('[data-action="delete"]')
         
         this.autoSaveElt = document.getElementById('js-auto-save')
 
@@ -41,34 +38,60 @@ export default class NoteForm {
 
     init() {
         this.noteModalElt.querySelector('button[data-action="save"]')
-            .addEventListener('click', e => {
-                e.preventDefault()
-                this.autoSaver.clear()
-                this.requestToSave()
-            })
+            .addEventListener('click', e => this.#requestSave(e))
+
         this.noteModalElt.querySelector('button[data-action="close"]')
-            .addEventListener('click', e => {
-                e.preventDefault()
-                this.tryCloseModal()
-                this.autoSaver.clear()
-            })
+            .addEventListener('click', e => this.#requestClose(e))
+
         this.btnDeleteElt.addEventListener('click', e => {
             e.preventDefault()
-            this.requestToDelete()
+            this.noteManager.showModalConfirm()
         })
+
+        this.btnExportWordElt.addEventListener('click', e => {
+            e.preventDefault()
+            this.noteManager.requestExportWord()
+        })
+
+        this.btnExportPdfElt.addEventListener('click', e => {
+            e.preventDefault()
+            this.noteManager.requestExportPdf()
+        })
+
         this.noteModalElt.addEventListener('mousedown', e => {
             if (e.target === this.noteModalElt) {
                 this.tryCloseModal(e)
             }
         })
-        this.confirmModalElt.querySelector('#modal-confirm-btn')
-            .addEventListener('click', () => this.onclickModalConfirmBtn())
+        // this.confirmModalElt.querySelector('#modal_confirm_btn')
+        //     .addEventListener('click', () => this.noteModal.hide())
+        //     this.ajax.send('GET', this.btnDeleteElt.dataset.pathDelete, this.responseAjax)
     }
 
-    resetForm() {
-        this.noteModal.show()
+    /**
+     * @param {Event} e 
+     */
+    #requestSave(e) {
+        e.preventDefault()
+        this.autoSaver.clear()
+        this.requestToSave()
+    }
 
-        this.noteModalElt.querySelector('form').action = `/support/${this.supportId}/note/new`
+    /**
+     * @param {Event} e 
+     */
+    #requestClose(e) {
+        e.preventDefault()
+        this.tryCloseModal()
+        this.autoSaver.clear()
+    }
+
+    new() {
+        this.#resetForm()
+    }
+
+    #resetForm() {
+        this.noteModalElt.querySelector('form').action = this.noteManager.pathCreate(this.noteManager.supportId)
         this.noteModalElt.querySelector('#note_title').value = ''
         this.contentElt.textContent = ''
         this.noteModalElt.querySelector('#note_type').value = 1
@@ -101,8 +124,6 @@ export default class NoteForm {
         note.tags.forEach(tags => tagsIds.push(tags.id))
         this.tagsSelectManager.updateItems(tagsIds)
 
-        this.noteModal.show()
-
         this.loader.off()
     }
 
@@ -110,15 +131,12 @@ export default class NoteForm {
      * @param {Object} note
      */
     initModal(note) {
-        this.noteModalElt.querySelector('form').action = `/note/${note.id}/edit`
+        this.noteModalElt.querySelector('form').action = this.noteManager.pathEdit(note.id)
 
         this.btnDeleteElt.classList.remove('d-none')
-        this.btnDeleteElt.dataset.pathDelete = `/note/${note.id}/delete`
 
         this.btnExportWordElt.classList.remove('d-none')
-        this.btnExportWordElt.href = `/note/${note.id}/export/word`
         this.btnExportPdfElt.classList.remove('d-none')
-        this.btnExportPdfElt.href = `/note/${note.id}/export/pdf`
 
         this.autoSaver.init()
     }
@@ -156,35 +174,6 @@ export default class NoteForm {
         this.requestToSave()
     }
 
-    onclickModalConfirmBtn() {
-        switch (this.confirmModalElt.dataset.action) {
-            case 'delete_note':
-                this.loader.on()
-                this.ajax.send('GET', this.btnDeleteElt.dataset.pathDelete, this.responseAjax)
-                break
-            case 'hide_note_modal':
-                this.noteModal.hide()
-                break
-        }
-        this.confirmModalElt.dataset.action = ''
-    }
-
-    /**
-     * Envoie la requête ajax pour supprimer la note.
-     */
-    requestToDelete() {
-        if (this.loader.isActive()) {
-            return
-        }
-
-        this.autoSaver.clear()
-
-        const modalBody = this.confirmModalElt.querySelector('.modal-body')
-        modalBody.innerHTML = "<p>Voulez-vous vraiment supprimer cette note ?</p>"
-        this.confirmModalElt.dataset.action = 'delete_note'
-        this.confirmModal.show()
-    }
-
     /**
      * Vérifie si des modifications ont été apportées avant la fermeture de la modal.
      */
@@ -193,9 +182,6 @@ export default class NoteForm {
             return this.noteModal.hide()
         }
 
-        const modalBody = this.confirmModalElt.querySelector('.modal-body')
-        modalBody.innerHTML = "<p>Attention, vous n'avez pas enregistrer les modifications. <br/>Continuez sans sauvegarder ?</p>"
-        this.confirmModalElt.dataset.action = 'hide_note_modal'
-        this.confirmModal.show()
+        this.noteManager.confirmModal.show()
     }
 }

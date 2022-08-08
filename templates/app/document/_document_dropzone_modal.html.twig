@@ -1,10 +1,10 @@
-<div id="dropzone-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="DropzoneModalLabel" aria-hidden="true">
+<div id="modal_dropzone" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="DropzoneModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="mb-0">Ajouter des fichiers</h2>
             </div>
-            {{ form_start(dropzoneForm) }}
+            {{ form_start(form_dropzone) }}
             <div class="modal-body pb-0">
                 <div class="row mb-3">
                     <div class="col-md-12">
@@ -17,8 +17,8 @@
                         {% endapply %}{% endset %}
                         <div class="dropzone card p-2 cursor-pointer" id="dropzone" data-placeholder="{{ dropzone_content }}"></div>
                     </div>
-                    <div class="col-sm-12 d-none">{{ form_widget(dropzoneForm.files) }}</div>
-                    <div class="col-sm-12">{{ form_help(dropzoneForm.files) }}</div>
+                    <div class="col-sm-12 d-none">{{ form_widget(form_dropzone.files) }}</div>
+                    <div class="col-sm-12">{{ form_help(form_dropzone.files) }}</div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -28,8 +28,8 @@
                     <button type="submit" name="send" class="btn btn-secondary d-none">Envoyer</button>
                 </div>
             </div>
-            {{ form_row(dropzoneForm._token) }}
-            {{ form_end(dropzoneForm) }}
+            {{ form_row(form_dropzone._token) }}
+            {{ form_end(form_dropzone) }}
         </div>
     </div>
 </div>

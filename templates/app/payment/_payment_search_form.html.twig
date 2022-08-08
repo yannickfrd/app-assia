@@ -22,13 +22,13 @@
     {% if app.session.get('haveServiceHotel') == false %}
         <button id="export_accounting_btn" name="export-accounting" value="true" class="btn btn-success ms-2 shadow" 
             title="Exporter sur Excel les données pour la comptabilité" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                <span class="fas fa-file-excel me-2"></span>Compta
+                <i class="fas fa-file-excel me-2"></i>Compta
         </button>
     {% endif %}
     {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceHotel') %}
         <button id="export_delta_btn" name="export-delta" value="true" class="btn btn-success ms-2 shadow" 
             title="Exporter sur Excel les données destinées à DELTA" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                <span class="fas fa-file-excel me-2"></span>DELTA
+                <i class="fas fa-file-excel me-2"></i>DELTA
             </button>
     {% endif %}
 {% endblock %}

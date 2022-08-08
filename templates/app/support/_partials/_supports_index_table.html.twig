@@ -73,7 +73,7 @@
     </div>
     {% if people_group is defined %}
         <button id="btn-new-support" class="m-2 btn btn-primary btn-sm" 
-        data-url="{{ path('group_new_support', {'id': people_group.id}) }}">
+        data-path="{{ path('group_new_support', {'id': people_group.id}) }}">
         <span class="fas fa-plus-square pe-2"></span>Créer un nouveau suivi</button>
     {% else %}
         <p class="ms-2 text-secondary"><span class="fas fa-info-circle me-2"></span>

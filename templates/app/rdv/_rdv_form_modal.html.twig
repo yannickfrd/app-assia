@@ -1,19 +1,17 @@
-<div id="modal-rdv" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalRdvLabel" aria-hidden="true">
+<div id="modal_rdv" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalRdvLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
 
             <div class="modal-header d-block d-md-flex pb-2">
                 <div class="col-12 col-lg-6">
-                    <h2 class="h3" data-url="{{ path('support_show', {'id': '__id__'} ) }}"></h2>
+                    <h2 class="h3"></h2>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <p class="mb-0 text-end small text-secondary" id="js-rdv-info"></p>
+                    <p class="mb-0 text-end small text-secondary" data-rdv="info"></p>
                 </div>
             </div>
 
-            {{ form_start(form_rdv, {
-                'action': support is defined ? path('support_rdv_create', {'id': support.id}) : path('rdv_create')
-            }) }}
+            {{ form_start(form_rdv) }}
 
             <div class="modal-body pb-0">
                 <div class="row mb-3">
@@ -116,8 +114,7 @@
                              data-container-tag="div" data-widget-counter="{{ form_rdv.alerts|length }}">
                         </div>
                         <button type="button" class="btn btn-primary btn-sm"
-                                data-list-selector="#alerts-fields-list" data-add-widget="alert"
-                                data-url="/alert/__id__/toggle-status">
+                            data-list-selector="#alerts-fields-list" data-add-widget="alert">
                             <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
                         </button>
                     </div>
@@ -128,12 +125,12 @@
                 <div class="row mb-3">
                     <div class="col-md-6 form-check">
                         <div class="col-md-12">
-                            {{ form_widget(form_rdv._googleCalendar, {attr: {'data-api-name': 'google'} }) }}
+                            {{ form_widget(form_rdv.googleCalendar, {attr: {'data-api-name': 'google'} }) }}
                         </div>
                     </div>
                     <div class="col-md-6 form-check">
                         <div class="col-md-12">
-                            {{ form_widget(form_rdv._outlookCalendar, {attr: {'data-api-name': 'outlook'} }) }}
+                            {{ form_widget(form_rdv.outlookCalendar, {attr: {'data-api-name': 'outlook'} }) }}
                         </div>
                     </div>
                 </div>
@@ -142,16 +139,16 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-start">
-                    <button id="modal-btn-delete" class="me-3 btn btn-danger" data-bs-placement="bottom"
-                            data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
-                            title="Supprimer le rendez-vous"><i class="fas fa-trash-alt"></i>
-                        <span class="d-md-inline ms-2">Supprimer</span>
+                    <button class="btn btn-danger me-3" data-action="delete"
+                        title="Supprimer le rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <i class="fas fa-trash-alt"></i><span class="d-md-inline ms-2">Supprimer</span>
                     </button>
                 </div>
                 <div class="float-end">
-                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-bs-dismiss="modal">Fermer
+                    <button type="button" class="btn btn-secondary" data-action="close_modal" 
+                        data-bs-dismiss="modal">Fermer
                     </button>
-                    <button name="save-rdv" type="button" class="btn btn-primary shadow" data-action="save-rdv">
+                    <button name="save_rdv" type="button" class="btn btn-primary shadow" data-action="save">
                         <i class="fas fa-save me-2"></i>Enregistrer
                     </button>
                 </div>

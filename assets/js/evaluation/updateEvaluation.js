@@ -19,7 +19,7 @@ export default class UpdateEvaluation {
 
     init() {
         this.btnSubmitElts.forEach(btnSubmitElt => {
-            this.url = btnSubmitElt.dataset.url
+            this.path = btnSubmitElt.dataset.path
             btnSubmitElt.addEventListener('click', e => this.save(e))
         })
         this.autoSaver.init()
@@ -50,7 +50,7 @@ export default class UpdateEvaluation {
     }
 
     sendRequest() {
-        this.ajax.send('POST', this.url, this.response.bind(this), new FormData(this.formElt))
+        this.ajax.send('POST', this.path, this.response.bind(this), new FormData(this.formElt))
     }
 
     /**

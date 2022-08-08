@@ -1,4 +1,5 @@
-<button class="btn btn-success btn-sm shadow" name="restore" data-action="restore" data-url="{{ path_route }}" 
+<button class="btn btn-success btn-sm shadow" name="restore" data-action="restore" 
+    {% if path is defined %}data-path-restore="{{ path }}"{% endif %}
     title="{{ restore_title ?? 'Restaurer' }}" data-bs-toggle="tooltip" data-bs-placement="bottom">
     <i class="fa-solid fa-trash-arrow-up"></i>
 </button>

@@ -1,6 +1,8 @@
 {% extends 'model/_modal_dialog.html.twig' %}
 
-{% block modal_body %}Êtes-vous vraiment sûr de vouloir supprimer cette tâche ?{% endblock %}
-{% block modal_confirm %}Supprimer la tâche{% endblock %}
-{% block modal_alert %}danger{% endblock %}
+{% block modal_body %}
+    <p>Êtes-vous vraiment sûr de vouloir supprimer cette tâche ?</p>
+{% endblock %}
 {% block modal_bg %}bg-light{% endblock %}
+{% block modal_button_confirm %}Supprimer la tâche{% endblock %}
+{% block modal_alert %}danger{% endblock %}

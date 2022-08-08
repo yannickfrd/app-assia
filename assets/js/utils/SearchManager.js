@@ -49,7 +49,7 @@ export default class SearchManager {
                 if (this.loader.inLoading) {
                     e.preventDefault()
                 } else {
-                    new AlertMessage('success', 'L\'export est en cours de préparation. Merci de patienter...', 10)
+                    new AlertMessage('success', 'L\'export est en cours de préparation. Merci de patienter...', 10 * 1000)
                     this.loader.inLoading = true
                     setTimeout(() => {
                         this.loader.inLoading = false

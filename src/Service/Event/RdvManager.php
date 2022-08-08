@@ -12,21 +12,17 @@ use Symfony\Component\Form\FormInterface;
 
 class RdvManager
 {
-    public static function addonBeforeFlush(Rdv $rdv, ?FormInterface $form = null, ?SupportGroup $supportGroup = null)
+    public static function addonBeforeFlush(Rdv $rdv)
     {
-        if (null !== $supportGroup) {
-            $rdv->setSupportGroup($supportGroup);
-        }
-
-        if ($form->get('_googleCalendar')->getData()) {
+        if (true === $rdv->getGoogleCalendar()) {
             $rdv->setGoogleEventId('1');
-        } elseif ($rdv->getGoogleEventId()) {
+        } elseif (null !== $rdv->getGoogleEventId()) {
             $rdv->setGoogleEventId(null);
         }
 
-        if ($form->get('_outlookCalendar')->getData()) {
+        if (true === $rdv->getOutlookCalendar()) {
             $rdv->setOutlookEventId('1');
-        } elseif ($rdv->getOutlookEventId()) {
+        } elseif (null !== $rdv->getOutlookEventId()) {
             $rdv->setOutlookEventId(null);
         }
     }
