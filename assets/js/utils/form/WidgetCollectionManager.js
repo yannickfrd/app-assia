@@ -4,16 +4,16 @@
 export default class WidgetCollectionManager {
 
     /**
-     * @param {CallableFunction} callbackAfterAdd
-     * @param {CallableFunction} callbackAfterRemove
+     * @param {CallableFunction} actionAfterAdding
+     * @param {CallableFunction} actionAfterRemoving
      * @param {number} limit 
      * @param {number} delay 
      */
-    constructor(callbackAfterAdd = null, callbackAfterRemove = null, limit = null, delay = 200) {
+    constructor(actionAfterAdding = null, actionAfterRemoving = null, limit = null, delay = 200) {
         this.btnElts = document.querySelectorAll('button[data-add-widget]')
         this.listElt = null
-        this.callbackAfterAdd = callbackAfterAdd
-        this.callbackAfterRemove = callbackAfterRemove
+        this.actionAfterAdding = actionAfterAdding
+        this.actionAfterRemoving = actionAfterRemoving
         this.limit = limit
         this.delay = delay
         this.init()
@@ -59,7 +59,7 @@ export default class WidgetCollectionManager {
         // Add item to the list
         this.listElt.appendChild(newElt)
 
-        if (this.callbackAfterAdd) this.callbackAfterAdd()
+        if (this.actionAfterAdding) this.actionAfterAdding()
 
         return newElt
     }
@@ -78,7 +78,7 @@ export default class WidgetCollectionManager {
                     elt.remove()
                     this.listElt.dataset.widgetCounter -= 1
                     this.btnElts.forEach(btnElt => btnElt.classList.remove('d-none'))
-                    if (this.callbackAfterRemove) this.callbackAfterRemove()
+                    if (this.actionAfterRemoving) this.actionAfterRemoving()
                 }, this.delay)
             })
         }

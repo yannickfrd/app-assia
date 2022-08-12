@@ -49,7 +49,7 @@ export default class NewPeopleGroup {
         )
 
         document.getElementById('send').addEventListener('click', e => {
-            if (validationPerson.getNbErrors() > 0) {
+            if (validationPerson.formValidator.isValid()) {
                 e.preventDefault(), {
                     once: true
                 }

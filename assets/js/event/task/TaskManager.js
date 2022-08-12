@@ -4,7 +4,7 @@ import AlertMessage from '../../utils/AlertMessage'
 
 export default class TaskManager extends AbstractManager {
     constructor() {
-        super('task')
+        super('task', null, {backdrop: 'static', keyboard: false})
 
         // Additionnal requests
         this.requestToggleStatus = (id) => this.request('toggle-status', id)

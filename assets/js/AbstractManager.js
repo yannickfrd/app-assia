@@ -94,7 +94,7 @@ export default class AbstractManager {
     }
 
     /**
-     * Get the path to request with action key-word (create, edit; delete, restore...).
+     * Get the path to request with action key-word (create, edit, delete, restore...).
      * 
      * @param {string} action 
      * @param {string | null} id 
@@ -196,8 +196,9 @@ export default class AbstractManager {
      * @param {Object} object
      */
      showForm(object) {
-        this.form.show(object)
-        this.objectModal.show()
+         this.form.show(object)
+         this.objectModal.show()
+         this.objectId = object.id
     }
 
     /**

@@ -81,7 +81,7 @@
                     </div>
                 </form>
                 <div class="text-white text-end w-min-160">
-                    <a id="user-name" class="text-white fw-bold" href="{{ path('my_profile') }}" data-bs-toggle="popover"
+                    <a id="user_name" class="text-white fw-bold" href="{{ path('my_profile') }}" data-bs-toggle="popover"
                         data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true" data-user-id="{{ app.user.id }}"
                         title="{{ app.user.firstname }} {{ app.user.lastname }}" data-bs-content="Dernière connexion : {{ app.user.lastLogin|date('d/m/Y H:i') }}
                         <br/>Statut : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get('userServices')|join('<br/>- ') }}">

@@ -206,7 +206,7 @@ export default class PaymentForm {
     }
 
     #resetForm() {
-        this.formValidator.reinit()
+        this.formValidator.reinitForm()
         this.formPaymentElt.querySelectorAll('input:not([type="hidden"]), select:not([id="payment_type"]), textarea').forEach(fieldElt => {
             fieldElt.value = ''
             if (fieldElt.type === 'checkbox') {
@@ -390,7 +390,7 @@ export default class PaymentForm {
             return this.formValidator.invalidField(this.paymentDateInputElt, 'Saisie obligatoire.')
         }
 
-        if (false === this.formValidator.checkDate(this.paymentDateInputElt, -(365 * 2), 0)) {
+        if (false === this.formValidator.isValidDate(this.paymentDateInputElt, -(365 * 2), 0)) {
             this.isValid = false
         }
     }
@@ -438,7 +438,7 @@ export default class PaymentForm {
             this.isValid = false
             return this.formValidator.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
         }
-        if (false === this.formValidator.checkDate(this.startDateInputElt, -(9 * 365), (3 * 31))) {
+        if (false === this.formValidator.isValidDate(this.startDateInputElt, -(9 * 365), (3 * 31))) {
             this.isValid = false
         }
     }
@@ -451,7 +451,7 @@ export default class PaymentForm {
             return this.formValidator.invalidField(this.endDateInputElt, 'La date doit être supérieure à la date de début.')
         }
 
-        if (false === this.formValidator.checkDate(this.endDateInputElt, -(9 * 365), (3 * 31))) {
+        if (false === this.formValidator.isValidDate(this.endDateInputElt, -(9 * 365), (3 * 31))) {
             this.isValid = false
         }
     }

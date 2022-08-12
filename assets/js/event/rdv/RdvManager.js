@@ -1,13 +1,12 @@
 import AbstractManager from '../../AbstractManager'
 import RdvForm from './RdvForm'
-import RdvModel from './model/RdvModel'
 import ApiCalendar from '../../api/ApiCalendar'
 import AlertMessage from '../../utils/AlertMessage'
 
 export default class RdvManager extends AbstractManager {
 
     constructor() {
-        super('rdv')
+        super('rdv', null, {backdrop: 'static', keyboard: false})
 
         this.form = new RdvForm(this)
         this.apiCalendar = new ApiCalendar(this.form)

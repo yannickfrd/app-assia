@@ -6,7 +6,7 @@ import { Modal } from 'bootstrap'
 export default class AutoLogout {
 
     constructor(timeout = 30, timeAlert = 5) {
-        this.userNameElt = document.getElementById('user-name')
+        this.userNameElt = document.getElementById('user_name')
         this.autoLogoutModal = new Modal(document.getElementById('modal-autoLogout'))
         this.timerElt = document.getElementById('timer-logout')
         this.sessiontTimerElt = document.getElementById('session-timer')

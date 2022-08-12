@@ -93,7 +93,7 @@ class RdvType extends AbstractType
                 },
                 'label' => 'event.support_group',
                 'placeholder' => 'event.support_group.placeholder',
-                'required' => false,
+                'required' => null !== $supportGroup,
             ])
             ->add('content', null, [
                 'attr' => [

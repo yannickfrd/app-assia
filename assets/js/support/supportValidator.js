@@ -65,7 +65,7 @@ export default class SupportValidator extends FormValidator
                 }
                 this.checkEndStatus()
 
-                if (this.loader.isActive() || this.checkForm() > 0) {
+                if (this.loader.isActive() || this.isValid()) {
                     e.preventDefault()
                 }
             })

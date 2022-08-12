@@ -6,7 +6,7 @@ import AlertMessage from '../../utils/AlertMessage'
 export default class CalendarManager extends AbstractManager {
 
     constructor() {
-        super('rdv', '#container_events')
+        super('rdv', '#container_events', {backdrop: 'static', keyboard: false})
 
         this.form = new RdvForm(this)
         this.apiCalendar = new ApiCalendar(this.form)

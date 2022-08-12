@@ -70,8 +70,6 @@ export default class NoteForm extends AbstractForm
         this.hydrateForm(note)
 
         this.formData = new FormData(this.formElt)
-        
-        this.focusFirstInput()
 
         this.ckEditor.setData(note.content)  
 
@@ -95,10 +93,6 @@ export default class NoteForm extends AbstractForm
     requestToSave(e) {
         e.preventDefault()
 
-        if (this.loader.isActive()) {
-            return
-        }
-
         this.autoSaver.clear()
 
         if (this.ckEditor.getData() === '') {
@@ -107,9 +101,9 @@ export default class NoteForm extends AbstractForm
 
         this.contentElt.value = this.ckEditor.getData()
 
-        this.formData = new FormData(this.formElt)
-
-        this.ajax.send('POST', this.formElt.action, this.responseAjax, this.formData)
+        if (this.loader.isActive() === false && this.isValid()) {
+            this.ajax.send('POST', this.formElt.action, this.responseAjax, new FormData(this.formElt))
+        }
     }
 
     autoSave(e) {

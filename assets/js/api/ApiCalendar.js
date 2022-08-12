@@ -10,8 +10,8 @@ export default class ApiCalendar {
      */
     constructor(rdvForm) {
         this.initRdv = () => rdvForm.initRdv
-        this.googleCalendarCheckbox = rdvForm.googleCalendarCheckbox
-        this.outlookCalendarCheckbox = rdvForm.outlookCalendarCheckbox
+        this.checkboxGoogleCalendar = rdvForm.checkboxGoogleCalendar
+        this.checkboxOutlookCalendar = rdvForm.checkboxOutlookCalendar
 
         this.ajax = new Ajax
 
@@ -22,10 +22,10 @@ export default class ApiCalendar {
     }
 
     init() {
-        this.googleCalendarCheckbox.addEventListener('change', (e) => {
+        this.checkboxGoogleCalendar.addEventListener('change', (e) => {
             localStorage.setItem('calendar.google', e.currentTarget.checked)
         })
-        this.outlookCalendarCheckbox.addEventListener('change', (e) => {
+        this.checkboxOutlookCalendar.addEventListener('change', (e) => {
             localStorage.setItem('calendar.outlook', e.currentTarget.checked)
         })
     }
@@ -72,20 +72,20 @@ export default class ApiCalendar {
      updateEvent(rdv, apiUrls) {
         const rdvModel = new RdvModel(rdv)
 
-        if ((this.googleCalendarCheckbox.checked && this.initRdv().googleEventId === null)
-            || (this.outlookCalendarCheckbox.checked && this.initRdv().outlookEventId === null)
-            || (rdvModel.isDifferent(this.initRdv()) && (this.googleCalendarCheckbox.checked
-                || this.outlookCalendarCheckbox.checked))
+        if ((this.checkboxGoogleCalendar.checked && this.initRdv().googleEventId === null)
+            || (this.checkboxOutlookCalendar.checked && this.initRdv().outlookEventId === null)
+            || (rdvModel.isDifferent(this.initRdv()) && (this.checkboxGoogleCalendar.checked
+                || this.checkboxOutlookCalendar.checked))
         ) {
             this.updateModal.show()
 
             const listApis = () => {
                 let list = {}
 
-                if (this.googleCalendarCheckbox.checked) {
+                if (this.checkboxGoogleCalendar.checked) {
                     list.google = apiUrls.google
                 }
-                if (this.outlookCalendarCheckbox.checked) {
+                if (this.checkboxOutlookCalendar.checked) {
                     list.outlook = apiUrls.outlook
                 }
 

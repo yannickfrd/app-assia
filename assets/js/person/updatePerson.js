@@ -28,7 +28,7 @@ export default class UpdatePerson {
         if (this.updatePersonBtnElt) {
             this.updatePersonBtnElt.addEventListener('click', e => {
                 e.preventDefault()
-                if (validationPerson.getNbErrors() === 0) {
+                if (validationPerson.formValidator.isValid()) {
                     this.loader.on()
                     const url = this.updatePersonBtnElt.dataset.path
                     this.ajax.send('POST', url, this.response.bind(this), new FormData(this.personFormElt))

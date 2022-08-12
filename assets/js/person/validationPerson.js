@@ -31,10 +31,6 @@ export default class ValidationPerson {
         }
     }
 
-    getNbErrors() {
-        return this.formValidator.checkForm()
-    }
-
     checkLastname() {
         if (this.lastnameInputElt.value === '') {
             return this.formValidator.invalidField(this.lastnameInputElt, 'Le nom peut pas être vide.')

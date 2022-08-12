@@ -1,20 +1,22 @@
 import AlertMessage from '../AlertMessage'
 
 /**
- * Contrôle de la validité des champs d'un formualaire
- * @return {Number}
+ * Contrôle de la validité des champs d'un formualaire.
  */
 export default class FormValidator {
-
-    constructor(containerElt = document) {
-        this.containerElt = containerElt
+    /**
+     * @param {HTMLElement | string} element 
+     */
+    constructor(element = 'main') {
+        this.containerElt = element instanceof HTMLElement ? element : document.querySelector(element)
     }
 
     /**
-     * Vérifie le formulaire avant envoie.
-     * @return {Number}
+     * Check is the form is valid.
+     * 
+     * @return {boolean}
      */
-    checkForm() {
+     isValid() {
         this.cleanHidedFields()
         this.checkRequiredFields()
 
@@ -31,18 +33,21 @@ export default class FormValidator {
             this.checkFields(document.querySelectorAll(`div[data-check-valid=${category}]`))
         })
 
-        const nbErrors = this.getNbErrors()
-        if (nbErrors > 0) {
+        if (this.getNbErrors() > 0) {
             this.scrollToFirstInvalidElt()
+
             new AlertMessage('danger', 'Veuillez corriger les erreurs indiquées avant d\'enregistrer.')
+
+            return false
         }
-        return nbErrors
+        
+        return true
     }
 
     /**
      * Réinitialisation du formulaire.
      */
-    reinit() {
+    reinitForm() {
         this.containerElt.classList.remove('was-validated')
         this.containerElt.querySelectorAll('input, select, textarea').forEach(elt => {
             this.removeInvalidFeedbackElt(this.getlabel(elt))
@@ -81,6 +86,7 @@ export default class FormValidator {
             if (fieldElt.type === 'select-one' && fieldElt.querySelectorAll('option').length <= 1) {
                 return fieldElt.removeAttribute('required')
             }
+
             this.invalidField(fieldElt, 'Saisie obligatoire.')
             fieldElt.addEventListener('change', () => this.validField(fieldElt))
         })
@@ -109,6 +115,7 @@ export default class FormValidator {
      * Vérifie si au moins un des champs de la catégorie est complété.
      * 
      * @param {NodeList} elts
+     * 
      * @return {Boolean}
      */
     oneFieldOfCategoryIsFilled(elts) {
@@ -124,21 +131,19 @@ export default class FormValidator {
     /**
      * Vérfifie si le champ est complété.
      * 
-     * @param {HTMLElement} fieldElt 
+     * @param {HTMLElement} fieldElt
+     * 
      * @return {Boolean}
      */
     isFilledField(fieldElt) {
-        if ((['text', 'number', 'date', 'select-one'].includes(fieldElt.type) && '' != fieldElt.value)
-            || ('checkbox' === fieldElt.type && true === fieldElt.checked)) {
-            return true
-        }
-        return false
+        return (fieldElt.type === 'checkbox' && fieldElt.checked === true) || fieldElt.value !== ''
     }
 
     /**
      * Met le champ en valide.
      * 
-     * @param {HTMLElement} fieldElt 
+     * @param {HTMLElement} fieldElt
+     * 
      * @return {Boolean} 
      */
     validField(fieldElt, addClassIsValid = true) {
@@ -153,8 +158,9 @@ export default class FormValidator {
     /**
      * Met le champ en invalide et indique un message d'erreur.
      * 
-     * @param {HTMLElement} fieldElt 
-     * @param {string} msg 
+     * @param {HTMLElement} fieldElt
+     * @param {string} msg
+     * 
      * @return {Boolean} 
      */
     invalidField(fieldElt, msg = 'Saisie incorrecte.') {
@@ -173,7 +179,8 @@ export default class FormValidator {
     /**
      * Crée l'élément avec l'information de l'erreur.
      * 
-     * @param {string} msg 
+     * @param {string} msg
+     * 
      * @return {HTMLDivElement}
      */
     createInvalidFeedbackElt(msg) {
@@ -188,44 +195,35 @@ export default class FormValidator {
     /**
      * Donne le label du champ.
      * 
-     * @param {HTMLElement} fieldElt 
+     * @param {HTMLElement} fieldElt
      */
     getlabel(fieldElt) {
-        const labelElt = fieldElt.parentNode.parentNode.querySelector('label')
-        if (labelElt) {
-            return labelElt
-        }
-        return fieldElt.parentNode
+        return fieldElt.parentNode.parentNode.querySelector('label') ?? fieldElt.parentNode
     }
 
     /**
      * Supprime l'élément d'invalidité du champ.
      * 
-     * @param {HTMLElement} labelElt 
+     * @param {HTMLElement} labelElt
      */
     removeInvalidFeedbackElt(labelElt) {
-        const invalidFeedbackElt = labelElt.querySelector('div[data-invalid]')
-        if (invalidFeedbackElt) {
-            invalidFeedbackElt.remove()
-        }
+        labelElt.querySelector('div[data-invalid]')?.remove()
     }
 
     /**
      * Renvoie le nombre de champs invalides.
      * 
-     * @return {Number}
+     * @return {number}
      */
     getNbErrors() {
         const invalidFields = this.containerElt.querySelectorAll('div[data-invalid]')
         const nbErrors = invalidFields.length
 
         if (nbErrors > 0) {
-            console.error(nbErrors + ' error' + (nbErrors > 1 ? 's' : '') + ' :')
-            invalidFields.forEach(field => {
-                console.error(field.parentElement.textContent)
-            })
+            console.error(nbErrors + ' error(s) :')
+            invalidFields.forEach(field => console.error(field.parentElement.textContent))
         }
-
+        
         return nbErrors
     }
 
@@ -239,7 +237,7 @@ export default class FormValidator {
 
     /**
      * Check if a field is valid or not.
-     * @param {HTMLElement} fieldElt 
+     * @param {HTMLElement} fieldElt
      * 
      * @param {string} msg 
      */
@@ -254,14 +252,15 @@ export default class FormValidator {
     /**
      * Check is a date input is valid.
      * 
-     * @param {HTMLInputElement} inputElt 
-     * @param {number} min 
-     * @param {number} max 
-     * @param {string} msg 
-     * @param {boolean} addClassIsValid 
-     * @return {Boolean} 
+     * @param {HTMLInputElement} inputElt
+     * @param {number} min
+     * @param {number} max
+     * @param {string} msg
+     * @param {boolean} addClassIsValid
+     * 
+     * @return {boolean} 
      */
-    checkDate(inputElt, min = -(365 * 99), max = (365 * 99), msg = 'Date invalide.', addClassIsValid = true) {
+     isValidDate(inputElt, min = -(365 * 99), max = (365 * 99), msg = 'Date invalide.', addClassIsValid = true) {
         const interval = Math.round((new Date(inputElt.value) - new Date()) / (24 * 3600 * 1000))
 
         if ((inputElt.value && !Number.isInteger(interval))
@@ -275,11 +274,12 @@ export default class FormValidator {
     /**
      * Check is a amount input is valid.
      * 
-     * @param {HTMLInputElement} inputElt 
-     * @param {number} min 
-     * @param {number} max 
-     * @param {boolean} resetValue 
-     * @param {string} msg 
+     * @param {HTMLInputElement} inputElt
+     * @param {number} min
+     * @param {number} max
+     * @param {boolean} resetValue
+     * @param {string} msg
+     * 
      * @return {Boolean} 
      */
     checkAmount(inputElt, min = 0, max = 99999, resetValue = false, msg = 'Montant invalide.') {
