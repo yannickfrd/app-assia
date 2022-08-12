@@ -12,7 +12,7 @@ class EvaluationEndToEndTest extends PantherTestCase
 
     public const BUTTON_SHOW = 'a.calendar-event';
 
-    public const FORM_RDV = 'form[name="evaluation"]';
+    public const FORM = 'form[name="evaluation"]';
     public const BUTTON_SAVE = 'button[name="send"]';
     public const BUTTON_DELETE = '#modal_delete_btn';
 

@@ -1,5 +1,7 @@
 <div id="modal_document" class="modal fade" tabindex="-1" role="dialog" 
-    aria-labelledby="documentModalLabel" aria-hidden="true">
+    aria-labelledby="documentModalLabel" aria-hidden="true"
+    data-confirm-before-close="{{ 'confirm_before_to_close_msg'|trans({}, 'forms') }}"
+>
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             {{ form_start(form_document, {
@@ -41,8 +43,8 @@
                 </div>
                 <div class="float-end">
                     <button type="button" class="btn btn-secondary shadow" data-bs-dismiss="modal">Fermer</button>
-                    <button type="submit" name="document_update" class="btn btn-primary shadow"
-                        data-action="update"><i class="fas fa-save me-2"></i>Mettre à jour</button>
+                    <button type="submit" name="document_save" class="btn btn-primary shadow"
+                        data-action="save"><i class="fas fa-save me-2"></i>Mettre à jour</button>
                 </div>
             </div>
             {{ form_row(form_document._token) }}

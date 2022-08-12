@@ -3,6 +3,7 @@ import FormValidator from "../utils/form/formValidator"
 import AlertMessage from "../utils/AlertMessage"
 import FieldDisplayer from "../utils/form/fieldDisplayer"
 import ContributionCalcul from "./ContributionCalcul"
+import DateFormatter from '../utils/date/DateFormatter'
 
 export default class PaymentForm {
 
@@ -37,16 +38,17 @@ export default class PaymentForm {
         this.commentExportInputElt = document.getElementById('payment_commentExport')
         this.infoPaymentElt = document.querySelector('[data-payment="info"]')
 
-        this.pdfBtnElt = this.formPaymentElt.querySelector('button[data-action="create_pdf"]')
-        this.mailBtnElt = this.formPaymentElt.querySelector('button[data-action="send_email"]')
-        this.deleteBtnElt = this.formPaymentElt.querySelector('button[data-action="delete"]')
-        this.saveBtnElt = this.formPaymentElt.querySelector('button[data-action="save"]')
-        this.editBtnElts = this.formPaymentElt.querySelectorAll('button[data-edit]')
+        this.btnExportPdfElt = this.formPaymentElt.querySelector('button[data-action="export_pdf"]')
+        this.btnSendmailElt = this.formPaymentElt.querySelector('button[data-action="send_email"]')
+        this.btnDeletelt = this.formPaymentElt.querySelector('button[data-action="delete"]')
+        this.btnSavelt = this.formPaymentElt.querySelector('button[data-action="save"]')
+        this.btnEditElts = this.formPaymentElt.querySelectorAll('button[data-edit]')
 
         this.btnConfirmElt = document.getElementById('modal_confirm_btn')
 
         this.formValidator = new FormValidator(this.formPaymentElt)
         this.contributionCalcul = new ContributionCalcul(this.formPaymentElt, this.afterCalculContribution.bind(this))
+        this.dateFormatter = new DateFormatter()
 
         this.payment = null
         this.isValid = true
@@ -77,22 +79,22 @@ export default class PaymentForm {
         this.toPayAmtInputElt.addEventListener('input', () => this.calculateAmountStillDue())
         this.paidAmtInputElt.addEventListener('input', () => this.calculateAmountStillDue())
 
-        this.saveBtnElt.addEventListener('click', e => {
+        this.btnSavelt.addEventListener('click', e => {
             e.preventDefault()
             this.tryToSave()
         })
 
-        this.deleteBtnElt.addEventListener('click', e => {
+        this.btnDeletelt.addEventListener('click', e => {
             e.preventDefault()
             this.paymentManager.showModalConfirm(this.payment.id)
         })
 
-        this.pdfBtnElt.addEventListener('click', e => {
+        this.btnExportPdfElt.addEventListener('click', e => {
             e.preventDefault()
             this.paymentManager.requestExportPdf(this.payment.id)
         })
         
-        this.mailBtnElt.addEventListener('click', e => {
+        this.btnSendmailElt.addEventListener('click', e => {
             e.preventDefault()
             this.paymentManager.requestSendEmail(this.payment.id)
         })
@@ -161,8 +163,8 @@ export default class PaymentForm {
             this.formPaymentElt.querySelector('#payment_noContribReason').value = payment.noContribReason ?? ''
         }
 
-        this.deleteBtnElt.classList.replace('d-none', 'd-block')
-        this.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'
+        this.btnDeletelt.classList.replace('d-none', 'd-block')
+        this.btnSavelt.querySelector('span').textContent = 'Mettre à jour'
 
         this.formPaymentElt.querySelector('#payment_contributionRate').value = payment.contributionRate
         this.formPaymentElt.querySelector('#payment_nbConsumUnits').value = payment.nbConsumUnits
@@ -172,7 +174,7 @@ export default class PaymentForm {
         this.checkResources()
 
         if (payment.id) {
-            this.editBtnElts.forEach(elt => {
+            this.btnEditElts.forEach(elt => {
                 elt.classList.remove('d-none')
             })
         }
@@ -185,10 +187,10 @@ export default class PaymentForm {
         this.formPaymentElt.action = this.paymentManager.pathCreate()
 
         this.checkType()
-        this.deleteBtnElt.classList.replace('d-block', 'd-none')
-        this.saveBtnElt.querySelector('span').textContent = 'Enregistrer'
+        this.btnDeletelt.classList.replace('d-block', 'd-none')
+        this.btnSavelt.querySelector('span').textContent = 'Enregistrer'
         document.getElementById('show_calcul_contribution_btn').classList.add('d-none')
-        this.editBtnElts.forEach(elt => elt.classList.add('d-none'))
+        this.btnEditElts.forEach(elt => elt.classList.add('d-none'))
     }
 
     /**
@@ -196,9 +198,9 @@ export default class PaymentForm {
      * @param {Object} payment
      */
     getInfoPaymentElt(payment) {
-        let htmlContent = `Créé le ${this.paymentManager.formatDatetime(payment.createdAt)} par ${payment.createdBy.fullname}`
+        let htmlContent = `Créé le ${this.dateFormatter.format(payment.createdAt)} par ${payment.createdBy.fullname}`
         if (payment.createdAt !== payment.updatedAt) {
-            htmlContent = htmlContent + `<br/> (modifié le ${this.paymentManager.formatDatetime(payment.updatedAt)} par ${payment.updatedBy.fullname})`
+            htmlContent = htmlContent + `<br/> (modifié le ${this.dateFormatter.format(payment.updatedAt)} par ${payment.updatedBy.fullname})`
         }
         return htmlContent
     }
@@ -213,7 +215,7 @@ export default class PaymentForm {
         })
         this.infoPaymentElt.innerHTML = ''
         this.checkResources()
-        this.editBtnElts.forEach(elt => elt.classList.add('d-none'))
+        this.btnEditElts.forEach(elt => elt.classList.add('d-none'))
     }
 
     /**

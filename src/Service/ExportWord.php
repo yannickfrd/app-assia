@@ -65,11 +65,13 @@ class ExportWord
      */
     public function download(): StreamedResponse
     {
+        $filename = $this->getFilename().'.docx';
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
 
         $response = new StreamedResponse();
         $response->headers->set('Content-Type', 'application/vnd.ms-word');
-        $response->headers->set('Content-Disposition', 'attachment;filename='.$this->getFilename().'.docx');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        $response->headers->set('Content-name', $filename);
         $response->setPrivate();
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);

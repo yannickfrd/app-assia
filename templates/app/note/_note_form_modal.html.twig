@@ -1,5 +1,7 @@
 <div id="modal_note" class="modal modal-fullscreen-sm-down fade" tabindex="-1" role="dialog"
-    aria-labelledby="modalNoteLabel" aria-hidden="true">
+    aria-labelledby="modalNoteLabel" aria-hidden="true"
+    data-confirm-before-close="{{ 'confirm_before_to_close_msg'|trans({}, 'forms') }}"
+>
     <div class="modal-dialog modal-dialog-fullscreen modal-xl" role="document">
         <div class="modal-content">
 
@@ -18,9 +20,9 @@
                 </div>
                 <div class="row mb-3">
                     <label class="col-form-label d-none d-sm-block col-sm-2 required" for="note_type">Type</label>
-                    <div class="col-6 col-sm-4">{{ form_widget(form.type) }}</div>
+                    <div class="col-6 col-sm-4">{{ form_widget(form.type, {attr: {'data-default-value': 1}}) }}</div>
                     <label class="col-form-label d-none d-sm-block col-sm-2 required" for="note_status">Statut</label>
-                    <div class="col-6 col-sm-4">{{ form_widget(form.status) }}</div>
+                    <div class="col-6 col-sm-4">{{ form_widget(form.status, {attr: {'data-default-value': 1}}) }}</div>
                 </div>
                 <div class="row mb-3">
                     <label class="col-form-label d-none d-sm-block col-sm-2" for="note_tags">Étiquettes</label>
@@ -48,7 +50,7 @@
                         title="Exporter la note au format PDF" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-file-pdf bg-danger fa-lg"></i><span class="d-none d-lg-inline ms-2">PDF</span>
                     </button>
-                    <div id="js-auto-save" class="text-secondary d-none py-1 ms-2">
+                    <div class="text-secondary ms-2 py-1 d-none" data-auto-saver="true">
                         <i class="fas fa-sync-alt me-2"></i>
                         <span class="d-none d-sm-inline">Sauv. auto.</span>
                     </div>

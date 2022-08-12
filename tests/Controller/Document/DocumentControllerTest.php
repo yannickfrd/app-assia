@@ -243,7 +243,7 @@ class DocumentControllerTest extends WebTestCase
         $crawler->clear();
         $crawler->addContent($this->client->getResponse()->getContent());
 
-        $this->client->submitForm('document_update', [
+        $this->client->submitForm('document_save', [
             'document[name]' => 'Document',
             'document[tags]' => ['1'],
         ]);
@@ -259,7 +259,7 @@ class DocumentControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->document->getId();
-        $this->client->request('GET', "/document/$id/delete");
+        $this->client->request('DELETE', "/document/$id/delete");
 
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 
@@ -271,7 +271,7 @@ class DocumentControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $documentId = $this->document->getId();
-        $this->client->request('GET', "/document/$documentId/delete");
+        $this->client->request('DELETE', "/document/$documentId/delete");
 
         // After delete a document
         $id = $this->supportGroup->getId();

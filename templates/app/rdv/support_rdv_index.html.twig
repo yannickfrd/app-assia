@@ -13,7 +13,7 @@
         {% include 'app/support/_partials/_support_nav.html.twig' %}
 
         <div class="row mb-2">
-            <div class="col-sm-4 count align-middle">
+            <div class="col-md-6 count align-middle">
                 <a href="{{ rdv_index ? path('calendar_show') : path('support_calendar_show', {id: support.id}) }}"
                 class="btn btn-primary shadow me-1"
                 title="Passer en vue agenda" data-bs-toggle="tooltip" data-bs-placement="bottom">
@@ -35,7 +35,7 @@
                     <span class="align-middle me-1">Résultat :</span>
                     <span class="align-middle" data-counter="rdv">{{ rdvs.getTotalItemCount|number }}</span>
             </div>
-            <div class="col-sm-8">
+            <div class="col-md-6">
                 <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
             </div>
         </div>

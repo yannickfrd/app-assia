@@ -41,7 +41,6 @@ export default class ExportManager extends AbstractManager {
      * @param {Object} response 
      */
      responseAjax(response) {
-        console.log(response)
         switch (response.action) {
             case 'export':
                 this.updateElt(response.export)

@@ -15,7 +15,7 @@ export default class AbstractManager {
      * @param {string |null} containerSelector // the selector of container's elements
      * @param {Object | null} modalOptions // options of modal
      */
-    constructor(objectName, containerSelector = null, modalOptions) {
+    constructor(objectName, containerSelector = null, modalOptions, modalConfirmSelector) {
         this.objectName = objectName
         this.containerElt = document.querySelector(containerSelector ?? `#container_${objectName}s`)
         this.form = null
@@ -42,6 +42,7 @@ export default class AbstractManager {
         this.requestShow = (id) => this.request('show', id, 'GET')
         this.requestDelete = (id) => this.request('delete', id, 'DELETE')
         this.requestRestore = (id) => this.request('restore', id, 'GET')
+
         // Paths
         this.pathCreate = (id) => this.getPath('create', id)
         this.pathEdit = (id) => this.getPath('edit', id)
@@ -49,7 +50,7 @@ export default class AbstractManager {
 
         this.counters = []
 
-        this.modalConfirmation = new ModalConfirmation('#modal_confirm', null, () => this.requestDelete(this.objectId))
+        this.modalConfirmation = new ModalConfirmation(modalConfirmSelector, null, () => this.requestDelete(this.objectId))
 
         this.#init()
     }
@@ -86,7 +87,7 @@ export default class AbstractManager {
      * @param {string} method
      */
      request(action, id, method = 'GET') {
-        // console.log(action, id)
+        // console.log(action, id, method)
         if (this.loader.isActive() === false) {
             this.ajax.send(method, this.getPath(action, id), this.responseAjax.bind(this))
         }
@@ -101,13 +102,14 @@ export default class AbstractManager {
      */
      getPath(action, id = null) {
         this.objectId = id ?? this.objectId
+
         const path = this.containerElt.getAttribute('data-path-' + action)
 
         if (!path) {
             throw new Error('No data-path-'  + action + ' in the container.')
         }
 
-        return path.replace('__id__', id)
+        return path.replace('__id__', this.objectId)
     }
 
     responseAjax(response) {
@@ -178,10 +180,10 @@ export default class AbstractManager {
             })
         })
         // Delete object
-        elt.querySelector(`[data-action="delete"]`)
+        elt.querySelector('[data-action="delete"]')
             ?.addEventListener('click', () => this.showModalConfirm(id))
         // Restore object
-        elt.querySelector(`[data-action="restore"]`)
+        elt.querySelector('[data-action="restore"]')
             ?.addEventListener('click', () => this.requestRestore(id))
 
         // Check if addionnals event listeners in the child class
@@ -284,10 +286,10 @@ export default class AbstractManager {
      * @param {Object} object
      */
      restoreElt(object) {
-        this.findElt(object.id)
+        this.deleteElt(object)
 
         new RedirectChecker(
-            document.querySelectorAll(`${this.containerElt} [data-${this.objectName}-id]`).length === 0,
+            this.containerElt.querySelectorAll(`[data-${this.objectName}-id]`).length === 0,
             null, 
             null, 
             'Vous allez être redirigé...'
@@ -309,6 +311,7 @@ export default class AbstractManager {
      * @returns {HTMLElement}
      */
      findElt(id) {
+        // console.log(id, this.objectName)
         const selector = `[data-${this.objectName}-id="${id}"]`
         const elt = this.containerElt.querySelector(selector)
 

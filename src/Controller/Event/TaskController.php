@@ -97,8 +97,8 @@ final class TaskController extends AbstractController
     ): JsonResponse {
         $task = new Task();
 
-        // Add SupportGroup to Task if id exists
-        if ($id) {
+        // Add SupportGroup to Task if ID exists
+        if (null !== $id) {
             /** @var SupportGroupRepository $supportGroupRepo */
             $supportGroupRepo = $em->getRepository(SupportGroup::class);
             $supportGroup = $supportGroupRepo->findSupportById($id);

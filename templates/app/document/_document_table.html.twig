@@ -53,9 +53,10 @@
 			data-container-tag="tr"
 			data-path-show="{{ path('document_show', {id: '__id__'}) }}" 
 			data-path-edit="{{ path('document_edit', {id: '__id__'}) }}"
-			data-path-delete="{{path('document_delete', {'id':'__id__'})}}"
-			data-path-download="{{ path('document_download', {id: '__id__'}) }}"
+			data-path-delete="{{path('document_delete', {id:'__id__'})}}"
+			data-path-restore="{{path('document_restore', {id:'__id__'})}}"
 			data-path-preview="{{ path('document_preview', {id: '__id__'}) }}"
+			data-path-download="{{ path('document_download', {id: '__id__'}) }}"
 		>
 			{% for document in documents %}
 				{{ include('app/document/_document_tr_component.html.twig') }}

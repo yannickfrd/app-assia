@@ -2,12 +2,12 @@ import {Modal} from 'bootstrap'
 
 export default class ModalConfirmation {
     /**
-     * @param {string} selector 
+     * @param {string | null} selector 
      * @param {string | null} buttonSelector 
      * @param {CallableFunction} callback 
      */
     constructor(modalSelector, buttonSelector, callback) {
-        this.modalConfirmElt = document.querySelector(modalSelector)
+        this.modalConfirmElt = document.querySelector(modalSelector ?? '#modal_confirm')
 
         if (!this.modalConfirmElt) {
             return
@@ -27,12 +27,12 @@ export default class ModalConfirmation {
     }
 
     /**
-     * @param {CallableFunction} callback 
+     * @param {CallableFunction} action 
      */
-    setNewCallback(callback) {
+    setNewAction(action) {
         this.btnConfirmElt.removeEventListener('click', this.callback)
         this.btnConfirmElt.addEventListener('click', () => callback())
-        this.callback = callback
+        this.callback = action
     }
 
     /**

@@ -29,18 +29,20 @@ export default class PaymentManager extends AbstractManager {
      * 
      * @param {Object} response 
      */
-     responseAjax(response) {    
+     responseAjax(response) {
         const payment = response.payment
+
+        if (payment !== undefined) {
+            this.checkActions(response, payment)
+        }
 
         switch (response.action) {
             case 'download':
-                return this.#getFile(response)
+                this.#updatePaymentPictoPdf()
+                return this.getFile(response.data)
             case 'send_receipt':
-                this.#updatePaymentPictoMail(payment)
-                break
+                return this.#updatePaymentPictoMail(payment)
         }
-
-        this.checkActions(response, payment)
 
         if (response.msg) {
             new AlertMessage(response.alert, response.msg)
@@ -104,23 +106,16 @@ export default class PaymentManager extends AbstractManager {
         }
     }
 
-    /**
-     * @param {Object} response
-     */
-    #getFile(response) {
+    #updatePaymentPictoPdf() {
         const pictoElt = this.findElt(this.objectId).querySelector('[data-action="export_pdf"] i')
-
         pictoElt.classList.replace('text-secondary', 'text-success')
-
-        this.ajax.showFile(response.data)
     }
 
     /**
      * @param {Object} payment
      */
-    #updatePaymentPictoMail(payment) {
+    #updatePaymentPictoMail(payment) {       
         const pictoElt = this.findElt(payment.id).querySelector('[data-action="send_email"] i')
-
         pictoElt.classList.replace('text-secondary', 'text-success')
     }
 

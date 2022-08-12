@@ -10,18 +10,19 @@ class TaskEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    public const CONTAINER = '#container-tasks';
-
     public const BUTTON_NEW = 'button[data-action="new_task"]';
-    public const FIRST_BUTTON_SHOW = 'button[data-action="edit"]';
-    public const FIRST_BUTTON_DELETE = 'button[data-action="delete"]';
-    public const FIRST_BUTTON_RESTORE = 'tr button[data-action="restore"]';
-    public const FIRST_CHECKBOX_TOGGLE_STATUS = 'input[data-action="toggle_status"]';
 
-    public const FORM_TASK = 'form[name="task"]';
-    public const MODAL_BUTTON_SAVE = '#modal_task button[data-action="save"]';
-    public const MODAL_BUTTON_CLOSE = '#modal_task button[data-action="close_modal"]';
-    public const MODAL_BUTTON_DELETE = '#modal_task button[data-action="delete"]';
+    public const CONTAINER = '#container_tasks';
+    public const FIRST_BUTTON_SHOW = self::CONTAINER.' button[data-action="show"]';
+    public const FIRST_BUTTON_DELETE = self::CONTAINER.' button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = self::CONTAINER.' tr button[data-action="restore"]';
+    public const FIRST_CHECKBOX_TOGGLE_STATUS = self::CONTAINER.' input[data-action="toggle_status"]';
+
+    public const MODAL = '#modal_task';
+    public const FORM = 'form[name="task"]';
+    public const MODAL_BUTTON_SAVE = self::MODAL.' button[data-action="save"]';
+    public const MODAL_BUTTON_CLOSE = self::MODAL.' button[data-action="close_modal"]';
+    public const MODAL_BUTTON_DELETE = self::MODAL.' button[data-action="delete"]';
 
     public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
@@ -65,7 +66,7 @@ class TaskEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Show tasks index page');
 
-        $this->clickElement('#support-tasks');
+        $this->clickElement('#support_tasks');
 
         $this->assertSelectorTextContains('h1', 'Tâches');
 
@@ -79,7 +80,7 @@ class TaskEndToEndTest extends PantherTestCase
         $this->clickElement(self::BUTTON_NEW);
         sleep(1); // animation effect
 
-        $this->setForm(self::FORM_TASK, [
+        $this->setForm(self::FORM, [
             'task[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'task[_endDate]' => (new \DateTime())->modify('+1 week')->format('d/m/Y'),
             'task[_endTime]' => '16:00',
@@ -104,7 +105,7 @@ class TaskEndToEndTest extends PantherTestCase
         $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(1); // animation effect
 
-        $this->setForm(self::FORM_TASK, [
+        $this->setForm(self::FORM, [
             'task[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'task[content]' => $this->faker->paragraphs(1),
             'task[tags]' => [1, 2],

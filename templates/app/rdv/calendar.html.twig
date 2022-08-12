@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% set alert_prototype = true %}
+
 {% block title %}Rendez-vous{% endblock %}
 
 {% block stylesheets %}
@@ -72,7 +74,6 @@
 
             <div id="container_events" class="calendar-table calendar-{{ calendar.weeks }}weeks"
                 data-prototype="{{ include('app/rdv/_rdv_event_component.html.twig', {rdv: form_rdv.vars.value})|e }}"
-                data-container-tag="div"
                 data-path-create="{{ support is defined ? path('support_rdv_create', {id: support.id}) : path('rdv_create') }}"
                 data-path-show="{{ path('rdv_show', {id: '__id__'}) }}"
                 data-path-edit="{{ path('rdv_edit', {id: '__id__'}) }}"

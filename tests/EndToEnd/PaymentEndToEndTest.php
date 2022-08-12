@@ -19,11 +19,13 @@ class PaymentEndToEndTest extends PantherTestCase
     public const FIRST_BUTTON_SHOW = 'tr button[data-action="show"]';
     public const FIRST_BUTTON_DELETE = 'tr button[data-action="delete"]';
     public const FIRST_BUTTON_RESTORE = 'tr button[data-action="restore"]';
-
-    public const FORM_PAYMENT = 'form[name="payment"]';
-    public const MODAL_BUTTON_SAVE = 'button[data-action="save"]';
-    public const MODAL_BUTTON_CLOSE = 'button[data-action="close"]';
-    public const BUTTON_CALCUL_CONTRIBUTION = '#calcul_contribution_btn';
+    
+    public const MODAL = '#modal_payment';
+    public const FORM = 'form[name="payment"]';
+    public const MODAL_BUTTON_SAVE = self::MODAL.' button[data-action="save"]';
+    public const MODAL_BUTTON_CLOSE = self::MODAL.' button[data-action="close"]';
+    public const MODAL_BUTTON_DELETE = self::MODAL.' button[data-action="delete"]';
+    public const BUTTON_CALCUL_CONTRIBUTION = self::MODAL.' #calcul_contribution_btn';
 
     public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
@@ -80,7 +82,7 @@ class PaymentEndToEndTest extends PantherTestCase
         $this->clickElement(self::BUTTON_NEW);
         sleep(1); // transition delay
 
-        $this->setForm(self::FORM_PAYMENT, [
+        $this->setForm(self::FORM, [
             'payment[type]' => Payment::CONTRIBUTION,
         ]);
 
@@ -89,7 +91,7 @@ class PaymentEndToEndTest extends PantherTestCase
         $this->clickElement(self::BUTTON_CALCUL_CONTRIBUTION);
         sleep(2); // transition delay
 
-        $this->clickElement('#contribution_calcul_modal button[type="button"]');
+        $this->clickElement('#contribution_calcul_modal button[data-action="close"]');
         sleep(2); // transition delay
 
         $this->clickElement(self::MODAL_BUTTON_SAVE);
@@ -109,7 +111,7 @@ class PaymentEndToEndTest extends PantherTestCase
 
         $year = (new \DateTime())->format('Y');
 
-        $this->setForm(self::FORM_PAYMENT, [
+        $this->setForm(self::FORM, [
             'payment[startDate]' => "01/01/$year",
             'payment[endDate]' => "31/01/$year",
             'payment[resourcesAmt]' => 1500,
@@ -134,7 +136,7 @@ class PaymentEndToEndTest extends PantherTestCase
         $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(1); // transition delay
 
-        $this->clickElement(self::FORM_PAYMENT.' '.self::FIRST_BUTTON_DELETE);
+        $this->clickElement(self::MODAL_BUTTON_DELETE);
         sleep(1); // transition delay
 
         $this->clickElement(self::MODAL_BUTTON_CONFIRM);

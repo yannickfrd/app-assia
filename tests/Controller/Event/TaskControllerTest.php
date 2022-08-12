@@ -218,7 +218,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('edit', $content['action']);
+        $this->assertSame('update', $content['action']);
         $this->assertSame('Task edit', $content['task']['title']);
     }
 

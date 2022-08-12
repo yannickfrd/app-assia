@@ -74,7 +74,7 @@ class ExportControllerTest extends WebTestCase
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
 
         // Delete the export
-        $this->client->request('GET', '/export/1/delete');
+        $this->client->request('DELETE', '/export/1/delete');
 
         $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);

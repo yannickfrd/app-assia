@@ -1,80 +1,43 @@
+import AbstractForm from '../utils/form/AbstractForm'
 import NoteManager from './NoteManager'
-import AlertMessage from '../utils/AlertMessage'
-import AutoSaver from '../utils/form/autoSaver'
-import ParametersUrl from '../utils/parametersUrl'
 import CkEditor from '../utils/ckEditor'
-import TagsManager from '../tag/TagsManager'
-import SelectManager from '../utils/form/SelectManager'
+import AutoSaver from '../utils/form/autoSaver'
+import AlertMessage from '../utils/AlertMessage'
 
-export default class NoteForm {
+export default class NoteForm extends AbstractForm 
+{
     /**
-     * @param {NoteManager} noteManager
+     * @param {NoteManager} manager
      */
-    constructor(noteManager) {
-        this.noteManager = noteManager
-        this.loader = noteManager.loader
-        this.ajax = noteManager.ajax
-        this.noteModalElt = noteManager.modalElt
-        this.noteModal = noteManager.objectModal
-        this.responseAjax = this.noteManager.responseAjax.bind(this.noteManager)
+    constructor(manager) {
+        super(manager)
 
-        this.parametersUrl = new ParametersUrl()
+        this.noteModalElt = manager.modalElt
+
+        this.contentElt = this.formElt.querySelector('#note_content')
+        this.btnExportWordElt = this.formElt.querySelector('[data-action="export_word"]')
+        this.btnExportPdfElt = this.formElt.querySelector('[data-action="export_pdf"]')
+        this.autoSaverElt = this.noteModalElt.querySelector('[data-auto-saver]')
+
         this.ckEditor = new CkEditor('#editor')
-
-        this.formNoteElt = this.noteModalElt.querySelector('form[name=note]')
-        this.contentElt = this.noteModalElt.querySelector('#note_content')
-        this.btnExportWordElt = this.noteModalElt.querySelector('[data-action="export_word"]')
-        this.btnExportPdfElt = this.noteModalElt.querySelector('[data-action="export_pdf"]')
-        this.btnDeleteElt = this.noteModalElt.querySelector('[data-action="delete"]')
-        
-        this.autoSaveElt = document.getElementById('js-auto-save')
-
-        this.tagsManager = new TagsManager()
-        this.tagsSelectManager = new SelectManager('#note_tags')
+        this.autoSaver = new AutoSaver('#editor', e => this.autoSave(e), 60, 20)
 
         this.init()
-        this.autoSaver = new AutoSaver('#editor', this.autoSave.bind(this), 60, 20)
     }
 
     init() {
-        this.noteModalElt.querySelector('button[data-action="save"]')
-            .addEventListener('click', e => this.#requestSave(e))
-
         this.noteModalElt.querySelector('button[data-action="close"]')
             .addEventListener('click', e => this.#requestClose(e))
 
-        this.btnDeleteElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.noteManager.showModalConfirm()
-        })
-
         this.btnExportWordElt.addEventListener('click', e => {
             e.preventDefault()
-            this.noteManager.requestExportWord()
+            this.manager.requestExportWord()
         })
 
         this.btnExportPdfElt.addEventListener('click', e => {
             e.preventDefault()
-            this.noteManager.requestExportPdf()
+            this.manager.requestExportPdf()
         })
-
-        this.noteModalElt.addEventListener('mousedown', e => {
-            if (e.target === this.noteModalElt) {
-                this.tryCloseModal(e)
-            }
-        })
-        // this.confirmModalElt.querySelector('#modal_confirm_btn')
-        //     .addEventListener('click', () => this.noteModal.hide())
-        //     this.ajax.send('GET', this.btnDeleteElt.dataset.pathDelete, this.responseAjax)
-    }
-
-    /**
-     * @param {Event} e 
-     */
-    #requestSave(e) {
-        e.preventDefault()
-        this.autoSaver.clear()
-        this.requestToSave()
     }
 
     /**
@@ -87,23 +50,15 @@ export default class NoteForm {
     }
 
     new() {
-        this.#resetForm()
-    }
+        this.resetForm()
 
-    #resetForm() {
-        this.noteModalElt.querySelector('form').action = this.noteManager.pathCreate(this.noteManager.supportId)
-        this.noteModalElt.querySelector('#note_title').value = ''
-        this.contentElt.textContent = ''
-        this.noteModalElt.querySelector('#note_type').value = 1
-        this.noteModalElt.querySelector('#note_status').value = 1
+        this.formData = new FormData(this.formElt)
+
+        this.formElt.querySelector('input').focus()
 
         this.ckEditor.setData('')
 
-        this.btnDeleteElt.classList.add('d-none')
-        this.btnExportWordElt.classList.add('d-none')
-        this.btnExportPdfElt.classList.add('d-none')
-
-        this.tagsSelectManager.clearItems()
+        this.hideButtons()
 
         this.autoSaver.init()
     }
@@ -112,76 +67,87 @@ export default class NoteForm {
      * @param {Object} note
      */
     show(note) {
-        this.initModal(note)
+        this.hydrateForm(note)
 
-        this.noteModalElt.querySelector('#note_title').value = note.title ?? ''
-        this.noteModalElt.querySelector('#note_type').value = note.type ?? ''
-        this.noteModalElt.querySelector('#note_status').value = note.status ?? ''
-        this.contentElt.textContent = note.content ?? ''
-        this.ckEditor.setData(this.contentElt.textContent)
+        this.formData = new FormData(this.formElt)
+        
+        this.focusFirstInput()
 
-        const tagsIds = []
-        note.tags.forEach(tags => tagsIds.push(tags.id))
-        this.tagsSelectManager.updateItems(tagsIds)
+        this.ckEditor.setData(note.content)  
 
-        this.loader.off()
-    }
-
-    /**
-     * @param {Object} note
-     */
-    initModal(note) {
-        this.noteModalElt.querySelector('form').action = this.noteManager.pathEdit(note.id)
-
-        this.btnDeleteElt.classList.remove('d-none')
-
-        this.btnExportWordElt.classList.remove('d-none')
-        this.btnExportPdfElt.classList.remove('d-none')
+        this.displayButtons()
 
         this.autoSaver.init()
     }
 
     /**
-     * Envoie la requête ajax pour sauvegarder la note.
+     * @param {Object} note
      */
-    requestToSave() {
+    afterCreate(note) {
+        this.formElt.action = this.manager.pathEdit(note.id)
+
+        this.displayButtons()
+    }
+
+    /**
+     * Try to save the note by Ajax request.
+     */
+    requestToSave(e) {
+        e.preventDefault()
+
         if (this.loader.isActive()) {
             return
         }
+
+        this.autoSaver.clear()
 
         if (this.ckEditor.getData() === '') {
             return new AlertMessage('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
         }
 
-        if (this.ckEditor.getData() !== this.contentElt.textContent) {
-            this.contentElt.textContent = this.ckEditor.getData()
-        }
+        this.contentElt.value = this.ckEditor.getData()
 
-        if (!this.autoSaver.active) {
-            this.loader.on()
-        }
+        this.formData = new FormData(this.formElt)
 
-        const url = this.formNoteElt.action
-        this.ajax.send('POST', url, this.responseAjax, new FormData(this.formNoteElt))
+        this.ajax.send('POST', this.formElt.action, this.responseAjax, this.formData)
     }
 
-    autoSave() {
-        this.autoSaveElt.classList.add('d-block')
+    autoSave(e) {
+        this.autoSaverElt.classList.remove('d-none')
+
         setTimeout(() => {
-            this.autoSaveElt.classList.remove('d-block')
+            this.autoSaverElt.classList.add('d-none')
             this.autoSaver.clear()
-        }, 4000)
-        this.requestToSave()
+        }, 3000)
+
+        this.requestToSave(e)
     }
 
     /**
-     * Vérifie si des modifications ont été apportées avant la fermeture de la modal.
+     * Check if the form has modifications before to close modal.
      */
-    tryCloseModal() {
-        if (this.ckEditor.getData() === this.contentElt.textContent) {
-            return this.noteModal.hide()
+     tryCloseModal() {
+        if (this.ckEditor.getData() === this.contentElt.value
+            && false === this.formDataIsChanged() 
+            || window.confirm(this.modalElt.dataset.confirmBeforeClose)
+        ) {
+            this.manager.objectModal.hide()
         }
+    }
 
-        this.noteManager.confirmModal.show()
+    /**
+     * Display buttons to export to Word or PDF
+     */
+    displayButtons() {
+        this.btnExportWordElt.classList.remove('d-none')
+        this.btnExportPdfElt.classList.remove('d-none')
+    }
+
+    /**
+     * Hide buttons to export to Word or PDF
+     */
+    hideButtons() {
+        this.btnExportWordElt.classList.add('d-none')
+        this.btnExportPdfElt.classList.add('d-none')
     }
 }

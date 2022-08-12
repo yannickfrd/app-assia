@@ -6,6 +6,7 @@ namespace App\Controller\Event;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Event\Rdv;
+use App\Entity\Support\SupportGroup;
 use App\Form\Event\RdvSearchType;
 use App\Form\Event\RdvType;
 use App\Form\Event\SupportRdvSearchType;
@@ -104,19 +105,23 @@ final class RdvController extends AbstractController
         EntityManagerInterface $em,
         ApiCalendarRouter $calendarRouter,
         TranslatorInterface $translator,
-        SupportGroupRepository $supportGroupRepo,
         ?int $id,
     ): JsonResponse {
-        $form = $this->createForm(RdvType::class, $rdv = new Rdv())
-            ->handleRequest($request);
+        $rdv = new Rdv();
 
-        // Add SupportGroup to Rdv if id exists
+        // Add SupportGroup to Rdv if ID exists
         if (null !== $id) {
+            /** @var SupportGroupRepository $supportGroupRepo */
+            $supportGroupRepo = $em->getRepository(SupportGroup::class);
             $supportGroup = $supportGroupRepo->findSupportById($id);
+
             $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
             $rdv->setSupportGroup($supportGroup);
         }
+
+        $form = $this->createForm(RdvType::class, $rdv)
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             RdvManager::addonBeforeFlush($rdv);
@@ -149,7 +154,6 @@ final class RdvController extends AbstractController
 
         return $this->json([
             'action' => 'show',
-            'canEdit' => $this->isGranted('EDIT', $rdv),
             'rdv' => $rdv,
         ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
     }
@@ -169,13 +173,11 @@ final class RdvController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $rdv);
 
-        $supportGroup = $rdv->getSupportGroup();
-
         $form = $this->createForm(RdvType::class, $rdv)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            RdvManager::addonBeforeFlush($rdv, $form, $supportGroup);
+            RdvManager::addonBeforeFlush($rdv);
 
             $em->flush();
 

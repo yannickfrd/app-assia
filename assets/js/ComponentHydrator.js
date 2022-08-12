@@ -25,14 +25,14 @@ export default class ComponentHydrator {
             const key = elt.dataset.objectKey
             const value = object[key + 'ToString'] ?? object[key]
     
-            console.log(key, value, typeof value)
+            // console.log(key, value, typeof value)
 
             if (key.endsWith('Amt') && typeof value === 'number') {
                 return elt.textContent = this.stringFormatter.formatAmount(value)
             }
-
-            if (typeof value === 'string' && value.endsWith('+00:00')) {
-                return elt.textContent = this.dateFormatter.format(value,  value.endsWith('T00:00:00+00:00') ? 'date' : 'datetime')
+           
+            if (typeof value === 'string' && value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\+(\d{2}):(\d{2})$/)) {
+                return elt.textContent = this.dateFormatter.format(value)
             }
 
             if (elt.type === 'checkbox') {
@@ -55,7 +55,7 @@ export default class ComponentHydrator {
                 return elt.textContent = object.supportGroup.service.name
             }
 
-            if ((key === 'createdBy' || key === 'updatedBy') && value instanceof Object) {
+            if ((key === 'createdBy' || key === 'updatedBy') && value instanceof Object && value.fullname) {
                 return elt.textContent = value.fullname
             }
 

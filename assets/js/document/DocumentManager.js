@@ -9,7 +9,7 @@ import AlertMessage from '../utils/AlertMessage'
 export default class DocumentManager extends AbstractManager {
 
     constructor() {
-        super('document')
+        super('document', null, {backdrop: 'static', keyboard: false})
 
         // Additionnal requests
         this.requestDownload = (id) => this.request('download', id)
@@ -100,7 +100,8 @@ export default class DocumentManager extends AbstractManager {
      * @param {HTMLTableRowElement} trElt 
      */
      extraListenersToElt(trElt) {
-         const id = trElt.dataset.documentId
+        const id = trElt.dataset.documentId
+        
         // Download document
         trElt.querySelector('[data-action="download"]').addEventListener('click', () => this.requestDownload(id))
         // Preview document
@@ -110,6 +111,13 @@ export default class DocumentManager extends AbstractManager {
             }
             this.requestPreview(id)
         })
+
+        // Add id to checkbox
+        const checkboxElt = trElt.querySelector('input[data-checkbox]')
+
+        if (!checkboxElt.dataset.checkbox) {
+            checkboxElt.dataset.checkbox = id
+        }
     }
 
     /**

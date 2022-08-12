@@ -5,6 +5,7 @@ export default class AlertMessage {
 
     constructor(alert, message, delay, autohide) {
         this.alertContainerElt = document.querySelector('.toast-container')
+        this.alertPrototype = this.alertContainerElt.dataset.prototype
         this.alert = alert ?? 'info'
         this.message = message
         this.delay = delay ??  8 * 1000
@@ -14,10 +15,14 @@ export default class AlertMessage {
     }
 
     #init() {
-        const wrapper = document.createElement('div')
-        wrapper.innerHTML = this.alertContainerElt.dataset.prototype
-        this.alertElt = wrapper.firstChild
+        if (!this.alertPrototype) {
+            throw new Error('No alert prototype!')
+        }
 
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = this.alertPrototype
+        this.alertElt = wrapper.firstChild
+        
         this.#hydrateAlertElt()
 
         this.toast = new Toast( this.alertElt)

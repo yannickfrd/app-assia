@@ -11,14 +11,17 @@ class RdvEndToEndTest extends PantherTestCase
     use AppPantherTestTrait;
 
     public const BUTTON_NEW = 'button[data-action="new_rdv"]';
-    public const FIRST_BUTTON_SHOW = 'a.calendar-event';
+
+    public const CONTAINER = '#container_rdvs';
+    public const FIRST_BUTTON_SHOW = '[data-action="show"]';
     public const FIRST_BUTTON_DELETE = 'tr button[data-action="delete"]';
     public const FIRST_BUTTON_RESTORE = 'tr button[data-action="restore"]';
 
-    public const FORM_RDV = 'form[name="rdv"]';
-    public const MODAL_BUTTON_SAVE = '#modal_rdv button[data-action="save"]';
-    public const MODAL_BUTTON_CLOSE = '#modal_rdv button[data-action="close_modal"]';
-    public const MODAL_BUTTON_DELETE = '#modal_rdv button[data-action="delete"]';
+    public const MODAL = '#modal_rdv';
+    public const FORM = 'form[name="rdv"]';
+    public const MODAL_BUTTON_SAVE = self::MODAL.' button[data-action="save"]';
+    public const MODAL_BUTTON_CLOSE = self::MODAL.' button[data-action="close_modal"]';
+    public const MODAL_BUTTON_DELETE = self::MODAL.' button[data-action="delete"]';
 
     public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
@@ -79,7 +82,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->client->waitFor(self::MODAL_BUTTON_SAVE);
         sleep(1); // animation effect
 
-        $this->setForm(self::FORM_RDV, [
+        $this->setForm(self::FORM, [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'start' => '10:30',
             'end' => '12:30',
@@ -104,7 +107,7 @@ class RdvEndToEndTest extends PantherTestCase
 
         $this->client->waitFor(self::MODAL_BUTTON_SAVE);
 
-        $this->setForm(self::FORM_RDV, [
+        $this->setForm(self::FORM, [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'rdv[tags]' => [1, 2],
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),

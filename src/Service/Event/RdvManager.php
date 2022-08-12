@@ -8,7 +8,6 @@ use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Form\FormInterface;
 
 class RdvManager
 {

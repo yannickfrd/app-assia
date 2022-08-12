@@ -257,7 +257,7 @@ class PaymentControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->fixtures['john_user']);
 
-        $this->client->request('GET', "/payment/{$this->payment->getId()}/delete");
+        $this->client->request('DELETE', "/payment/{$this->payment->getId()}/delete");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('delete', $content['action']);
@@ -268,7 +268,7 @@ class PaymentControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $paymentId = $this->payment->getId();
-        $this->client->request('GET', "/payment/$paymentId/delete");
+        $this->client->request('DELETE', "/payment/$paymentId/delete");
 
         // After delete a payment
         $id = $this->supportGroup->getId();

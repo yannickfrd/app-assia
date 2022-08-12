@@ -18,7 +18,7 @@ class ApiCalendarRouter
     {
         $urls = [];
 
-        if('delete' === $action) {
+        if ('delete' === $action) {
             if (null !== $rdv->getGoogleEventId()) {
                 $urls['google'] = $this->router->generate('delete_event_google_calendar', [
                     'eventId' => $rdv->getGoogleEventId(),

@@ -40,6 +40,21 @@ export default class NoteManager extends AbstractManager  {
         this.form.autoSaver.clear()
     }
 
+    /**
+     * Addionnal event listeners to the object element.
+     * 
+     * @param {HTMLTableRowElement} trElt 
+     */
+     extraListenersToElt(trElt) {
+        const id = trElt.dataset.noteId
+        // Export to Word
+        trElt.querySelector('[data-action="export_word"]')
+            ?.addEventListener('click', () => this.requestExportWord(id))
+        // Send to PDF
+        trElt.querySelector('[data-action="export_pdf"]')
+            ?.addEventListener('click', () => this.requestExportPdf(id))
+    }
+
     extraUpdatesElt(note, noteElt) {
         const content = this.form.ckEditor.getData().replace(/(<([^>]+)>)/gi, ' ')
 
@@ -48,6 +63,7 @@ export default class NoteManager extends AbstractManager  {
             this.findEltByDataObjectKey(noteElt, 'content').innerHTML = new StringFormatter().slice(content, 600)
             if (note.createdAtToString === note.updatedAtToString) {
                 this.findEltByDataObjectKey(noteElt, 'createdBy').innerHTML =  note.updatedByToString
+                this.form.afterCreate(note)
             } else {
                 this.findEltByDataObjectKey(noteElt, 'updateInfo').classList.remove('d-none')
             }

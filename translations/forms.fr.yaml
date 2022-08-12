@@ -6,6 +6,7 @@ City: Ville
 Coefficient: Coefficient du suivi
 Color: Couleur
 Comment location: Complément adresse
+confirm_before_to_close_msg: "Attention, vous n'avez pas enregistré les modifications. \nFermer sans sauvegarder ?"
 Confirm password: Confirmation du mot de passe
 ConfirmPassword: Confirmation du mot de passe
 Confirm new password: Confirmation nouveau mot de passe

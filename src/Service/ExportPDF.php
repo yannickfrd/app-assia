@@ -87,9 +87,12 @@ class ExportPDF
      */
     public function download(): StreamedResponse
     {
+        $filename = $this->getFilename().'.pdf';
+
         $response = new StreamedResponse();
         $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition', 'attachment;filename='.$this->getFilename().'.pdf');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        $response->headers->set('Content-name', $filename);
         $response->setPrivate();
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);

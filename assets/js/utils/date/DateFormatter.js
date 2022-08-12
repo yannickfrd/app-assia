@@ -42,7 +42,7 @@ export default class DateFormatter {
     /**
      * Return a locale formated date from a string date.
      * 
-     * @param {string} date
+     * @param {Date | string} date
      * @param {string} type
      * @param {string} separator
      * @param {string} locale
@@ -55,6 +55,10 @@ export default class DateFormatter {
         }
 
         if (!(date instanceof Date)) {
+            if (date.includes('T00:00:00')) {
+                type = 'date'
+            }
+
             date = new Date(date)
         }
 

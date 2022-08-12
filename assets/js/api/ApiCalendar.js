@@ -1,16 +1,22 @@
-import Ajax from "../utils/ajax";
-import AlertMessage from "../utils/AlertMessage";
+import Ajax from "../utils/ajax"
+import AlertMessage from "../utils/AlertMessage"
+import RdvModel from "../event/rdv/model/RdvModel"
+import {Modal} from "bootstrap"
+import RdvForm from "../event/rdv/RdvForm"
 
 export default class ApiCalendar {
-    constructor() {
+    /**
+     * @param {RdvForm} rdvForm 
+     */
+    constructor(rdvForm) {
+        this.initRdv = () => rdvForm.initRdv
+        this.googleCalendarCheckbox = rdvForm.googleCalendarCheckbox
+        this.outlookCalendarCheckbox = rdvForm.outlookCalendarCheckbox
+
         this.ajax = new Ajax
 
-        this.modalRdvElt = document.getElementById('modal_rdv')
-        this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
-        this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button[data-action="delete"]')
-
-        this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[googleCalendar]"]')
-        this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[outlookCalendar]"]')
+        this.modalElt = document.querySelector('#update_api_modal')
+        this.updateModal = new Modal(this.modalElt)
 
         this.init()
     }
@@ -25,21 +31,76 @@ export default class ApiCalendar {
     }
 
     /**
+     * 
+     * @param {Object} response 
+     */
+     checkResponse(response) {
+        const rdv = response.rdv
+        const apiUrls = response.apiUrls
+
+        switch (response.action) {
+            case 'create':
+                this.addEvent(rdv, apiUrls)
+                break
+            case 'update':
+                this.updateEvent(rdv, apiUrls)
+                break
+        }
+    }
+
+    /**
      * Allows to pre-fill the form automatically on Google and Outlook calendars.
      * And open a new tab.
-     * @param {RdvModel} rdvMdl
-     * @param {Object} api
+     * 
+     * @param {Object} rdv
+     * @param {Object} apiUrls
      */
-    addEvent(rdvMdl, api) {
-        Object.keys(api).forEach(apiName => {
-            rdvMdl.apiName = apiName
+    addEvent(rdv, apiUrls) {
+        const rdvModel = new RdvModel(rdv)
 
-            window.open(rdvMdl.url, '_blank')
+        Object.keys(apiUrls).forEach(apiName => {
+            rdvModel.apiName = apiName
+
+            window.open(rdvModel.url, '_blank')
         })
     }
 
     /**
+     * @param {Object} rdv
+     * @param {Object} apiUrls
+     */
+     updateEvent(rdv, apiUrls) {
+        const rdvModel = new RdvModel(rdv)
+
+        if ((this.googleCalendarCheckbox.checked && this.initRdv().googleEventId === null)
+            || (this.outlookCalendarCheckbox.checked && this.initRdv().outlookEventId === null)
+            || (rdvModel.isDifferent(this.initRdv()) && (this.googleCalendarCheckbox.checked
+                || this.outlookCalendarCheckbox.checked))
+        ) {
+            this.updateModal.show()
+
+            const listApis = () => {
+                let list = {}
+
+                if (this.googleCalendarCheckbox.checked) {
+                    list.google = apiUrls.google
+                }
+                if (this.outlookCalendarCheckbox.checked) {
+                    list.outlook = apiUrls.outlook
+                }
+
+                return Object.keys(list).length === 0 ? apiUrls : list
+            }
+
+            this.modalElt.querySelector('[data-action="confirm"]').addEventListener('click', () => {
+                this.addEvent(rdvModel, listApis())
+            }, {once: true})
+        }
+    }
+
+    /**
      * Executes the requested actions
+     * 
      * @param {string} action
      * @param {Object} apiUrls
      */
@@ -51,13 +112,13 @@ export default class ApiCalendar {
             switch (action) {
                 case 'update':
                     method = 'PUT'
-                    break;
+                    break
                 case 'delete':
                     if (!this.calendarIsChecked(apiName)) {
-                        url = false;
+                        url = false
                     }
                     method = 'DELETE'
-                    break;
+                    break
             }
 
             if (url) {
@@ -68,6 +129,7 @@ export default class ApiCalendar {
 
     /**
      * Get the answer back
+     * 
      * @param {Object} data
      */
     responseAjax(data) {

@@ -10,18 +10,18 @@ class NoteEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    public const CONTAINER_NOTES = '#container_notes';
+    public const BUTTON_NEW_NOTE = 'button[data-action="new_note"]';
 
-    public const BUTTON_NEW_NOTE = '#modal_note button[data-action="new_note"]';
+    public const CONTAINER = '#container_notes';
+    public const FIRST_BUTTON_SHOW = self::CONTAINER.' [data-action="show"]';
+    public const FIRST_BUTTON_DELETE = self::CONTAINER.' button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = self::CONTAINER.' button[data-action="restore"]';
 
-    public const FORM_NOTE = 'form[name="note"]';
-    public const MODAL_BUTTON_SAVE = '#modal_note button[data-action="save"]';
-    public const MODAL_BUTTON_CLOSE = '#modal_note button[data-action="close"]';
-    public const MODAL_BUTTON_DELETE = '#modal_note button[data-action="delete"]';
-
-    public const NOTES_TABLE = '#table_notes';
-    public const FIRST_BUTTON_SHOW = '#table_notes a[data-action="show"]';
-    public const FIRST_BUTTON_RESTORE = 'button[data-action="restore"]';
+    public const MODAL = '#modal_note';
+    public const FORM = 'form[name="note"]';
+    public const MODAL_BUTTON_SAVE = self::MODAL.' button[data-action="save"]';
+    public const MODAL_BUTTON_CLOSE = self::MODAL.' button[data-action="close"]';
+    public const MODAL_BUTTON_DELETE = self::MODAL.' button[data-action="delete"]';
 
     public const MODAL_CONFIRM = '#modal_confirm';
     public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
@@ -77,9 +77,9 @@ class NoteEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Show the notes page');
 
-        $this->clickElement('#support-notes');
+        $this->clickElement('#support_notes');
 
-        $this->client->waitFor(self::CONTAINER_NOTES);
+        $this->client->waitFor(self::CONTAINER);
         $this->assertSelectorTextContains('h1', 'Notes');
     }
 
@@ -89,7 +89,7 @@ class NoteEndToEndTest extends PantherTestCase
 
         $this->clickElement('a#view_table');
 
-        $this->client->waitFor(self::CONTAINER_NOTES.'.table-responsive');
+        $this->client->waitFor(self::CONTAINER);
         $this->assertSelectorTextContains('h1', 'Notes');
     }
 
@@ -100,7 +100,7 @@ class NoteEndToEndTest extends PantherTestCase
         $this->clickElement(self::BUTTON_NEW_NOTE);
         sleep(1); // transition delay
 
-        $this->setForm(self::FORM_NOTE, [
+        $this->setForm(self::FORM, [
             'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
         ]);
 
@@ -111,6 +111,8 @@ class NoteEndToEndTest extends PantherTestCase
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
         $this->clickElement(self::MODAL_BUTTON_CLOSE);
+
+        $this->acceptWindowConfirm();
     }
 
     private function createNote(): void
@@ -126,13 +128,14 @@ class NoteEndToEndTest extends PantherTestCase
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
         $this->clickElement(self::MODAL_BUTTON_CLOSE);
+        sleep(1);
     }
 
     private function editNote(): void
     {
         $this->outputMsg('Edit a note by card-view');
 
-        $this->clickElement(self::CONTAINER_NOTES.' div[data-note-id]');
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
 
         $this->setNoteForm();
 
@@ -147,10 +150,11 @@ class NoteEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a note by modal');
 
-        $this->clickElement(self::CONTAINER_NOTES.' div[data-note-id]');
+        $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(1); // transition delay
-        $this->client->waitFor(self::MODAL_CONFIRM);
-        $this->clickElement('#modal_delete_btn');
+
+        $this->client->waitFor(self::MODAL);
+        $this->clickElement(self::MODAL_BUTTON_DELETE);
         sleep(1); // transition delay
 
         $this->clickElement(self::MODAL_BUTTON_CONFIRM);
@@ -198,7 +202,7 @@ class NoteEndToEndTest extends PantherTestCase
         $this->clickElement('label[for="deleted_deleted"]');
         $this->clickElement('button[id="search"]');
 
-        $this->client->waitFor(self::CONTAINER_NOTES);
+        $this->client->waitFor(self::CONTAINER);
 
         $this->restoreNote();
     }
@@ -207,7 +211,7 @@ class NoteEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a note by table-view');
 
-        $this->clickElement(self::CONTAINER_NOTES.' tbody>tr button[data-action="delete-note"]');
+        $this->clickElement(self::FIRST_BUTTON_DELETE);
         sleep(1); // transition delay
         $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
@@ -224,7 +228,7 @@ class NoteEndToEndTest extends PantherTestCase
         $this->clickElement('label[for="deleted_deleted"]');
         $this->clickElement('button[id="search"]');
 
-        $this->client->waitFor(self::NOTES_TABLE);
+        $this->client->waitFor(self::CONTAINER);
 
         $this->restoreNote();
     }
@@ -242,7 +246,7 @@ class NoteEndToEndTest extends PantherTestCase
     {
         sleep(1); // transition delay
 
-        $this->setForm(self::FORM_NOTE, [
+        $this->setForm(self::FORM, [
             'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
             'note[tags]' => [1, 2],

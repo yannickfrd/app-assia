@@ -63,4 +63,11 @@ export default class AutoSaver {
         this.active = false
         this.init()
     }
+
+    /**
+     * @returns {boolean}
+     */
+    isActive() {
+        return this.active
+    }
 }

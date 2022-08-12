@@ -135,7 +135,7 @@ export default class TaskForm
         this.statusCheckboxElt.value = false
         this.statusCheckboxElt.checked = false
 
-        this.levelSelectElt.value = this.levelSelectElt.dataset.defaultLevel
+        this.levelSelectElt.value = this.levelSelectElt.dataset.defaultValue
 
         this.usersSelectManager.updateItems(this.currentUserId)
 
@@ -181,6 +181,7 @@ export default class TaskForm
 
         const formData = new FormData(this.formTaskElt)
         formData.append(this.supportSelectElt.name, this.supportSelectElt.value)
+
         this.ajax.send('POST', this.formTaskElt.action, this.taskManager.responseAjax.bind(this.taskManager), formData)
     }
 

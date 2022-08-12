@@ -78,12 +78,12 @@
 				title="Rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">Rendez-vous
 				<span class="badge bg-light text-dark ms-2">{{ count_rdvs }}</span>
 			</a>
-			<a id="support-tasks" class="btn btn-primary me-2 mb-2 shadow" 
+			<a id="support_tasks" class="btn btn-primary me-2 mb-2 shadow" 
 				href="{{ path('support_task_index', {'id': support.id}) }}" 
 				title="Tâches" data-bs-toggle="tooltip" data-bs-placement="bottom">Tâches
 				<span class="badge bg-light text-dark ms-2">{{ count_tasks }}</span>
 			</a>
-			<a id="support-notes" class="btn btn-primary me-2 mb-2 shadow" 
+			<a id="support_notes" class="btn btn-primary me-2 mb-2 shadow" 
 				href="{{ path('support_note_index', {'id': support.id}) }}" 
 				title="Notes sociales et rapports" data-bs-toggle="tooltip" data-bs-placement="bottom">Notes
 				<span class="badge bg-light text-dark ms-2">{{ count_notes }}</span>

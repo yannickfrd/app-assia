@@ -12,15 +12,19 @@ class DocumentEndToEndTest extends PantherTestCase
     use AppPantherTestTrait;
 
     public const BUTTON_NEW = '#btn_add_files';
-    public const FIRST_BUTTON_SHOW = 'td[data-object-key="name"]';
-    public const FIRST_BUTTON_PREVIEW = 'a[data-action="preview"]';
-    public const FIRST_BUTTON_DOWNLOAD = 'a[data-action="download"]';
-    public const FIRST_BUTTON_DELETE = 'button[data-action="delete"]';
-    public const FIRST_BUTTON_RESTORE = 'button[data-action="restore"]';
 
-    public const FORM_DOCUMENT = 'form[name="document"]';
-    public const MODAL_BUTTON_SAVE = 'button[name="document_update"]';
-    public const MODAL_BUTTON_CLOSE = 'button[type="button" data-dismiss="modal"]';
+    public const CONTAINER = '#container_documents';
+    public const FIRST_BUTTON_SHOW = self::CONTAINER.' td[data-object-key="name"]';
+    public const FIRST_BUTTON_PREVIEW = self::CONTAINER.' button[data-action="preview"]';
+    public const FIRST_BUTTON_DOWNLOAD = self::CONTAINER.' button[data-action="download"]';
+    public const FIRST_BUTTON_DELETE = self::CONTAINER.' button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = self::CONTAINER.' button[data-action="restore"]';
+
+    public const MODAL = '#modal_document';
+    public const FORM = 'form[name="document"]';
+    public const MODAL_BUTTON_SAVE = self::MODAL.' button[data-action="save"]';
+    public const MODAL_BUTTON_CLOSE = self::MODAL.' button[type="button" data-dismiss="modal"]';
+    public const MODAL_BUTTON_DELETE = self::MODAL.' button[data-action="delete"]';
 
     public const MODAL_BUTTON_CONFIRM = '#modal_confirm_btn';
 
@@ -89,7 +93,7 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->client->waitFor('#dropzone ul li.list-group-item-success');
         $this->assertSelectorExists('#dropzone ul li.list-group-item-success');
 
-        $this->clickElement('button[name="close"]');
+        $this->clickElement('#modal_dropzone button[name="close"]');
     }
 
     private function editDocument(): void
@@ -103,7 +107,7 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->client->waitFor(self::MODAL_BUTTON_SAVE);
         sleep(2); // animation effect
 
-        $this->setForm(self::FORM_DOCUMENT, [
+        $this->setForm(self::FORM, [
             'document[name]' => $this->faker->words(mt_rand(3, 5), true),
             'document[tags]' => [1, 2],
             'document[content]' => $this->faker->sentence(),
@@ -152,7 +156,7 @@ class DocumentEndToEndTest extends PantherTestCase
     private function deleteDocument(): void
     {
         $this->outputMsg('Delete a document');
-        $this->clickElement('#container-documents '.self::FIRST_BUTTON_DELETE);
+        $this->clickElement(self::FIRST_BUTTON_DELETE);
         sleep(1); // animation effect
         $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 
@@ -168,7 +172,7 @@ class DocumentEndToEndTest extends PantherTestCase
 
         $this->clickElement(self::FIRST_BUTTON_SHOW);
         sleep(2); // animation effect
-        $this->clickElement('#modal_document '.self::FIRST_BUTTON_DELETE);
+        $this->clickElement(self::MODAL_BUTTON_DELETE);
         sleep(1); // animation effect
         $this->clickElement(self::MODAL_BUTTON_CONFIRM);
 

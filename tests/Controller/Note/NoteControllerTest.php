@@ -85,8 +85,7 @@ class NoteControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $selector = ('card-view' === $view) ? 'div[data-note-id]' : 'tbody tr';
-        $this->assertGreaterThanOrEqual(5, $crawler->filter($selector)->count());
+        $this->assertGreaterThanOrEqual(5, $crawler->filter('[data-note-id]')->count());
     }
 
     /**
@@ -207,7 +206,7 @@ class NoteControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->note->getId();
-        $this->client->request('GET', "/note/$id/delete");
+        $this->client->request('DELETE', "/note/$id/delete");
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
@@ -223,7 +222,7 @@ class NoteControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $noteId = $this->note->getId();
-        $this->client->request('GET', "/note/$noteId/delete");
+        $this->client->request('DELETE', "/note/$noteId/delete");
 
         // After delete a note
         $id = $this->supportGroup->getId();
@@ -231,8 +230,8 @@ class NoteControllerTest extends WebTestCase
             'deleted' => ['deleted' => true],
         ]);
         $this->assertResponseIsSuccessful();
-        $selector = ('card-view' === $view) ? 'div[data-note-id]' : 'tbody tr';
-        $this->assertGreaterThanOrEqual(1, $crawler->filter($selector)->count());
+
+        $this->assertGreaterThanOrEqual(1, $crawler->filter('[data-note-id]')->count());
 
         $this->client->request('GET', "/note/$noteId/restore");
         $content = json_decode($this->client->getResponse()->getContent(), true);
@@ -242,7 +241,7 @@ class NoteControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', "/support/$id/notes/$view", [
             'deleted' => ['deleted' => true],
         ]);
-        $this->assertGreaterThanOrEqual(0, $crawler->filter($selector)->count());
+        $this->assertGreaterThanOrEqual(0, $crawler->filter('[data-note-id]')->count());
     }
 
     public function testExportNoteIsSuccessful(): void

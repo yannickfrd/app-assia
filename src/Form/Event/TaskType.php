@@ -69,7 +69,7 @@ class TaskType extends AbstractType
             ])
             ->add('level', ChoiceType::class, [
                 'choices' => Choices::getChoices(Task::LEVEL),
-                'attr' => ['data-default-level' => Task::MEDIUM_LEVEL],
+                'attr' => ['data-default-value' => Task::MEDIUM_LEVEL],
                 'placeholder' => 'task.level.placeholder',
                 'required' => false,
             ])
