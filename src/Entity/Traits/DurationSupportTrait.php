@@ -4,6 +4,7 @@ namespace App\Entity\Traits;
 
 trait DurationSupportTrait
 {
+    /** @Groups({"export", "exportable"}) */
     public function getDuration(?\DateTime $endDate = null): ?int
     {
         if (null === $this->startDate) {

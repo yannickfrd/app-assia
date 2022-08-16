@@ -5,15 +5,22 @@ namespace App\Form\Admin;
 use App\Entity\People\PeopleGroup;
 use App\Form\Model\Admin\ExportSearch;
 use App\Form\Support\Support\SupportSearchType;
-use App\Form\Utils\Choices;
+use App\Repository\Admin\ExportModelRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class ExportSearchType extends AbstractType
 {
+    public function __construct(
+        private ExportModelRepository $exportModelRepo,
+        private Security $security,
+    ) {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -24,7 +31,7 @@ class ExportSearchType extends AbstractType
             ->add('calcul', null, ['mapped' => false])
             ->add('familyTypologies', ChoiceType::class, [
                 'multiple' => true,
-                'choices' => Choices::getChoices(PeopleGroup::FAMILY_TYPOLOGY),
+                'choices' => array_flip(PeopleGroup::FAMILY_TYPOLOGY),
                 'attr' => [
                     'placeholder' => 'placeholder.familtyTypology',
                     'size' => 1,
@@ -32,9 +39,8 @@ class ExportSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('model', ChoiceType::class, [
-                'choices' => Choices::getChoices(ExportSearch::MODELS),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
+                'choices' => $this->getModels(),
+                'attr' => ['autocomplete' => 'true'],
             ])
             ->add('formattedSheet', CheckboxType::class, [
                 'required' => false,
@@ -42,13 +48,6 @@ class ExportSearchType extends AbstractType
             ->add('anonymized', CheckboxType::class, [
                 'required' => false,
             ]);
-        // ->add('nbPeople', null, [
-            //     'attr' => [
-            //         'class' => 'w-max-100',
-            //         'placeholder' => 'NbPeople',
-            //         'autocomplete' => 'off',
-            //     ],
-        // ])
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -66,8 +65,22 @@ class ExportSearchType extends AbstractType
         return SupportSearchType::class;
     }
 
-    public function getBlockPrefix(): string
+    private function getModels(): array
     {
-        return '';
+        $exportModels = $this->exportModelRepo->findBy([
+            'createdBy' => $this->security->getUser(),
+        ], ['title' => 'ASC']);
+
+        $models = [
+        'Modèles par défaut' => array_flip(ExportSearch::MODELS),
+        ];
+
+        if (count($exportModels) > 0) {
+            foreach ($exportModels as $exportModel) {
+                $models['Modèles personnalisés'][$exportModel->getTitle()] = $exportModel->getId();
+            }
+        }
+
+        return $models;
     }
 }

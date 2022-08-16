@@ -24,19 +24,19 @@ class EvalBudgetGroup
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $resourcesGroupAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $chargesGroupAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $debtsGroupAmt;
 
@@ -52,13 +52,13 @@ class EvalBudgetGroup
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $budgetBalanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $contributionAmt;
 

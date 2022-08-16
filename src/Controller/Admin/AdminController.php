@@ -47,7 +47,7 @@ final class AdminController extends AbstractController
     public function glossary(GlossaryService $glossary): Response
     {
         return $this->render('app/admin/glossary.html.twig', [
-            'entities' => $glossary->getAll(),
+            'entities' => $glossary->getDatas(),
         ]);
     }
 

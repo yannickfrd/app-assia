@@ -9,8 +9,6 @@ class ExportSearch extends SupportSearch
     public const MODELS = [
         'full' => 'Export complet',
         'light' => 'Export simplifié',
-        // 'avdl' => 'Export AVDL',
-        // 'pash' => 'Export PASH',
     ];
 
     /** @var bool */

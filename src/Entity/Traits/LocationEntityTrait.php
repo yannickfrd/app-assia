@@ -2,6 +2,8 @@
 
 namespace App\Entity\Traits;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+
 trait LocationEntityTrait
 {
     /**
@@ -11,11 +13,13 @@ trait LocationEntityTrait
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("exportable")
      */
     private $city;
 
     /**
      * @ORM\Column(name="zipCode", type="string", length=10, nullable=true)
+     * @Groups("exportable")
      */
     private $zipcode;
 
@@ -62,6 +66,7 @@ trait LocationEntityTrait
         return $this;
     }
 
+    /** @Groups("exportable") */
     public function getDept(): ?string
     {
         return $this->zipcode ? substr($this->zipcode, 0, 2) : null;

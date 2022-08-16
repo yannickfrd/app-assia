@@ -24,9 +24,26 @@
         </div>
     </div>
 
-    <div class="accordion mb-4">
-        {% include 'app/admin/export/_export_options.html.twig' with {accordion_id: 'optionsExport'} %}
+    <div class="row mt-5 bg-light">
+        <div class="col-md-6">{{ form_row(form.model, {
+            'attr': {'data-no-reset': 'true'} }) }}
+        </div>
+        <div class="col-md-3">
+            <div class="form-check"
+                title="Un tableur non formaté utilise moins de mémoire et permet donc de faire des exports plus importants"
+                data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                {{ form_widget(form.formattedSheet, {attr: {'data-no-reset': 'true'} }) }}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check"
+                title="Anonymiser l'export (nom, prénom et date de naissance)"
+                data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                    {{ form_widget(form.anonymized, {attr: {'data-no-reset': 'true'} }) }}
+            </div>
+        </div>
     </div>
+
     <div class="row mb-3">
         <div class="col-md-12">
             <div class="float-start d-flex">

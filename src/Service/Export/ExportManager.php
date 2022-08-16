@@ -14,27 +14,15 @@ use Symfony\Component\Security\Core\Security;
 
 class ExportManager
 {
-    private $security;
-    private $em;
-    private $exportNotification;
-    private $exportRepo;
-    private $supportPersonRepo;
-    private $evaluationPersonExport;
-
     public function __construct(
-        Security $security,
-        EntityManagerInterface $em,
-        ExportRepository $exportRepo,
-        ExportNotification $exportNotification,
-        SupportPersonRepository $supportPersonRepo,
-        EvaluationPersonExport $evaluationPersonExport
+        private Security $security,
+        private EntityManagerInterface $em,
+        private ExportRepository $exportRepo,
+        private ExportNotification $exportNotification,
+        private SupportPersonRepository $supportPersonRepo,
+        private EvaluationPersonExport $evaluationPersonExport,
+        private ExportModelConverter $exportModelConverter
     ) {
-        $this->security = $security;
-        $this->em = $em;
-        $this->exportNotification = $exportNotification;
-        $this->exportRepo = $exportRepo;
-        $this->supportPersonRepo = $supportPersonRepo;
-        $this->evaluationPersonExport = $evaluationPersonExport;
     }
 
     /**
@@ -68,7 +56,11 @@ class ExportManager
     {
         $supports = $this->supportPersonRepo->findSupportsFullToExport($search);
 
-        $file = $this->evaluationPersonExport->exportData($supports, $search);
+        if (array_key_exists($search->getModel(), ExportSearch::MODELS)) {
+            $file = $this->evaluationPersonExport->exportData($supports, $search);
+        } else {
+            $file = $this->exportModelConverter->exportData($supports, $search);
+        }
 
         $this->update($export, $file);
 

@@ -43,24 +43,24 @@ class EvalBudgetPerson
      */
     private $id;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $resourceToString;
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $evalBudgetResourcesToString;
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $resourcesAmt;
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $salariesAmt;
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $areAmt;
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $ijAmt;
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $rsaAmt;
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $afAmt;
 
     /**
@@ -68,7 +68,7 @@ class EvalBudgetPerson
      */
     private $incomeTax;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $incomeTaxToString;
 
     /**
@@ -91,15 +91,15 @@ class EvalBudgetPerson
      */
     private $charge;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $chargeToString;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $evalBudgetChargesToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $chargesAmt;
 
@@ -113,15 +113,15 @@ class EvalBudgetPerson
      */
     private $debt;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $debtToString;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $evalBudgetDebtsToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $debtsAmt;
 
@@ -135,7 +135,7 @@ class EvalBudgetPerson
      */
     private $overIndebtRecord;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $overIndebtRecordToString;
 
     /**
@@ -148,7 +148,7 @@ class EvalBudgetPerson
      */
     private $settlementPlan;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $settlementPlanToString;
 
     /**
@@ -156,7 +156,7 @@ class EvalBudgetPerson
      */
     private $moratorium;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $moratoriumToString;
 
     /**

@@ -69,7 +69,7 @@ class EvalSocialPerson
      */
     private $rightSocialSecurity;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $rightSocialSecurityToString;
 
     /**
@@ -77,7 +77,7 @@ class EvalSocialPerson
      */
     private $socialSecurity;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $socialSecurityToString;
 
     /**
@@ -95,12 +95,12 @@ class EvalSocialPerson
      */
     private $infoCrip;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $infoCripToString;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $infoCripDate;
 
@@ -109,7 +109,7 @@ class EvalSocialPerson
      */
     private $infoCripByService;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $infoCripByServiceToString;
 
     /**
@@ -127,7 +127,7 @@ class EvalSocialPerson
      */
     private $aseFollowUp;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $aseFollowUpToString;
 
     /**
@@ -135,7 +135,7 @@ class EvalSocialPerson
      */
     private $aseMeasureType;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $aseMeasureTypeToString;
 
     /**
@@ -148,7 +148,7 @@ class EvalSocialPerson
      */
     private $healthProblem;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $healthProblemToString;
 
     /**
@@ -156,7 +156,7 @@ class EvalSocialPerson
      */
     private $physicalHealthProblem;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $physicalHealthProblemToString;
 
     /**
@@ -164,7 +164,7 @@ class EvalSocialPerson
      */
     private $mentalHealthProblem;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $mentalHealthProblemToString;
 
     /**
@@ -172,7 +172,7 @@ class EvalSocialPerson
      */
     private $addictionProblem;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $addictionProblemToString;
 
     /**
@@ -180,7 +180,7 @@ class EvalSocialPerson
      */
     private $reducedMobility;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $reducedMobilityToString;
 
     /**
@@ -188,7 +188,7 @@ class EvalSocialPerson
      */
     private $wheelchair;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $wheelchairToString;
 
     /**
@@ -196,7 +196,7 @@ class EvalSocialPerson
      */
     private $medicalFollowUp;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $medicalFollowUpToString;
 
     /**
@@ -204,7 +204,7 @@ class EvalSocialPerson
      */
     private $homeCareSupport;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $homeCareSupportToString;
 
     /**
@@ -212,7 +212,7 @@ class EvalSocialPerson
      */
     private $homeCareSupportType;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $homeCareSupportTypeToString;
 
     /**
@@ -220,7 +220,7 @@ class EvalSocialPerson
      */
     private $familyBreakdown;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $familyBreakdownToString;
 
     /**
@@ -228,7 +228,7 @@ class EvalSocialPerson
      */
     private $friendshipBreakdown;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $friendshipBreakdownToString;
 
     /**
@@ -236,7 +236,7 @@ class EvalSocialPerson
      */
     private $violenceVictim;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $violenceVictimToString;
 
     /**
@@ -244,7 +244,7 @@ class EvalSocialPerson
      */
     private $domViolenceVictim;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $domViolenceVictimToString;
 
     /**

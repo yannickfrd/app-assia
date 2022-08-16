@@ -55,7 +55,7 @@ class Person
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("show_person")
+     * @Groups({"show_person", "exportable"})
      */
     private $id;
 
@@ -67,7 +67,7 @@ class Person
      * max=50,
      * minMessage="Le nom est trop court ({{ limit }} caractères min).",
      * maxMessage="Le nom est trop long ({{ limit }} caractères max).")
-     * @Groups({"export", "show_person"})
+     * @Groups({"export", "exportable", "show_person"})
      */
     private $lastname;
 
@@ -79,7 +79,7 @@ class Person
      * max=50,
      * minMessage="Le prénom est trop court ({{ limit }} caractères min).",
      * maxMessage="Le prénom est trop long ({{ limit }} caractères max).")
-     * @Groups({"export", "show_person"})
+     * @Groups({"export", "exportable", "show_person"})
      */
     private $firstname;
 
@@ -97,7 +97,7 @@ class Person
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\NotNull(message="La date de naissance ne doit pas être vide.")
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $birthdate;
 
@@ -107,7 +107,7 @@ class Person
      * max = 90,
      * minMessage = "La date de naissance est incorrect.",
      * maxMessage = "La date de naissance est incorrect.")
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $age;
 
@@ -118,7 +118,7 @@ class Person
     private $gender;
 
     /**
-     * @Groups("export").
+     * @Groups({"export", "exportable"}).
      */
     private $genderToString;
 
@@ -213,7 +213,7 @@ class Person
     }
 
     /**
-     * @Groups("show_person")
+     * @Groups({"show_person", "exportable"})
      */
     public function getFullname(): ?string
     {

@@ -71,7 +71,7 @@ class EvalAdmPerson
     private $nationality;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $nationalityToString;
 
@@ -82,7 +82,7 @@ class EvalAdmPerson
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $country;
 
@@ -92,7 +92,7 @@ class EvalAdmPerson
     private $paper;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $paperToString;
 
@@ -102,7 +102,7 @@ class EvalAdmPerson
     private $paperType;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $paperTypeToString;
 
@@ -112,7 +112,7 @@ class EvalAdmPerson
     private $asylumBackground;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $asylumBackgroundToString;
 
@@ -122,19 +122,19 @@ class EvalAdmPerson
     private $asylumStatus;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $asylumStatusToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $agdrefId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $ofpraRegistrationId;
 
@@ -164,7 +164,7 @@ class EvalAdmPerson
     private $workRight;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $workRightToString;
 

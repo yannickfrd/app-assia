@@ -37,7 +37,7 @@ class EvalFamilyGroup
      */
     private $childrenBehind;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $childrenBehindToString;
 
     /**
@@ -45,12 +45,12 @@ class EvalFamilyGroup
      */
     private $famlReunification;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $famlReunificationToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $nbPeopleReunification;
 

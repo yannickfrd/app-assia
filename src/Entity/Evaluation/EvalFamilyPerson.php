@@ -97,7 +97,7 @@ class EvalFamilyPerson
      */
     private $maritalStatus;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $maritalStatusToString;
 
     /**
@@ -105,7 +105,7 @@ class EvalFamilyPerson
      */
     private $noConciliationOrder;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $noConciliationOrderToString;
 
     /**
@@ -113,12 +113,12 @@ class EvalFamilyPerson
      */
     private $unbornChild;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $unbornChildToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $expDateChildbirth;
 
@@ -132,7 +132,7 @@ class EvalFamilyPerson
      */
     private $childcareOrSchool;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $childcareOrSchoolToString;
 
     /**
@@ -140,7 +140,7 @@ class EvalFamilyPerson
      */
     private $childcareSchoolType;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $childcareSchoolTypeToString;
 
     /**
@@ -157,7 +157,7 @@ class EvalFamilyPerson
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $schoolCity;
 
@@ -166,7 +166,7 @@ class EvalFamilyPerson
      */
     private $schoolZipcode;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $schoolDept;
 
     /**
@@ -174,7 +174,7 @@ class EvalFamilyPerson
      */
     private $childToHost;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $childToHostToString;
 
     /**
@@ -182,7 +182,7 @@ class EvalFamilyPerson
      */
     private $childDependance;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $childDependanceToString;
 
     /**
@@ -190,7 +190,7 @@ class EvalFamilyPerson
      */
     private $protectiveMeasure;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $protectiveMeasureToString;
 
     /**
@@ -198,7 +198,7 @@ class EvalFamilyPerson
      */
     private $protectiveMeasureType;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $protectiveMeasureTypeToString;
 
     /**
@@ -206,7 +206,7 @@ class EvalFamilyPerson
      */
     private $pmiFollowUp;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $pmiFollowUpToString;
 
     /**

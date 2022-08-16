@@ -110,7 +110,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getPaperToString(): ?string
     {
@@ -130,7 +130,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getPaperTypeToString(): ?string
     {
@@ -150,7 +150,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getRightSocialSecurityToString(): ?string
     {
@@ -170,7 +170,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getSocialSecurityToString(): ?string
     {
@@ -190,7 +190,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getFamilyBreakdownToString(): ?string
     {
@@ -210,7 +210,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getFriendshipBreakdownToString(): ?string
     {
@@ -230,7 +230,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getProfStatusToString(): ?string
     {
@@ -250,7 +250,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getContractTypeToString(): ?string
     {
@@ -270,7 +270,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getDebtToString(): ?string
     {
@@ -285,7 +285,7 @@ class EvalInitPerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getDebtsAmt(): ?float
     {

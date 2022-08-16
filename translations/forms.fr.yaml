@@ -14,11 +14,17 @@ Content: Contenu
 Day: Jour
 Dept: Département
 Device: Dispositif
+Device name: Nom du dispositif
 Devices: Dispositifs
+Duration: Durée
 Email: Email
 Email1: Adresse email 1
 Email2: Adresse email 2
 End: Fin
+End location addresse: Fin du suivi - Addresse
+End location city: Fin du suivi - Ville
+End location zipcode: Fin du suivi - Code postal
+End location dept: Fin du suivi - Département
 End place: Mettre fin également à l'hébergement
 endPlace.help: Si cette case est cochée, l'hébergement associé au suivi aura automatiquement les mêmes dates de fin de prise en charge.
 End date: Date de fin
@@ -34,9 +40,11 @@ Full address: Adresse
 Gender: Sexe
 head.help: Demandeur principal
 Hotel: Hôtel
+Id: Identifiant
 Info to siao date: Date remise à disposition de la place
 hotelName: Nom de l'hôtel
 Lastname: Nom
+Last rdv: Dernier rendez-vous
 Lessor: Bailleur/Propriétaire
 Location: Lieu
 Login: Login
@@ -46,6 +54,7 @@ Month: Mois
 Name: Nom
 Nb people: Nb. de personnes
 NbPeople: Nb. pers.
+Next rdv: Prochain rendez-vous
 New password: Nouveau mot de passe
 New referent: Nouvel·le intervenant·e
 Old password: Ancien mot de passe
@@ -89,8 +98,11 @@ Poles: Pôles
 Pole name: Nom du pôle
 Pre admission: Pré-admission
 Referent: Intervenant·e
+Referent name: Nom de l'intervenant·e
+Save: Enregistrer
 Social referent: Référent social
 Referent2: Intervenant·e 2
+Referent2name: Nom de l'intervenant·e n°2
 Referents: Intervenant·e·s
 Role: Rôle dans le groupe
 search: Recherche
@@ -99,6 +111,7 @@ Select: Sélectionner
 Service: Service
 Services: Services
 Service name: Nom du service
+Share: Partager
 Si siao id: ID groupe SI-SIAO
 Start: Début
 Start date: Date de début
@@ -106,6 +119,7 @@ Status: Statut
 Soundex firstname: Phonétique prénom
 Soundex lastname: Phonétique nom
 Sub service: Sous-service
+Sub service name: Nom du sous-service
 Sub services: Sous-services
 sub_service:
   name: Nom du sous-service
@@ -176,6 +190,10 @@ event:
   title.placeholder: Ajouter un titre
   users: Intervenant·e·s
   users.placeholder: -- Intervenant·e·s --
+
+# Model export
+model_export:
+  share.help: Partager ce modèle avec d'autres utilisateurs
 
 ### Note
 notes.export.title: Exporter toutes les notes sur un document Word
@@ -294,6 +312,10 @@ service:
   name: Nom du service
   minRestToLive.help: Reste à vivre minimum par jour et par personne
   type: Type d'activité
+Place end date: Date de fin d'hébergement
+Place end reason: Motif de fin d'hébergement
+Places names: Nom du logement ou d'hébergement
+Place start date: Date de début d'hébergement
 Place type: Type de logement ou d'hébergement
 Configuration: Configuration
 Individual collective: Individuel ou partagé
@@ -371,6 +393,7 @@ Origin dept: Département d'origine
 Priority criteria: Critères de priorité
 Recommendation: Préconisation
 Rosalie id: ID Rosalie
+Ssd: SSD
 hotel_support:
   priority_criteria.placeholder: -- Critères de priorité --
   start_date: Date d'arrivée

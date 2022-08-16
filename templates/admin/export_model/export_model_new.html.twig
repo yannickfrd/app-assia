@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Nouveau modèle d\'export' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        <h1 class="h2 mb-3">{{ title }}</h1>
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a class="text-primary" href="{{ path('admin') }}">Administration</a></li>
+                <li class="breadcrumb-item"><a class="text-primary" href="{{ path('export_model_index') }}">Mes modèles d'export</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+
+        <section>  
+            {{ form_start(form) }}
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="float-end">
+                            <button type="submit" class="btn btn-primary shadow">{{ button_label|default('Enregistrer') }}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-6">{{ form_row(form.title) }}</div>
+                    <div class="col-md-6">{{ form_row(form.comment) }}</div>
+                    <div class="col-md-6">{{ form_row(form.share) }}</div>
+                </div>
+                {% for entity_items in entities %}
+                    {% set class_name = entity_items|first.class_name %}
+                    <section class="row mb-4" data-group-name="{{ class_name }}">
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input type="checkbox" id="" class="form-check-input"
+                                    data-group-target="{{ class_name }}">
+                                <label class="form-check-label" for="{{ class_name }}">
+                                    <h3 class="h5">{{ entity_items|first.trans_class_name }}</h3>
+                                </label>
+                            </div>
+                        </div>
+                        {% for key, item in entity_items %}
+                            <div class="col-md-3">{{ form_widget(form[item.name]) }}</div>
+                        {% endfor %}
+                    </section>
+                {% endfor %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-end">
+                            <button  type="submit" class="btn btn-primary shadow">{{ button_label|default('Enregistrer') }}</button>
+                        </div>
+                    </div>
+                </div>
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        </section>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('export-model') }}
+{% endblock javascripts %}

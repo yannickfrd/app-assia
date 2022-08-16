@@ -95,7 +95,7 @@ class HotelSupport
      */
     private $priorityCriteria;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $priorityCriteriaToString;
 
     /**
@@ -103,7 +103,7 @@ class HotelSupport
      */
     private $emergencyActionRequest;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $emergencyActionRequestToString;
 
     /**
@@ -111,12 +111,12 @@ class HotelSupport
      */
     private $emergencyActionDone;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $emergencyActionDoneToString;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $emergencyActionPrecision;
 
@@ -125,7 +125,7 @@ class HotelSupport
      */
     private $reasonNoInclusion;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $reasonNoInclusionToString;
 
     /**
@@ -135,19 +135,19 @@ class HotelSupport
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $ssd;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $evaluationDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $agreementDate;
 
@@ -156,7 +156,7 @@ class HotelSupport
      */
     private $levelSupport;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $levelSupportToString;
 
     /**
@@ -164,7 +164,7 @@ class HotelSupport
      */
     private $departmentAnchor;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $departmentAnchorToString;
 
     /**
@@ -172,7 +172,7 @@ class HotelSupport
      */
     private $recommendation;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $recommendationToString;
 
     /**
@@ -180,7 +180,7 @@ class HotelSupport
      */
     private $endSupportDepartment;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $endSupportDepartmentToString;
 
     /**

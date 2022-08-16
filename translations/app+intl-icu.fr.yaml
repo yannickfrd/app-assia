@@ -17,6 +17,8 @@ Eval social group: Évaluation sociale du groupe
 Eval social person: Évaluation sociale de la personne
 Eval housing group: Évaluation situation au regard du logement
 Eval justice person: Évaluation situation judiciaire de la personne
+Eval init group: Évaluation situation initiale du groupe
+Eval init person: Évaluation situation initiale de la personne
 Referent: Référent social
 Note: Note
 Rdv: Rendez-vous
@@ -92,6 +94,11 @@ export:
     deleted_successfully: "Le fichier d'export a été supprimé."
     count_results: "Nombre de résultats : {count}"
     file_ready: "Le fichier est prêt. Vous avez reçu le lien de téléchargement par email."
+
+export_model:
+    created_successfully: "Le modèle d'export a été créé."
+    updated_successfully: "Le modèle d'export a été mis à jour."
+    deleted_successfully: "Le modèle d'export a été supprimé."
 
 google_calendar:
     error_occurred: "Une erreur s'est produite avec Google Agenda."

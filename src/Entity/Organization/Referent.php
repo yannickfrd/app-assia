@@ -9,6 +9,7 @@ use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\ReferentRepository")
@@ -48,16 +49,19 @@ class Referent
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("exportable")
      */
     private $name;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups("exportable")
      */
     private $type;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups("exportable")
      */
     private $socialWorker;
 

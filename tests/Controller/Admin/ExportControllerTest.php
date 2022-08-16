@@ -100,13 +100,16 @@ class ExportControllerTest extends WebTestCase
     private function getFormData(): array
     {
         return [
-            'supportDates' => '',
-            'date' => [
-                'start' => '',
-                'end' => '',
+            'export_search' => [
+                'supportDates' => '',
+                'date' => [
+                    'start' => '',
+                    'end' => '',
+                ],
+                'head' => false,
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
+                'model' => 'full',
             ],
-            'head' => false,
-            'status' => [SupportGroup::STATUS_IN_PROGRESS],
         ];
     }
 

@@ -35,6 +35,7 @@ Encore
     .addEntry('listPeople', './assets/js/listPeople/listPeople.js')
     .addEntry('location-search', './assets/js/location-search.js')
     .addEntry('login', './assets/js/security/login.js')
+    .addEntry('export-model', './assets/js/export/export-model-index.js')
     .addEntry('note', './assets/js/note/note-index.js')
     .addEntry('payment', './assets/js/payment/payment-index.js')
     .addEntry('peopleGroup', './assets/js/peopleGroup/peopleGroup.js')

@@ -37,19 +37,19 @@ class OriginRequest
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $infoToSiaoDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $orientationDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $preAdmissionDate;
 
@@ -59,13 +59,13 @@ class OriginRequest
     private $resulPreAdmission;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $resulPreAdmissionToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $decisionDate;
 
@@ -87,9 +87,12 @@ class OriginRequest
      */
     private $organization;
 
+    /** @Groups("exportable") */
+    private $organizationName;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $organizationComment;
 
@@ -190,6 +193,11 @@ class OriginRequest
     public function getOrganization(): ?Organization
     {
         return $this->organization;
+    }
+
+    public function getOrganizationName(): ?string
+    {
+        return $this->organization?->getName();
     }
 
     public function setOrganization(?Organization $organization): self

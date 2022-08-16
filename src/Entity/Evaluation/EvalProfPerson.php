@@ -103,7 +103,7 @@ class EvalProfPerson
      */
     private $profStatus;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $profStatusToString;
 
     /**
@@ -116,7 +116,7 @@ class EvalProfPerson
      */
     private $contractType;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $contractTypeToString;
 
     /**
@@ -124,7 +124,7 @@ class EvalProfPerson
      */
     private $workingTime;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $workingTimeToString;
 
     /**
@@ -167,7 +167,7 @@ class EvalProfPerson
      */
     private $transportMeansType;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $transportMeansTypeToString;
 
     /**
@@ -180,7 +180,7 @@ class EvalProfPerson
      */
     private $rqth;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $rqthToString;
 
     /**
@@ -193,7 +193,7 @@ class EvalProfPerson
      */
     private $schoolLevel;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $schoolLevelToString;
 
     /**
@@ -201,7 +201,7 @@ class EvalProfPerson
      */
     private $profExperience;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $profExperienceToString;
 
     /**

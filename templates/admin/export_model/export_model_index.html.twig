@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Mes modèles d\'export' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="h2 mb-3">{{ title }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a class="text-primary" href="{{ path('admin') }}">Administration</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+        <section class="mb-5">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <a href="{{ path('export_model_new') }}" class="btn btn-primary btn-sm shadow">
+                        <span class="fas fa-plus-square me-2"></span>Créer un nouveau modèle</a>
+                </div>
+            </div>
+            <div class="row align-items-baseline">
+                <div class="col-md-4 align-middle mb-2">Résultat :
+                    <span id="exportModel_counter">{{ export_models.count|number }}</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(export_models) }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="table_export_models" class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="row" class="align-middle th-w-20"></th>
+                                    <th scope="col" class="align-middle th-w-auto">{{ knp_pagination_sortable(export_models, 'Nom du modèle d\'export', 'e.title') }}</th>
+                                    <th scope="col" class="align-middle  th-w-auto">{{ knp_pagination_sortable(export_models, 'Description', 'e.comment') }}</th>
+                                    <th scope="col" class="align-middle  th-w-100">{{ knp_pagination_sortable(export_models, 'Partagé', 'e.share') }}</th>
+                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(export_models, 'Créé le', 'e.createdAt') }}</th>
+                                    <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(export_models, 'Créé par', 'u1.lastname') }}</th>
+                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(export_models, 'Modifié le', 'e.updatedAt') }}</th>
+                                    <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(export_models, 'Modifié par', 'u2.lastname') }}</th>
+                                    <th scope="col" class="align-middle th-w-20"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider" id="container-export_models">
+                                {% for export_model in export_models %}
+                                    <tr>
+                                        <td scope="row" class="align-middle text-center">
+                                            {% include 'model/button/_show_button.html.twig' with {
+                                                'path_route': path('export_model_edit', {'id': export_model.id}),
+                                                'show_title': 'Voir le modèle',
+                                            } %}
+                                        </td>
+                                        <td class="align-middle">{{ export_model.title }}</td>
+                                        <td class="align-middle">{{ export_model.comment }}</td>
+                                        <td class="align-middle">{{ export_model.share ? 'Oui' : 'Non' }}</td>
+                                        <td class="align-middle">{{ export_model.createdAt|date('d/m/Y H:i') }}</td>
+                                        <td class="align-middle">{{ export_model.createdBy.fullname }}</td>
+                                        <td class="align-middle">{{ export_model.updatedAt|date('d/m/Y H:i') }}</td>
+                                        <td class="align-middle">{{ export_model.updatedBy.fullname }}</td>
+                                        <td class="align-middle text-center">
+                                            {{ include('admin/export_model/export_model_delete_form.html.twig') }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="navigation">{{ knp_pagination_render(export_models) }}</div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock javascripts %}

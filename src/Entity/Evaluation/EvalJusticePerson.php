@@ -101,7 +101,7 @@ class EvalJusticePerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getJusticeStatusToString(): ?string
     {
@@ -121,7 +121,7 @@ class EvalJusticePerson
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getJusticeActToString(): ?string
     {

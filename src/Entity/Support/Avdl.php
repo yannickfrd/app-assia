@@ -79,13 +79,13 @@ class Avdl
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $diagStartDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $diagEndDate;
 
@@ -101,13 +101,13 @@ class Avdl
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $supportStartDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $supportEndDate;
 
@@ -128,7 +128,7 @@ class Avdl
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $propoHousingDate;
 
@@ -139,7 +139,7 @@ class Avdl
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $accessHousingDate;
     /**
@@ -164,7 +164,7 @@ class Avdl
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getDiagTypeToString(): ?string
     {
@@ -208,7 +208,7 @@ class Avdl
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getRecommendationSupportToString(): ?string
     {
@@ -264,7 +264,7 @@ class Avdl
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getSupportTypeToString(): ?string
     {
@@ -296,7 +296,7 @@ class Avdl
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getAccessHousingModalityToString(): ?string
     {
@@ -328,7 +328,7 @@ class Avdl
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getPropoResultToString(): ?string
     {

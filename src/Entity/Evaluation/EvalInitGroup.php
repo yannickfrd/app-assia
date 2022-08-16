@@ -26,13 +26,13 @@ class EvalInitGroup
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $resourcesGroupAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $debtsGroupAmt;
 
@@ -92,7 +92,7 @@ class EvalInitGroup
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getHousingStatusToString(): ?string
     {
@@ -112,7 +112,7 @@ class EvalInitGroup
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getSiaoRequestToString(): ?string
     {
@@ -132,7 +132,7 @@ class EvalInitGroup
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getSocialHousingRequestToString(): ?string
     {

@@ -158,23 +158,25 @@ class SupportGroup
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("show_support_group")
+     * @Groups({"show_support_group", "exportable"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"export", "exportable"})
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"export", "exportable"})
      */
     private $theoreticalEndDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endDate;
 
@@ -187,51 +189,52 @@ class SupportGroup
      */
     private $status = 2;
 
-    /**
-     * @Groups("export")
-     */
+    /** @Groups({"export", "exportable"}) */
     private $statusToString;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referentSupports")
-     * @Groups("export")
      */
     private $referent;
 
+    /** @Groups({"export", "exportable"}) */
+    private $referentName;
+
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referent2Supports")
-     * @Groups("export")
      */
     private $referent2;
+
+    /** @Groups({"export", "exportable"}) */
+    private $referent2Name;
 
     /**
      * @ORM\Column(type="float", nullable=true, options={"default":1})
      * @Assert\Range(min = 0, max = 10,
      * minMessage="Le coefficient ne peut être inférieur à {{ limit }}",
      * maxMessage="Le coefficient ne peut être supérieur à {{ limit }}")
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $coefficient = self::DEFAULT_COEFFICIENT;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"export", "exportable"})
      */
     private $endReason;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endStatus;
 
-    /**
-     * @Groups("export")
-     */
+    /** @Groups({"export", "exportable"}) */
     private $endStatusToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endStatusComment;
 
@@ -244,13 +247,18 @@ class SupportGroup
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("exportable")
      */
     private $endLocationCity;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups("exportable")
      */
     private $endLocationZipcode;
+
+    /** @Groups("exportable") */
+    private $endLocationDept;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -259,11 +267,13 @@ class SupportGroup
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"export", "exportable"})
      */
     private $nbPeople;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"export", "exportable"})
      */
     private $evaluationScore;
 
@@ -296,21 +306,31 @@ class SupportGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\Service", inversedBy="supportGroup")
-     * @Groups({"export", "show_service"})
+     * @Groups("show_service")
      */
     private $service;
 
+    /** @Groups({"export", "exportable"}) */
+    private $serviceName;
+
     /**
      * @ORM\ManyToOne(targetEntity=SubService::class, inversedBy="supportGroups")
-     * @Groups("export")
      */
     private $subService;
 
+    /** @Groups({"export", "exportable"}) */
+    private $subServiceName;
+
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\Device", inversedBy="supportGroup")
-     * @Groups("export")
      */
     private $device;
+
+    /** @Groups({"export", "exportable"}) */
+    private $deviceName;
+
+    /** @Groups({"export", "exportable"}) */
+    private $poleName;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\Note", mappedBy="supportGroup", cascade={"persist", "remove"})
@@ -383,6 +403,7 @@ class SupportGroup
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("exportable")
      */
     private $nbChildrenUnder3years;
 
@@ -485,6 +506,11 @@ class SupportGroup
         return $this->referent;
     }
 
+    public function getReferentName(): ?string
+    {
+        return $this->referent?->getFullname();
+    }
+
     public function setReferent(?User $referent): self
     {
         $this->referent = $referent;
@@ -495,6 +521,11 @@ class SupportGroup
     public function getReferent2(): ?User
     {
         return $this->referent2;
+    }
+
+    public function getReferent2Name(): ?string
+    {
+        return $this->referent2?->getFullname();
     }
 
     public function setReferent2(?User $referent2): self
@@ -711,12 +742,14 @@ class SupportGroup
         return $this;
     }
 
-    /**
-     * @Groups({"export", "show_service"})
-     */
     public function getService(): ?Service
     {
         return $this->service;
+    }
+
+    public function getServiceName(): ?string
+    {
+        return $this->service?->getName();
     }
 
     public function setService(?Service $service): self
@@ -731,6 +764,11 @@ class SupportGroup
         return $this->subService;
     }
 
+    public function getSubServiceName(): ?string
+    {
+        return $this->subService?->getName();
+    }
+
     public function setSubService(?SubService $subService): self
     {
         $this->subService = $subService;
@@ -743,11 +781,21 @@ class SupportGroup
         return $this->device;
     }
 
+    public function getDeviceName(): ?string
+    {
+        return $this->device?->getName();
+    }
+
     public function setDevice(?Device $device): self
     {
         $this->device = $device;
 
         return $this;
+    }
+
+    public function getPoleName(): ?string
+    {
+        return $this->service?->getPole()->getName();
     }
 
     /**
@@ -810,6 +858,46 @@ class SupportGroup
         }
 
         return $this;
+    }
+
+    /** @Groups("exportable") */
+    public function getLastRdv(): ?\DateTimeInterface
+    {
+        if (null === $this->getRdvs()) {
+            return null;
+        }
+
+        /** @var ?Rdv $lastRdv */
+        $lastRdv = null;
+        $now = new \DateTime();
+
+        foreach ($this->getRdvs() as $rdv) {
+            if ($rdv->getStart() < $now && (null === $lastRdv || $rdv->getStart() < $lastRdv->getStart())) {
+                $lastRdv = $rdv;
+            }
+        }
+
+        return $lastRdv ? $lastRdv->getStart() : null;
+    }
+
+    /** @Groups("exportable") */
+    public function getNextRdv(): ?\DateTimeInterface
+    {
+        if (null === $this->getRdvs()) {
+            return null;
+        }
+
+        /** @var ?Rdv $nextRdv */
+        $nextRdv = null;
+        $now = new \DateTime();
+
+        foreach ($this->getRdvs() as $rdv) {
+            if ($rdv->getStart() > $now && (null === $nextRdv || $rdv->getStart() < $nextRdv->getStart())) {
+                $nextRdv = $rdv;
+            }
+        }
+
+        return $nextRdv ? $nextRdv->getStart() : null;
     }
 
     /**
@@ -901,6 +989,13 @@ class SupportGroup
     public function getEvaluationsGroup(): ?Collection
     {
         return $this->evaluationsGroup;
+    }
+
+    public function getFirstEvaluationGroup(): ?EvaluationGroup
+    {
+        $evaluationGroup = $this->evaluationsGroup->first();
+
+        return false !== $evaluationGroup ? $evaluationGroup : null;
     }
 
     public function addEvaluationGroup(EvaluationGroup $evaluationGroup): self

@@ -9,31 +9,31 @@ trait ResourcesEntityTrait
      */
     private $resource;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $resourceToString;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $evalBudgetResourcesToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $resourcesAmt;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $salariesAmt;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $areAmt;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $ijAmt;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $rsaAmt;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $afAmt;
 
     public function getResource(): ?int

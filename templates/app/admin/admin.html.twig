@@ -90,6 +90,12 @@
                     <li class="mb-2 text-primary">
                         <a class="text-primary" href="{{ path('export_index') }}">Exporter les données</a>
                     </li>
+                    <li class="mb-2 text-primary">
+                        <a class="text-primary" href="{{ path('export_model_index') }}">Voir mes modèles d'export</a>
+                    </li>
+                    <li class="mb-2 text-primary">
+                        <a class="text-primary" href="{{ path('export_model_new') }}">Créer un modèle d'export</a>
+                    </li>
                 </ul>
 
                 {% if is_granted('ROLE_SUPER_ADMIN') %}

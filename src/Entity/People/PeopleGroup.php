@@ -57,6 +57,7 @@ class PeopleGroup
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("exportable")
      */
     private $id;
 
@@ -70,12 +71,13 @@ class PeopleGroup
     /**
      * @ORM\Column(type="smallint")
      * @Assert\Range(min = 1, max = 99, minMessage="Le nombre de personnes doit être renseigné.",  maxMessage="Le nombre de personnes doit être renseigné.")
-     * Groups("export")
+     * @Groups("export")
      */
     private $nbPeople;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups("exportable")
      */
     private $siSiaoId;
 
@@ -139,7 +141,7 @@ class PeopleGroup
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getFamilyTypologyToString(): string
     {

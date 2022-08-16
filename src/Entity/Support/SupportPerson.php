@@ -31,7 +31,7 @@ class SupportPerson
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"show_support_person"})
+     * @Groups({"show_support_person", "exportable"})
      */
     private $id;
 
@@ -41,7 +41,7 @@ class SupportPerson
     private $role;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $roleToString;
 
@@ -51,20 +51,20 @@ class SupportPerson
     private $head;
 
     /**
-     * @Groups("export").
+     * @Groups({"export", "exportable"}).
      */
     private $headToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      * @Assert\NotNull(message="La date de début ne doit pas être vide.")
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endDate;
 
@@ -76,18 +76,18 @@ class SupportPerson
     private $status;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $statusToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endReason;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endReasonToString;
 
@@ -97,13 +97,13 @@ class SupportPerson
     private $endStatus;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endStatusToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endStatusComment;
 
@@ -346,6 +346,13 @@ class SupportPerson
         return $this->evaluations;
     }
 
+    public function getFirstEvaluation(): ?EvaluationPerson
+    {
+        $evaluation = $this->evaluations->first();
+
+        return false !== $evaluation ? $evaluation : null;
+    }
+
     public function addEvaluationPerson(EvaluationPerson $evaluationPerson): self
     {
         if (!$this->evaluations->contains($evaluationPerson)) {
@@ -415,5 +422,63 @@ class SupportPerson
         }
 
         return $this;
+    }
+
+    /** @Groups("exportable") */
+    public function getPlaceStartDate(): ?\DateTimeInterface
+    {
+        if (0 === $this->getPlacesPerson()->count()) {
+            return null;
+        }
+
+        $placesStartDates = [];
+
+        foreach ($this->getPlacesPerson() as $placePerson) {
+            $placesStartDates[] = $placePerson->getStartDate();
+        }
+
+        return min($placesStartDates);
+    }
+
+    /** @Groups("exportable") */
+    public function getPlaceEndDate(): ?\DateTimeInterface
+    {
+        if (0 === $this->getPlacesPerson()->count()) {
+            return null;
+        }
+
+        $placesEndDates = [];
+
+        foreach ($this->getPlacesPerson() as $placePerson) {
+            $placesEndDates[] = $placePerson->getEndDate();
+        }
+
+        return max($placesEndDates);
+    }
+
+    /** @Groups("exportable") */
+    public function getPlaceEndReason(): ?string
+    {
+        if (0 === $this->getPlacesPerson()->count()) {
+            return null;
+        }
+
+        return $this->getPlacesPerson()->last()->getEndReasonToString();
+    }
+
+    /** @Groups("exportable") */
+    public function getPlacesNames(): ?string
+    {
+        if (0 === $this->getPlacesPerson()->count()) {
+            return null;
+        }
+
+        $placesNames = [];
+
+        foreach ($this->getPlacesPerson() as $placePerson) {
+            $placesNames[] = $placePerson->getPlaceGroup()->getPlace()->getName();
+        }
+
+        return (string) join(', ', $placesNames);
     }
 }

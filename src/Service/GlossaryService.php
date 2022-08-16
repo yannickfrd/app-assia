@@ -42,7 +42,7 @@ class GlossaryService
     protected $translator;
     protected $normalizer;
 
-    protected const TO_IGNORE = [
+    public const TO_IGNORE = [
         'id',
         'createdAt',
         'createdBy',
@@ -52,7 +52,7 @@ class GlossaryService
         'disabledAt',
     ];
 
-    protected const TRANSLATED_TYPES = [
+    public const TRANSLATED_TYPES = [
         'int' => 'Nombre',
         'float' => 'Nombre',
         'DateTimeInterface' => 'Date',
@@ -60,18 +60,21 @@ class GlossaryService
         'string' => 'Texte',
     ];
 
-    /** @var array */
-    protected $data = [];
-
     public function __construct(TranslatorInterface $translator, NormalizerInterface $normalizer)
     {
         $this->translator = $translator;
         $this->normalizer = $normalizer;
     }
 
-    public function getAll(): array
+    public function getDatas(array $entities = null): array
     {
-        foreach ($this->getEntities() as $entitie) {
+        if (null === $entities) {
+            $entities = $this->getEntities();
+        }
+
+        $datas = [];
+
+        foreach ($entities as $entitie) {
             $reflectionClass = new \ReflectionClass($entitie);
             $className = $reflectionClass->getShortName();
             $transClassName = $this->trans($className);
@@ -91,7 +94,7 @@ class GlossaryService
                         $values = $this->getConstValues($typeName, $shortName, $reflectionClass, $propertyName);
 
                         $properties[$propertyName] = [
-                            'entity' => $className,
+                            'entity' => lcfirst($className),
                             'trans_entity' => $transClassName,
                             'name' => lcfirst($propertyName),
                             'trans_name' => $this->trans($propertyName),
@@ -103,48 +106,46 @@ class GlossaryService
                     }
                 }
             }
-            $this->data[$reflectionClass->getShortName()] = $properties;
+            $datas[$reflectionClass->getShortName()] = $properties;
         }
 
-        return $this->data;
+        return $datas;
     }
 
-    protected function getEntities(): array
+    protected function getEntities(): iterable
     {
-        return [
-            new User(),
-            new Person(),
-            new RolePerson(),
-            new PeopleGroup(),
-            new SupportGroup(),
-            new SupportPerson(),
-            new OriginRequest(),
-            new Avdl(),
-            new HotelSupport(),
-            new EvaluationGroup(),
-            new EvaluationPerson(),
-            new EvalAdmPerson(),
-            new EvalProfPerson(),
-            new EvalBudgetGroup(),
-            new EvalBudgetPerson(),
-            new EvalFamilyGroup(),
-            new EvalFamilyPerson(),
-            new EvalSocialGroup(),
-            new EvalSocialPerson(),
-            new EvalHousingGroup(),
-            new EvalJusticePerson(),
-            new Referent(),
-            new Note(),
-            new Rdv(),
-            new Task(),
-            new Document(),
-            new Payment(),
-            new Service(),
-            new Pole(),
-            new Place(),
-            new PlaceGroup(),
-            new PlacePerson(),
-        ];
+        yield User::class;
+        yield Person::class;
+        yield RolePerson::class;
+        yield PeopleGroup::class;
+        yield SupportGroup::class;
+        yield SupportPerson::class;
+        yield OriginRequest::class;
+        yield Avdl::class;
+        yield HotelSupport::class;
+        yield EvaluationGroup::class;
+        yield EvaluationPerson::class;
+        yield EvalAdmPerson::class;
+        yield EvalProfPerson::class;
+        yield EvalBudgetGroup::class;
+        yield EvalBudgetPerson::class;
+        yield EvalFamilyGroup::class;
+        yield EvalFamilyPerson::class;
+        yield EvalSocialGroup::class;
+        yield EvalSocialPerson::class;
+        yield EvalHousingGroup::class;
+        yield EvalJusticePerson::class;
+        yield Referent::class;
+        yield Note::class;
+        yield Rdv::class;
+        yield Task::class;
+        yield Document::class;
+        yield Payment::class;
+        yield Service::class;
+        yield Pole::class;
+        yield Place::class;
+        yield PlaceGroup::class;
+        yield PlacePerson::class;
     }
 
     public function methodExists(string $value, array $methods): bool

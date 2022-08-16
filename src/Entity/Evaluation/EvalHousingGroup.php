@@ -105,18 +105,18 @@ class EvalHousingGroup
      */
     private $siaoRequest;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $siaoRequestToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $siaoRequestDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $siaoUpdatedRequestDate;
 
@@ -125,7 +125,7 @@ class EvalHousingGroup
      */
     private $siaoRequestDept;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $siaoRequestDeptToString;
 
     /**
@@ -133,7 +133,7 @@ class EvalHousingGroup
      */
     private $siaoRecommendation;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $siaoRecommendationToString;
 
     /**
@@ -141,7 +141,7 @@ class EvalHousingGroup
      */
     private $socialHousingRequest;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $socialHousingRequestToString;
 
     /**
@@ -151,13 +151,13 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $socialHousingRequestDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $socialHousingUpdatedRequestDate;
 
@@ -181,18 +181,18 @@ class EvalHousingGroup
      */
     private $syplo;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $syploToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $syploId;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $syploDate;
 
@@ -201,18 +201,18 @@ class EvalHousingGroup
      */
     private $daloAction;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $daloActionToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $daloId;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $daloRecordDate;
 
@@ -221,12 +221,12 @@ class EvalHousingGroup
      */
     private $daloType;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $daloTypeToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $daloDecisionDate;
 
@@ -235,12 +235,12 @@ class EvalHousingGroup
      */
     private $daloTribunalAction;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $daloTribunalActionToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $daloTribunalActionDate;
 
@@ -249,12 +249,12 @@ class EvalHousingGroup
      */
     private $collectiveAgreementHousing;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $collectiveAgreementHousingToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $collectiveAgreementHousingDate;
 
@@ -263,7 +263,7 @@ class EvalHousingGroup
      */
     private $hsgActionEligibility;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $hsgActionEligibilityToString;
 
     /**
@@ -271,12 +271,12 @@ class EvalHousingGroup
      */
     private $hsgActionRecord;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $hsgActionRecordToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $hsgActionDate;
 
@@ -295,7 +295,7 @@ class EvalHousingGroup
      */
     private $expulsionInProgress;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $expulsionInProgressToString;
 
     /**
@@ -303,7 +303,7 @@ class EvalHousingGroup
      */
     private $publicForce;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $publicForceToString;
 
     /**
@@ -321,7 +321,7 @@ class EvalHousingGroup
      */
     private $housingExperience;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $housingExperienceToString;
 
     /**
@@ -389,7 +389,7 @@ class EvalHousingGroup
      */
     private $domiciliation;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $domiciliationToString;
 
     /**
@@ -397,18 +397,18 @@ class EvalHousingGroup
      */
     private $domiciliationType;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $domiciliationTypeToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $startDomiciliationDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $endDomiciliationDate;
 
@@ -421,7 +421,7 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $domiciliationCity;
 
@@ -430,7 +430,7 @@ class EvalHousingGroup
      */
     private $domiciliationZipcode;
 
-    /** @Groups("export") */
+    /** @Groups({"export", "exportable"}) */
     private $domiciliationDept;
 
     /**
@@ -440,7 +440,7 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     private $housingArrivalDate;
 

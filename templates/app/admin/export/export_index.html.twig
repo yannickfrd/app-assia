@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Export des données{% endblock %}
+{% set title = 'Export des données' %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
     <div class="container">
 
-        <h1 class="h2 mb-3">Export des données</h1>
+        <h1 class="h2 mb-3">{{ title }}</h1>
 
         <hr/>
 

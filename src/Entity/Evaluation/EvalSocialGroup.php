@@ -119,7 +119,7 @@ class EvalSocialGroup
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getReasonRequestToString(): ?string
     {
@@ -139,7 +139,7 @@ class EvalSocialGroup
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getWanderingTimeToString(): ?string
     {
@@ -157,7 +157,7 @@ class EvalSocialGroup
     }
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "exportable"})
      */
     public function getAnimalToString(): ?string
     {
