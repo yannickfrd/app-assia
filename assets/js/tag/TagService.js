@@ -37,7 +37,7 @@ export default class TagService {
         this.initTagsTemp()
         this.selectManager.clearOptionsList(this.tagsTemp)
 
-        this.formTags.addEventListener('submit', this.add.bind(this))
+        this.formTags.addEventListener('submit', (e) => this.add(e))
 
         const aElts = this.listBadge.querySelectorAll('span.badge a')
 
@@ -76,7 +76,7 @@ export default class TagService {
                     }
                 })
             })
-            this.ajax.send(e.currentTarget.method, e.currentTarget.action, this.responseAjax.bind(this), formData)
+            this.ajax.send(e.currentTarget.method, e.currentTarget.action, (resp) => this.responseAjax(resp), formData)
 
         } else {
             new AlertMessage('warning', 'Vous n\'avez pas sélectionné d\'étiquettes.')
@@ -89,7 +89,7 @@ export default class TagService {
      */
     tryDelete(href) {
         this.loader.on()
-        this.ajax.send('DELETE', href, this.responseAjax.bind(this))
+        this.ajax.send('DELETE', href, (resp) => this.responseAjax(resp))
     }
 
     /**

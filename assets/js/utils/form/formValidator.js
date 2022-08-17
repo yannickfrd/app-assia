@@ -198,7 +198,7 @@ export default class FormValidator {
      * @param {HTMLElement} fieldElt
      */
     getlabel(fieldElt) {
-        return fieldElt.parentNode.parentNode.querySelector('label') ?? fieldElt.parentNode
+        return fieldElt.closest(`label[for="${fieldElt.id}"]`) ?? fieldElt.parentNode
     }
 
     /**
@@ -285,7 +285,7 @@ export default class FormValidator {
     checkAmount(inputElt, min = 0, max = 99999, resetValue = false, msg = 'Montant invalide.') {
         const value = parseFloat(inputElt.value.replaceAll(' ', '').replace(',', '.'))
 
-        if (!isNaN(value) && true === resetValue) {
+        if (!isNaN(value) && resetValue === true) {
             inputElt.value = value
         }
 

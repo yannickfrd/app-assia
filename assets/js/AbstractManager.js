@@ -89,7 +89,7 @@ export default class AbstractManager {
      request(action, id, method = 'GET') {
         // console.log(action, id, method)
         if (this.loader.isActive() === false) {
-            this.ajax.send(method, this.getPath(action, id), this.responseAjax.bind(this))
+            this.ajax.send(method, this.getPath(action, id), (resp) => this.responseAjax(resp))
         }
     }
 

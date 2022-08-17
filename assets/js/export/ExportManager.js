@@ -15,12 +15,12 @@ export default class ExportManager extends AbstractManager {
     init() {
         document.querySelector('button#count').addEventListener('click', e => {
             e.preventDefault()
-            this.ajax.send('POST', this.getPath('count'), this.responseAjax.bind(this), new FormData(this.formElt))
+            this.ajax.send('POST', this.getPath('count'), (resp) => this.responseAjax(resp), new FormData(this.formElt))
         })
 
         document.querySelector('button#export').addEventListener('click', e => {
             e.preventDefault()
-            this.ajax.send('POST', this.getPath('new'), this.responseAjax.bind(this), new FormData(this.formElt))
+            this.ajax.send('POST', this.getPath('new'), (resp) => this.responseAjax(resp), new FormData(this.formElt))
         })
     }
 
@@ -67,7 +67,7 @@ export default class ExportManager extends AbstractManager {
      * @param {path} path 
      */
     create(path) {
-        this.ajax.send('POST', path, this.responseAjax.bind(this), new FormData(this.formElt))
+        this.ajax.send('POST', path, (resp) => this.responseAjax(resp), new FormData(this.formElt))
     }
 
     /**

@@ -1,6 +1,6 @@
 import FormValidator from '../utils/form/formValidator'
 import SelectCollectionManager from '../utils/form/SelectCollectionManager'
-import ContributionCalcul from '../payment/ContributionCalcul'
+import ContributionCalculator from '../payment/ContributionCalculator'
 
 /**
  * Evaluation sociale.
@@ -32,7 +32,7 @@ export default class evaluationBudget {
         })
 
         if (document.getElementById('calcul_contribution_btn')) {
-            new ContributionCalcul(null, this.afterCalculContribution.bind(this))
+            new ContributionCalculator(null, (payment) => this.afterCalculContribution(payment))
         }
     }
 

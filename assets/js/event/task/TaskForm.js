@@ -10,16 +10,15 @@ export default class TaskForm extends AbstractForm
     constructor(manager) {
         super(manager)
 
-        this.titleInputElt = this.formElt.querySelector('#task_title')
         this.endInputElt = this.formElt.querySelector('#task_end')
         this.endDateInputElt = this.formElt.querySelector('#task__endDate')
         this.endTimeInputElt = this.formElt.querySelector('#task__endTime')
-        this.levelSelectElt = this.formElt.querySelector('#task_level')
+        this.selectSupportElt = this.formElt.querySelector('#task_supportGroup')
 
         this.taskTitleElt = this.modalElt.querySelector('.modal-header h2')
-        this.infoTaskElt = this.modalElt.querySelector('p[data-object-key="info"]')
+        this.infoTaskElt = this.modalElt.querySelector('[data-task="info"]')
 
-        this.alertsManager = new AlertsManager(this.endInputElt)
+        this.alertsManager = new AlertsManager(this.endInputElt, 3)
         
         this.#init()
     }
@@ -49,7 +48,7 @@ export default class TaskForm extends AbstractForm
      * @param {Object} task
      */
      show(task) {
-        this.hydrateForm(task)
+        this.initForm(task)
        
         this.taskTitleElt.innerHTML = this.getTitleModal(task, 'Tâche')
         this.infoTaskElt.innerHTML = this.getCreateUpdateInfo(task)
@@ -72,6 +71,8 @@ export default class TaskForm extends AbstractForm
         e.preventDefault()
 
         this.#updateEndDate()
+
+        this.formElt.classList.add('was-validated')
 
         const formData = new FormData(this.formElt)
         formData.append(this.selectSupportElt.name, this.selectSupportElt.value)

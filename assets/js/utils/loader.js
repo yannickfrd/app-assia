@@ -40,6 +40,6 @@ export default class Loader {
      * @return {Boolean}
      */
     isActive() {
-        return false === this.loaderElt.classList.contains('d-none')
+        return this.loaderElt.classList.contains('d-none') === false
     }
 }

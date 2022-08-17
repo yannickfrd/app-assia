@@ -25,8 +25,6 @@ export default class ComponentHydrator {
             const key = elt.dataset.objectKey
             const value = object[key + 'ToString'] ?? object[key]
     
-            // console.log(key, value, typeof value)
-
             if (key.endsWith('Amt') && typeof value === 'number') {
                 return elt.textContent = this.stringFormatter.formatAmount(value)
             }

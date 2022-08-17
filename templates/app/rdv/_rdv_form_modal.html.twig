@@ -1,24 +1,28 @@
 <div id="modal_rdv" class="modal fade" tabindex="-1" role="dialog" 
-    aria-labelledby="modal_task_label" aria-hidden="true"
+    aria-labelledby="modal_rdv_label" aria-hidden="true"
     data-confirm-before-close="{{ 'confirm_before_to_close_msg'|trans({}, 'forms') }}"
 >
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-
             <div class="modal-header d-block d-md-flex pb-2">
                 <div class="col-12 col-lg-6">
                     <h2 class="h3"></h2>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <p class="mb-0 text-end small text-secondary" data-rdv="info"></p>
+                    <div class="text-end">
+                        <small class="text-secondary" data-rdv="info"></small>
+                    </div>
                 </div>
             </div>
-
             {{ form_start(form_rdv) }}
-
             <div class="modal-body pb-0">
                 <div class="row mb-3">
-                    <div class="col-12" id="modalRdvLabel">{{ form_widget(form_rdv.title) }}</div>
+                    <div class="col-12" id="modal_rdv_label">
+                        {{ form_label(form_rdv.title, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(form_rdv.title, {attr: {
+                            'data-default-value': support is defined ? support.header.fullname : false
+                        }}) }}
+                     </div>
                 </div>
                 <div class="form-inline justify-content-md-right mb-2">
                     <div class="col-auto my-1 pe-1 pl-0 d-inline-flex">
@@ -49,11 +53,20 @@
                             <input type="time" id="end" name="end" required="required" class="form-control">
                         </div>
                     </div>
-                    <div class="col-auto my-1 pe-1 pl-0 d-inline-flex">{{ form_widget(form_rdv.status) }}</div>
+                    <div class="col-auto my-1 pe-1 pl-0 d-inline-flex">
+                        {{ form_label(form_rdv.status, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(form_rdv.status) }}
+                    </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-12 col-lg-6 d-none">{{ form_widget(form_rdv.start) }}</div>
-                    <div class="col-12 col-lg-6 d-none">{{ form_widget(form_rdv.end) }}</div>
+                    <div class="col-12 col-lg-6 d-none">
+                        {{ form_label(form_rdv.start, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(form_rdv.start) }}
+                    </div>
+                    <div class="col-12 col-lg-6 d-none">
+                        {{ form_label(form_rdv.end, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(form_rdv.end) }}
+                    </div>
                     <div class="col-12 position-relative">
                         <div class="input-group" data-location-search="address" data-location-search-create="true"
                             data-location-lat="{{ support is defined ? support.service.lat }}"
@@ -62,12 +75,14 @@
                             <span class="input-group-text" title="Localisation" data-bs-toggle="tooltip"
                                 data-bs-placement="bottom"><i class="fas fa-map-marker-alt text-black-50"></i>
                             </span>
+                            {{ form_label(form_rdv.location, null, {label_attr: {class: 'visually-hidden'}}) }}
                             {{ form_widget(form_rdv.location, {attr: {'data-location-type': 'search'}}) }}
                         </div>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-12">
+                        {{ form_label(form_rdv.tags, null, {label_attr: {class: 'visually-hidden'}}) }}
                         <div class="input-group">
                             <span class="input-group-text" title="Étiquettes" data-bs-toggle="tooltip"
                                 data-bs-placement="bottom"><i class="fas fa-tag text-black-50"></i>
@@ -80,59 +95,41 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         {{ form_label(form_rdv.users, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
-                        {{ form_widget(form_rdv.users) }}
+                        {{ form_widget(form_rdv.users, {attr: {'data-default-value': app.user.id}}) }}
                         {{ form_errors(form_rdv.users) }}
                     </div>
                     <div class="col-md-6">
                         {{ form_label(form_rdv.supportGroup, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
-                        {{ form_widget(form_rdv.supportGroup) }}
+                        {{ form_widget(form_rdv.supportGroup, {attr: {
+                            'disabled': support is defined,
+                            'data-disabled-if-value': 'true',
+                            'data-default-value': support is defined ? support.id : false, 
+                            'data-choice-label': 'supportGroup_header_fullname',
+                        }}) }}
                     </div>
                 </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-12">{{ form_widget(form_rdv.content) }}</div>
-                </div>
-
-                {% set alert_widget %}
-                    <div class="form-inline mb-1">
-                        <div class="d-inline-flex me-2 mb-2">
-                            <div class="input-group">
-                                <span class="input-group-text" title="Alerte" data-bs-toggle="tooltip"
-                                     data-bs-placement="bottom"><i class="fas fa-bell text-black-50"></i>
-                                </span>
-                                {{ form_widget(form_rdv.alerts.vars.prototype.date) }}
-                            </div>
-                        </div>
-                        <div class="d-inline-flex me-2 mb-2">{{ form_widget(form_rdv.alerts.vars.prototype.type) }}</div>
-                        <div class="d-inline-flex mb-2">
-                            <button class="btn btn-sm btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                {% endset %}
 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <div id="alerts-fields-list" data-prototype="{{ alert_widget|e }}"
-                             data-container-tag="div" data-widget-counter="{{ form_rdv.alerts|length }}">
-                        </div>
-                        <button type="button" class="btn btn-primary btn-sm"
-                            data-list-selector="#alerts-fields-list" data-add-widget="alert">
-                            <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
-                        </button>
+                        {{ form_label(form_rdv.content, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(form_rdv.content) }}
                     </div>
                 </div>
+
+                {{ include('model/_alerts.html.twig', {form_alerts: form_rdv.alerts}) }}
 
                 <hr>
 
                 <div class="row mb-3">
                     <div class="col-md-6 form-check">
                         <div class="col-md-12">
+                            {{ form_label(form_rdv.googleCalendar, null, {label_attr: {class: 'visually-hidden'}}) }}
                             {{ form_widget(form_rdv.googleCalendar, {attr: {'data-api-name': 'google'} }) }}
                         </div>
                     </div>
                     <div class="col-md-6 form-check">
                         <div class="col-md-12">
+                            {{ form_label(form_rdv.outlookCalendar, null, {label_attr: {class: 'visually-hidden'}}) }}
                             {{ form_widget(form_rdv.outlookCalendar, {attr: {'data-api-name': 'outlook'} }) }}
                         </div>
                     </div>

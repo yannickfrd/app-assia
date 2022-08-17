@@ -10,7 +10,7 @@ export default class DocumentViewer {
         this.manager = manager
         this.loader = manager.loader
         this.ajax = manager.ajax
-        this.responseAjax = manager.responseAjax.bind(manager)
+        this.responseAjax = (resp) => manager.responseAjax(resp)
 
         this.previewModalElt = document.getElementById('document_preview_modal')
         this.modalContent = document.querySelector('#document_preview_modal .modal-content')

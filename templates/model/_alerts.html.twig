@@ -1,0 +1,32 @@
+{% set alert_widget %}
+    <div class="form-inline mb-1">
+        <div class="d-inline-flex me-2 mb-2">
+            {{ form_label(form_alerts.vars.prototype.date, null, {label_attr: {class: 'visually-hidden'}}) }}
+            <div class="input-group">
+                <span class="input-group-text" title="Alerte" data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom"><i class="fas fa-bell text-black-50"></i>
+                </span>
+                {{ form_widget(form_alerts.vars.prototype.date) }}
+            </div>
+        </div>
+        <div class="d-inline-flex me-2 mb-2">
+            {{ form_label(form_alerts.vars.prototype.type, null, {label_attr: {class: 'visually-hidden'}}) }}
+            {{ form_widget(form_alerts.vars.prototype.type) }}
+        </div>
+        <div class="d-inline-flex mb-2">
+            <button class="btn btn-sm btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
+        </div>
+    </div>
+{% endset %}
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div id="alerts-fields-list" data-prototype="{{ alert_widget|spaceless|e }}"
+            data-container-tag="div" data-widget-counter="{{ form_alerts|length }}">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm"
+            data-list-selector="#alerts-fields-list" data-add-widget="alert">
+            <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
+        </button>
+    </div>
+</div> 

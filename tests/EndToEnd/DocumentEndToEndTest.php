@@ -14,7 +14,7 @@ class DocumentEndToEndTest extends PantherTestCase
     public const BUTTON_NEW = '#btn_add_files';
 
     public const CONTAINER = '#container_documents';
-    public const FIRST_BUTTON_SHOW = self::CONTAINER.' td[data-object-key="name"]';
+    public const FIRST_BUTTON_SHOW = self::CONTAINER.' [data-action="show"]';
     public const FIRST_BUTTON_PREVIEW = self::CONTAINER.' button[data-action="preview"]';
     public const FIRST_BUTTON_DOWNLOAD = self::CONTAINER.' button[data-action="download"]';
     public const FIRST_BUTTON_DELETE = self::CONTAINER.' button[data-action="delete"]';

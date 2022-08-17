@@ -9,7 +9,9 @@
                     <h2 class="h3"></h2>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <p class="mb-0 text-end small text-secondary" data-object-key="info"></p>
+                    <div class="text-end">
+                        <small class="text-secondary" data-task="info"></small>
+                    </div>
                 </div>
             </div>
             
@@ -17,11 +19,15 @@
 
             <div class="modal-body pb-0">
                 <div class="row mb-3">
-                    <div class="col-12">{{ form_widget(form_task.title) }}</div>
+                    <div class="col-12">
+                        {{ form_label(form_task.title, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(form_task.title) }}
+                    </div>
                 </div>
                 <div class="form-inline justify-content-md-right mb-2">
-                    <div class="d-none">{{ form_widget(form_task.end) }}</div>
+                    <div class="d-none">{{ form_row(form_task.end) }}</div>
                     <div class="col-auto my-1 pe-1 ps-0 d-inline-flex">
+                        {{ form_label(form_task._endDate, null, {label_attr: {class: 'visually-hidden'}}) }}
                         <div class="input-group">
                             <span class="input-group-text" title="Date d'échéance" data-bs-toggle="tooltip" 
                                 data-bs-placement="bottom"><i class="far fa-calendar text-black-50"></i>
@@ -30,6 +36,7 @@
                         </div>
                     </div>
                     <div class="col-auto my-1 pe-1 ps-0 d-inline-flex">
+                        {{ form_label(form_task._endTime, null, {label_attr: {class: 'visually-hidden'}}) }}
                         <div class="input-group">
                             <span class="input-group-text" title="Heure d'échéance" data-bs-toggle="tooltip" 
                                 data-bs-placement="bottom"><i class="far fa-clock text-black-50"></i>
@@ -42,18 +49,21 @@
                             <span class="input-group-text" title="Priorité" data-bs-toggle="tooltip" 
                                 data-bs-placement="bottom"><i class="fas fa-layer-group text-black-50"></i>
                             </span>
+                            {{ form_label(form_task.level, null, {label_attr: {class: 'visually-hidden'}}) }}
                             {{ form_widget(form_task.level) }}
                         </div>
                     </div>
                     <div class="col-auto ms-1 my-1 d-inline-flex">
                         <div class="form-check ps-0"
                             title="Statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                {{ form_label(form_task.status, null, {label_attr: {class: 'visually-hidden'}}) }}
                                 {{ form_widget(form_task.status, {label: 'Réalisée'}) }}
                         </div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12">
+                        {{ form_label(form_task.tags, null, {label_attr: {class: 'visually-hidden'}}) }}
                         <div class="input-group">
                             <span class="input-group-text" title="Étiquette(s)" data-bs-toggle="tooltip" 
                                 data-bs-placement="bottom"><i class="fas fa-tag text-black-50"></i>
@@ -66,46 +76,30 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         {{ form_label(form_task.users, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
-                        {{ form_widget(form_task.users) }}
+                        {{ form_widget(form_task.users, {attr: {
+                            'data-default-value': app.user.id
+                        }}) }}
                     </div>
                     <div class="col-md-6">
                         {{ form_label(form_task.supportGroup, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
-                        {{ form_widget(form_task.supportGroup) }}
+                        {{ form_widget(form_task.supportGroup, {attr: {
+                            'disabled': support is defined,
+                            'data-choice-label': 'supportGroup_header_fullname',
+                            'data-default-value': support is defined ? support.id : false,
+                            'data-disabled-if-value': 'true',
+                        }}) }}
                     </div>
                 </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-12">{{ form_widget(form_task.content) }}</div>
-                </div>
-
-                {% set alert_widget %}
-                    <div class="form-inline mb-1">
-                        <div class="d-inline-flex me-2 mb-2">
-                            <div class="input-group">
-                                <span class="input-group-text" title="Alerte" data-bs-toggle="tooltip" 
-                                    data-bs-placement="bottom"><i class="fas fa-bell text-black-50"></i>
-                                </span>
-                                {{ form_widget(form_task.alerts.vars.prototype.date) }}
-                            </div>
-                        </div>
-                        <div class="d-inline-flex me-2 mb-2">{{ form_widget(form_task.alerts.vars.prototype.type) }}</div>
-                        <div class="d-inline-flex mb-2">
-                            <button class="btn btn-sm btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
-                {% endset %}
 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <div id="alerts-fields-list" data-prototype="{{ alert_widget|e }}"
-                            data-container-tag="div" data-widget-counter="{{ form_task.alerts|length }}">
-                        </div>
-                        <button type="button" class="btn btn-primary btn-sm"
-                            data-list-selector="#alerts-fields-list" data-add-widget="alert">
-                            <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
-                        </button>
+                    {{ form_label(form_task.content, null, {label_attr: {class: 'visually-hidden'}}) }}
+                    {{ form_widget(form_task.content) }}
                     </div>
-                </div> 
+                </div>
+
+                {{ include('model/_alerts.html.twig', {form_alerts: form_task.alerts}) }}
+
                 {{ form_row(form_task._token) }}
             </div>
 

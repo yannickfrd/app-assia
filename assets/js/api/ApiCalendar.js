@@ -122,7 +122,7 @@ export default class ApiCalendar {
             }
 
             if (url) {
-                this.ajax.send(method, url, this.responseAjax.bind(this))
+                this.ajax.send(method, url, (resp) => this.responseAjax(resp))
             }
         }
     }

@@ -49,7 +49,7 @@ export default class ConfirmAction {
         this.loader.on()
         this.trElt = trElt
 
-        if (false === this.asynch) {
+        if (this.asynch === false) {
             return location.assign(btnElt.dataset.path)
         }
         

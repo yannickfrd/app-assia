@@ -2,14 +2,15 @@
 {% set service_type_hotel = support.service.type == constant('SERVICE_TYPE_HOTEL', support.service) %}
 
 <div id="modal_payment" class="modal fade" tabindex="-1" role="dialog" 
-    aria-labelledby="paymentModalLabel" aria-hidden="true">
+    aria-labelledby="paymentModalLabel" aria-hidden="true"
+    data-confirm-before-close="{{ 'confirm_before_to_close_msg'|trans({}, 'forms') }}"
+>   
   <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h2 class="mb-0">Paiement</h2>
-            <div class="small text-secondary">
-                <p class="mb-0 ms-3 text-end" data-payment="info">
-                </p>
+            <div class="text-end ms-3">
+                <small class="text-secondary" data-payment="info"></small>
             </div>
         </div>
         {{ form_start(form) }}
@@ -23,7 +24,7 @@
                         data-path="{{ path('support_payment_calcul', {id: support.id}) }}"
                         title="Calculer le montant à régler" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-sync me-2"></i>Calculer</button>
-                    <button id="show_calcul_contribution_btn" class="btn btn-primary ms-2 d-none" 
+                    <button id="btn_show_calcul_contribution" class="btn btn-primary ms-2 d-none" 
                         title="Voir le détail du montant à régler" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-eye me-2"></i>Voir le détail</button>
                 </div>
@@ -98,8 +99,8 @@
                         <i class="fas fa-file-pdf bg-secondary fa-lg"></i>
                         <span class="d-none d-md-inline ms-2">PDF</span>
                     </button>
-                    <button class="btn btn-primary mb-1 shadow" data-action="send_email"
-                        data-edit="true" title="Envoyer un email avec le reçu en PDF" data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                    <button class="btn btn-primary mb-1 shadow" data-action="send_email" data-edit="true" 
+                        title="Envoyer un email avec le reçu en PDF" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-envelope bg-secondary fa-lg"></i>
                         <span class="d-none d-md-inline ms-2">Email</span>
                     </button>

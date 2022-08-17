@@ -5,7 +5,7 @@ import { Modal, Popover } from 'bootstrap'
 /**
  * Récupère les ressources et calcul le montant à payer du suivi au clic sur le bouton.
  */
-export default class ContributionCalcul {
+export default class ContributionCalculator {
 
     /**
      * @param {HTMLFormElement} formElt 
@@ -18,7 +18,7 @@ export default class ContributionCalcul {
         this.ajax = null
 
         this.calculContribBtnElt = document.getElementById('calcul_contribution_btn')
-        this.showCalculContribBtnElt = document.getElementById('show_calcul_contribution_btn')
+        this.showCalculContribBtnElt = document.getElementById('btn_show_calcul_contribution')
         this.contribCalculModal = new Modal(document.getElementById('contribution_calcul_modal'))
 
         this.resourcesChecked = false // Ressources vérifiées dans la base de données
@@ -41,7 +41,7 @@ export default class ContributionCalcul {
                 const path = this.calculContribBtnElt.dataset.path
                 const data = this.formElt ? new FormData(this.formElt) : null
 
-                this.ajax.send('POST', path, this.responseAjax.bind(this), data)
+                this.ajax.send('POST', path, (resp) => this.responseAjax(resp), data)
             }
         })
 
@@ -72,9 +72,7 @@ export default class ContributionCalcul {
     getContribution(data) {
         const modalBody = document.getElementById('contribution_calcul_modal').querySelector('.modal-body')
         modalBody.innerHTML = data.view
-        modalBody.querySelectorAll('[data-bs-toggle="popover"]').forEach(popover => {  
-            new Popover(popover)
-        })
+        modalBody.querySelectorAll('[data-bs-toggle="popover"]').forEach(popover => new Popover(popover))
 
         this.contribCalculModal.show()
         this.showCalculContribBtnElt.classList.remove('d-none')

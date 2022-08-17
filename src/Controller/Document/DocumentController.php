@@ -65,7 +65,9 @@ final class DocumentController extends AbstractController
         ]);
         $formSearch->handleRequest($request);
 
-        $formDocument = $this->createForm(DocumentType::class, (new Document())->setSupportGroup($supportGroup));
+        $document = (new Document())->setSupportGroup($supportGroup);
+
+        $formDocument = $this->createForm(DocumentType::class, $document);
 
         $form_dropzone = $this->createForm(DropzoneDocumentType::class, null, [
             'action' => $this->generateUrl('document_create', ['id' => $supportGroup->getId()]),

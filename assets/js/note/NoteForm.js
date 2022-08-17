@@ -67,7 +67,7 @@ export default class NoteForm extends AbstractForm
      * @param {Object} note
      */
     show(note) {
-        this.hydrateForm(note)
+        this.initForm(note)
 
         this.formData = new FormData(this.formElt)
 
@@ -101,8 +101,11 @@ export default class NoteForm extends AbstractForm
 
         this.contentElt.value = this.ckEditor.getData()
 
+        this.formElt.classList.add('was-validated')
+
         if (this.loader.isActive() === false && this.isValid()) {
-            this.ajax.send('POST', this.formElt.action, this.responseAjax, new FormData(this.formElt))
+            this.formData = new FormData(this.formElt)
+            this.ajax.send('POST', this.formElt.action, this.responseAjax, this.formData)
         }
     }
 
@@ -122,7 +125,7 @@ export default class NoteForm extends AbstractForm
      */
      tryCloseModal() {
         if (this.ckEditor.getData() === this.contentElt.value
-            && false === this.formDataIsChanged() 
+            && this.formDataIsChanged() === false
             || window.confirm(this.modalElt.dataset.confirmBeforeClose)
         ) {
             this.manager.objectModal.hide()

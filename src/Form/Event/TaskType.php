@@ -71,7 +71,6 @@ class TaskType extends AbstractType
                 'choices' => Choices::getChoices(Task::LEVEL),
                 'attr' => ['data-default-value' => Task::MEDIUM_LEVEL],
                 'placeholder' => 'task.level.placeholder',
-                'required' => false,
             ])
              ->add('users', EntityType::class, [
                 'class' => User::class,

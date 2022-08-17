@@ -11,7 +11,7 @@ import '../utils/form/autocomplete-select'
 export default class SupportValidator extends FormValidator
 {
     constructor() {
-        super()
+        super('form[name="support"]')
 
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
@@ -53,7 +53,7 @@ export default class SupportValidator extends FormValidator
     }
 
     /**
-     * Vérifie la validité du formualire avant la soumission.
+     * Vérifie la validité du formualaire avant la soumission.
      */
     checkFormBeforeSubmit() {
         this.btnSubmitElts.forEach(btnElt => {
@@ -65,13 +65,14 @@ export default class SupportValidator extends FormValidator
                 }
                 this.checkEndStatus()
 
-                if (this.loader.isActive() || this.isValid()) {
-                    e.preventDefault()
+                if (this.loader.isActive() || this.isValid() === false) {
+                    return e.preventDefault()
                 }
+
+                return this.loader.on()
             })
         })
     }
-
 
     checkDate(dateInputElt) {
         const dateValidator = new DateValidator(dateInputElt, this)
@@ -142,7 +143,7 @@ export default class SupportValidator extends FormValidator
     sendAjaxRequest() {
         if (this.serviceSelectElt.value) {
             const url = this.serviceSelectElt.dataset.path
-            this.ajax.send('POST', url, this.responseAjax.bind(this), new URLSearchParams(this.getData()))
+            this.ajax.send('POST', url, (resp) => this.responseAjax(resp), new URLSearchParams(this.getData()))
         }
     }
 

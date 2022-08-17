@@ -1,5 +1,6 @@
 import AbstractManager from '../../AbstractManager'
 import SelectManager from './SelectManager'
+import FormHydrator from './FormHydrator'
 import FormValidator from './formValidator'
 import DateFormatter from "../date/DateFormatter"
 
@@ -15,29 +16,21 @@ export default class AbstractForm extends FormValidator
         this.objectName = manager.objectName
         this.loader = manager.loader
         this.ajax = manager.ajax
-        this.responseAjax = manager.responseAjax.bind(manager)
+        this.responseAjax = (resp) => manager.responseAjax(resp)
         this.modalElt = manager.modalElt
         this.supportId = manager.supportId
-
-        this.currentUserId = document.getElementById('user_name').dataset.userId
 
         this.formElt = document.querySelector(`form[name="${this.objectName}"]`)
         this.btnDeleteElt = this.modalElt.querySelector('[data-action="delete"]')
 
-        this.selectTagsElt = document.querySelector(`#${this.objectName}_tags`)
-        this.selectUsersElt = document.querySelector(`#${this.objectName}_users`)
-        this.selectSupportElt = this.formElt.querySelector(`#${this.objectName}_supportGroup`)
-
         this.formData = null
 
-        if (this.selectTagsElt) {
-            this.tagsSelectManager = new SelectManager(this.selectTagsElt)
-        }
+        this.selectManagers = {}
+        this.formElt.querySelectorAll('select[multiple], select[autocomplete="true"]').forEach(select => {
+            this.selectManagers[select.id.split('_').pop()] = new SelectManager(select)
+        })
 
-        if (this.selectUsersElt) {
-            this.usersSelectManager = new SelectManager(this.selectUsersElt)
-        }
-
+        this.formHydrator = new FormHydrator(this.formElt, this.selectManagers)
         this.dateFormatter = new DateFormatter()
 
         this.#init()
@@ -68,7 +61,7 @@ export default class AbstractForm extends FormValidator
      * @param {Object} object // entity
      */
      show(object) {
-        this.hydrateForm(object)
+        this.initForm(object)
 
         this.formData = new FormData(this.formElt)
     }
@@ -79,6 +72,8 @@ export default class AbstractForm extends FormValidator
     requestToSave(e) {
         e.preventDefault()
 
+        this.formElt.classList.add('was-validated')
+
         if (this.loader.isActive() === false && this.isValid()) {
             this.ajax.send('POST', this.formElt.action, this.responseAjax, new FormData(this.formElt))
         }
@@ -87,33 +82,12 @@ export default class AbstractForm extends FormValidator
     /**
      * @param {Object} object // entity
      */
-    hydrateForm(object) {
+    initForm(object) {
         this.formElt.action = this.manager.pathEdit(object.id)
 
-        this.formElt.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(fieldElt => {
-            const key = this.#getKey(fieldElt)
-            const value = object[key]
-            // console.log(key, value)
-            if(value === undefined || value instanceof Array) {
-                return
-            }
-
-            if(value instanceof Object && value.id !== undefined) {
-                return fieldElt.value = value.id 
-            }
-
-            if (fieldElt.type === 'checkbox') {
-                return fieldElt.checked = value
-            }
-
-            fieldElt.value = value ?? ''
-        })
-
-        this.checkUsers(object)
-        this.checkTags(object)
-        this.checkSupportGroup(object)
-
         this.reinitForm()
+
+        this.formHydrator.hydrate(object)
 
         this.btnDeleteElt.classList.remove('d-none')
 
@@ -121,28 +95,25 @@ export default class AbstractForm extends FormValidator
     }
 
     resetForm() {
-        this.formElt.action = this.manager.pathCreate(this.manager.supportId)
+        this.formElt.action = this.manager.pathCreate(this.supportId)
 
         this.formElt.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(fieldElt => {
             fieldElt.value = fieldElt.dataset.defaultValue ?? ''
+            fieldElt.disabled = fieldElt.value && fieldElt.dataset.disabledIfValue
         })
-
+        
         this.formElt.querySelectorAll('input[type="checkbox"]').forEach(fieldElt => {
             fieldElt.checked = fieldElt.dataset.defaultValue === "true"
         })
 
-        if (this.selectTagsElt) {
-            this.tagsSelectManager.clearItems()
-        }
+        for (const [key, selectManager] of Object.entries(this.selectManagers)) {
+            selectManager.clearItems()
 
-        if (this.selectUsersElt) {
-            this.usersSelectManager.clearItems()
-            this.usersSelectManager.updateItems(this.currentUserId)
-        }
-        
-        if (this.selectSupportElt) {
-            this.selectSupportElt.value = this.supportId ?? ''
-            this.selectSupportElt.disabled = this.supportId !== null
+            const defaultValue = selectManager.selectElt.dataset.defaultValue
+
+            if (defaultValue) {
+                selectManager.updateItems(defaultValue)
+            }   
         }
 
         this.reinitForm()
@@ -156,58 +127,10 @@ export default class AbstractForm extends FormValidator
      * Check if the form has modifications before to close modal.
      */
      tryCloseModal() {
-        if (false === this.formDataIsChanged()
+        if (this.formDataIsChanged() === false
             || window.confirm(this.modalElt.dataset.confirmBeforeClose)
         ) {
             this.manager.objectModal.hide()
-        }
-    }
-
-    /**
-     * @param {Object} object // entity
-     */
-     checkUsers(object) {
-        if (!this.selectUsersElt) {
-            return
-        }
-
-        const userIds = []
-        object.users.forEach(user => userIds.push(user.id))
-        this.usersSelectManager.updateItems(userIds)
-    }
-
-    /**
-     * @param {Object} object // entity
-     */
-    checkTags(object) {
-        if (!this.selectTagsElt) {
-            return
-        }
-
-        const tagsIds = []
-        object.tags.forEach(tags => tagsIds.push(tags.id))
-        this.tagsSelectManager.updateItems(tagsIds)
-    }
-
-    /**
-     * @param {Object} object // entity
-     */
-    checkSupportGroup(object) {
-        if (!this.selectSupportElt) {
-            return
-        }
-
-        this.selectSupportElt.disabled = object.supportGroup !== null
-
-        if (object.supportGroup) {
-            if (this.selectSupportElt.value === '') {
-                const optionElt = document.createElement('option')
-                optionElt.value = object.supportGroup.id
-                optionElt.textContent = object.supportGroup.header.fullname
-                this.selectSupportElt.appendChild(optionElt)
-                this.selectSupportElt.value = object.supportGroup.id
-            }
-            this.selectSupportElt.value = object.supportGroup.id
         }
     }
 
@@ -239,14 +162,14 @@ export default class AbstractForm extends FormValidator
             return ''
         }
 
-        let content = 'Créé le ' + object.createdAtToString
+        let content = 'Créé le ' + (object.createdAtToString ?? this.dateFormatter.format(object.createdAt))
 
         if (object.createdBy) {
             content += ' par ' + object.createdBy.fullname
         }
 
-        if (object.createdAtToString !== object.updatedAtToString) {
-            content += `<br/> (modifié le ${object.updatedAtToString}
+        if (object.createdAt !== object.updatedAt || object.createdAtToString !== object.updatedAtToString) {
+            content += `<br/> (modifié le ${(object.updatedAtToString ?? this.dateFormatter.format(object.updatedAt))}
                 ${object.updatedBy ? ' par ' + object.updatedBy.fullname : ''})`
         }
 
@@ -255,17 +178,8 @@ export default class AbstractForm extends FormValidator
 
     focusFirstField() {
         setTimeout(() => {
-            this.formElt.querySelector('input').focus()
+            this.formElt.querySelector('input, select').focus()
         }, 500)
-    }
-
-    /**
-     * @param {HTMLElement} fieldElt 
-     * 
-     * @returns {string}
-     */
-    #getKey(fieldElt) {
-        return fieldElt.id.split('_').pop()
     }
 
     /**

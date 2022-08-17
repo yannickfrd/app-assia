@@ -1,13 +1,12 @@
 import AbstractForm from '../../utils/form/AbstractForm'
-import RdvManager from "./RdvManager"
-import CalendarManager from "./CalendarManager"
+import AbstractManager from '../../AbstractManager'
 import LocationSearcher from '../../utils/LocationSearcher'
 import AlertsManager from '../../utils/form/AlertsManager'
 
 export default class RdvForm extends AbstractForm
 {
     /**
-     * @param {RdvManager|CalendarManager} manager
+     * @param {AbstractManager} manager
      */
     constructor(manager) {
         super(manager)
@@ -21,10 +20,11 @@ export default class RdvForm extends AbstractForm
         this.inputEnd = this.formElt.querySelector('input[name="end"]')
         this.checkboxGoogleCalendar = this.formElt.querySelector('input[name="rdv[googleCalendar]"]')
         this.checkboxOutlookCalendar = this.formElt.querySelector('input[name="rdv[outlookCalendar]"]')
+        this.selectSupportElt = this.formElt.querySelector('#rdv_supportGroup')
 
         // Others elements
         this.rdvTitleElt = this.modalElt.querySelector('.modal-header h2')
-        this.infoRdvElt = document.querySelector('p[data-rdv="info"]')
+        this.infoRdvElt = document.querySelector('[data-rdv="info"]')
 
         this.checkboxGoogleCalendar.checked = localStorage.getItem('calendar.google') === 'true'
         this.checkboxGoogleCalendar.dataset.defaultValue = this.checkboxGoogleCalendar.checked
@@ -34,7 +34,7 @@ export default class RdvForm extends AbstractForm
         this.initRdv = null
 
         this.locationSearcher = new LocationSearcher(document.querySelector('[data-location-search]'))
-        this.alertsManager = new AlertsManager(this.inputRdvStart)
+        this.alertsManager = new AlertsManager(this.inputRdvStart, 3)
 
         this.init()
     }
@@ -78,7 +78,7 @@ export default class RdvForm extends AbstractForm
      * @param {Object} rdv
      */
      show(rdv) {
-        this.hydrateForm(rdv)
+        this.initForm(rdv)
         this.initRdv = rdv
 
         this.rdvTitleElt.innerHTML = this.getTitleModal(rdv, 'Rendez-vous')
@@ -105,6 +105,8 @@ export default class RdvForm extends AbstractForm
         e.preventDefault()
 
         this.#updateDateTimes()
+
+        this.formElt.classList.add('was-validated')
 
         const formData = new FormData(this.formElt)
         formData.append(this.selectSupportElt.name, this.selectSupportElt.value)

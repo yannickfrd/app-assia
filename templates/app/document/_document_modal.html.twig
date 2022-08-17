@@ -4,10 +4,13 @@
 >
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            {{ form_start(form_document, {
-                'action': path('document_edit', {id: '__id__'}),
-                'attr': {'data-path': path('document_edit', {id: '__id__'})}
-            }) }}
+            <div class="modal-header d-block d-md-flex pb-2">
+                <div class="col-12 col-lg-6">
+                    <h2 class="h3">Document</h2>
+                </div>
+            </div>
+            {{ form_start(form_document, {'action': path('document_edit', {id: '__id__'})}) }}
+
             <div class="modal-body pb-0">
                 <div class="row mb-3">
                     <div class="col-12">

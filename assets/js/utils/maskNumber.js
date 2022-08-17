@@ -5,7 +5,7 @@
     const regex = /[^0-9]/g;
 
      document.querySelectorAll('input[data-mask-type="number"]').forEach(inpuElt => {
-        if (false === inpuElt.hasAttribute('maxlength')) {
+        if (inpuElt.hasAttribute('maxlength') === false) {
             inpuElt.setAttribute('maxlength', 12)
         }
         

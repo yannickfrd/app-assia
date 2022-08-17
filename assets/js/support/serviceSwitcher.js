@@ -44,7 +44,7 @@ export default class ServiceSwitcher {
     changeService() {
         if (this.serviceSelectElt.value) {
             const url = this.serviceSelectElt.dataset.path
-            this.ajax.send('POST', url, this.responseAjax.bind(this), new URLSearchParams(this.getData()))
+            this.ajax.send('POST', url, (resp) => this.responseAjax(resp), new URLSearchParams(this.getData()))
         }
     }
 

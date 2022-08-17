@@ -14,7 +14,7 @@ export default class TagsManager {
             return
         }
 
-        for (const [key, tag] of Object.entries(tags)) {
+        for (const [key, tag] of Object(tags)) {
             containerElt.appendChild(this.createTagElt(tag))
         }
     }

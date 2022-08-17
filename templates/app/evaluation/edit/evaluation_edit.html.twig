@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
+{% set role_child = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
+{% set GENDER_FEMALE = constant('App\\Entity\\People\\Person::GENDER_FEMALE') %}
+{% set SERVICE_TYPE_AVDL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL') %}
+{% set SERVICE_TYPE_HOTEL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
+
+{% set title = 'Évaluation sociale' %}
+{% set evaluation_group = form.vars.value %}
+{% set edit_mode = evaluation_group.updatedAt != evaluation_group.createdAt %}
+{% set evaluation_people = form.evaluationPeople %}
+{% set nb_people = evaluation_people|length %}
+{% set people_adults = evaluation_people|filter(e => e.vars.value.supportPerson.role != role_child) %}
+{% set people_over_16 = evaluation_people|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
+{% set nb_children = nb_people - people_adults|length %}
+{% set alert_prototype = true %}
+
 {% block title %}Évaluation sociale{% endblock %}
 
 {% block body %}
-	{% set role_child = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
-	{% set GENDER_FEMALE = constant('App\\Entity\\People\\Person::GENDER_FEMALE') %}
-	{% set SERVICE_TYPE_AVDL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL') %}
-	{% set SERVICE_TYPE_HOTEL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
-	
-	{% set title = 'Évaluation sociale' %}
-	{% set evaluation_group = form.vars.value %}
-	{% set edit_mode = evaluation_group.updatedAt != evaluation_group.createdAt %}
-	{% set evaluation_people = form.evaluationPeople %}
-	{% set nb_people = evaluation_people|length %}
-	{% set people_adults = evaluation_people|filter(e => e.vars.value.supportPerson.role != role_child) %}
-	{% set people_over_16 = evaluation_people|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
-	{% set nb_children = nb_people - people_adults|length %}
-	{% set alert_prototype = true %}
-
 	<div class="container pt-3">
 
 		{% include 'app/support/_partials/_support_nav.html.twig' %}

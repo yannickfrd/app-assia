@@ -15,7 +15,7 @@ class TaskEndToEndTest extends PantherTestCase
     public const CONTAINER = '#container_tasks';
     public const FIRST_BUTTON_SHOW = self::CONTAINER.' button[data-action="show"]';
     public const FIRST_BUTTON_DELETE = self::CONTAINER.' button[data-action="delete"]';
-    public const FIRST_BUTTON_RESTORE = self::CONTAINER.' tr button[data-action="restore"]';
+    public const FIRST_BUTTON_RESTORE = self::CONTAINER.' button[data-action="restore"]';
     public const FIRST_CHECKBOX_TOGGLE_STATUS = self::CONTAINER.' input[data-action="toggle_status"]';
 
     public const MODAL = '#modal_task';

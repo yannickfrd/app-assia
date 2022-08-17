@@ -86,7 +86,7 @@ export default class FieldDisplayer {
      * Vérifie le champ de type Checkbox.
      */
     checkbox() {
-        this.visibleElt(true === this.parentFieldElt.checked)
+        this.visibleElt(this.parentFieldElt.checked === true)
     }
 
     /**
@@ -94,7 +94,7 @@ export default class FieldDisplayer {
      * @param {Boolean} isVisible 
      */
     visibleElt(isVisible) {
-        if (true === isVisible) {
+        if (isVisible === true) {
             this.elt.classList.remove('d-none')
             setTimeout(() => {
                 this.elt.classList.add('fade-in')

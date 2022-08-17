@@ -25,7 +25,7 @@ export default class SupportListManager {
         if (this.loader.isActive() === false) {
             this.loader.on()
 
-            this.ajax.send('GET', restoreBtn.dataset.pathRestore, this.responseAjax.bind(this))
+            this.ajax.send('GET', restoreBtn.dataset.pathRestore, (resp) => this.responseAjax(resp))
         }
     }
 

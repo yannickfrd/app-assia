@@ -13,9 +13,9 @@ class RdvEndToEndTest extends PantherTestCase
     public const BUTTON_NEW = 'button[data-action="new_rdv"]';
 
     public const CONTAINER = '#container_rdvs';
-    public const FIRST_BUTTON_SHOW = '[data-action="show"]';
-    public const FIRST_BUTTON_DELETE = 'tr button[data-action="delete"]';
-    public const FIRST_BUTTON_RESTORE = 'tr button[data-action="restore"]';
+    public const FIRST_BUTTON_SHOW = '[data-action="show"]'; // don't use the container (for calendar view)
+    public const FIRST_BUTTON_DELETE = self::CONTAINER.' button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = self::CONTAINER.' button[data-action="restore"]';
 
     public const MODAL = '#modal_rdv';
     public const FORM = 'form[name="rdv"]';

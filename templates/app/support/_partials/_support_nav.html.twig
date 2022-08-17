@@ -71,7 +71,7 @@
 	</nav>
 </div>
 
-<div id="js-support-people">
+<div id="js_support_people">
 	{% if support.supportPeople %}
 		{% for support_person in support.supportPeople %}
 			<a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': support_person.person.id, 'slug': support_person.person.slug}) }}" 

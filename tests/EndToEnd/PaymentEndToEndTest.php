@@ -13,13 +13,13 @@ class PaymentEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    public const CONTAINER = '#container_payments';
-
     public const BUTTON_NEW = 'button[data-action="new_payment"]';
-    public const FIRST_BUTTON_SHOW = 'tr button[data-action="show"]';
-    public const FIRST_BUTTON_DELETE = 'tr button[data-action="delete"]';
-    public const FIRST_BUTTON_RESTORE = 'tr button[data-action="restore"]';
     
+    public const CONTAINER = '#container_payments';
+    public const FIRST_BUTTON_SHOW = self::CONTAINER.' button[data-action="show"]';
+    public const FIRST_BUTTON_DELETE = self::CONTAINER.' button[data-action="delete"]';
+    public const FIRST_BUTTON_RESTORE = self::CONTAINER.' button[data-action="restore"]';
+
     public const MODAL = '#modal_payment';
     public const FORM = 'form[name="payment"]';
     public const MODAL_BUTTON_SAVE = self::MODAL.' button[data-action="save"]';

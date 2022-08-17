@@ -5,7 +5,7 @@ import AlertMessage from '../utils/AlertMessage'
 export default class PaymentManager extends AbstractManager {
 
     constructor() {
-        super('payment')
+        super('payment', null, {backdrop: 'static', keyboard: false})
 
         this.form = new PaymentForm(this)
 
@@ -129,9 +129,7 @@ export default class PaymentManager extends AbstractManager {
         this.sumPaidAmtElt.textContent = sumPaidAmt.toLocaleString() + ' €'
 
         const stillToPayAmtElts = document.querySelectorAll('td[data-object-key="stillToPayAmt"]')
-        stillToPayAmtElts.forEach(elt => {
-            this.changeTextColor(elt, elt.textContent)
-        })
+        stillToPayAmtElts.forEach(elt => this.changeTextColor(elt, elt.textContent))
 
         const sumStillToPayAmt = (sumToPayAmt - sumPaidAmt)
         this.sumStillToPayAmtElt.textContent = sumStillToPayAmt.toLocaleString() + ' €'

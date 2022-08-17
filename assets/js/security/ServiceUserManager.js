@@ -12,7 +12,7 @@ export default class ServiceUserManager {
         this.btnAddServiceElt = document.querySelector('button#addService')
         this.tableElt = document.querySelector('#user_services_table')
         
-        this.servicesCollectionManager = new WidgetCollectionManager(this.tableElt ? this.updateServicesSelect.bind(this) : null)
+        this.servicesCollectionManager = new WidgetCollectionManager(this.tableElt ? () => this.updateServicesSelect() : null)
 
         this.init()
     }
@@ -55,7 +55,7 @@ export default class ServiceUserManager {
         if (window.confirm('Attention, vous allez retirer l\'utilisateur du service. \nConfirmer ?')) {
             this.loader.on()
 
-            this.ajax.send('DELETE', e.currentTarget.dataset.path, this.responseAjax.bind(this))
+            this.ajax.send('DELETE', e.currentTarget.dataset.path, (resp) => this.responseAjax(resp))
         }
     }
 
@@ -65,7 +65,7 @@ export default class ServiceUserManager {
     toggleMainService(checkboxElt) {
         this.loader.on()
 
-        this.ajax.send('GET', checkboxElt.dataset.path, this.responseAjax.bind(this))
+        this.ajax.send('GET', checkboxElt.dataset.path, (resp) => this.responseAjax(resp))
     }
 
     /** @param {Object} response */

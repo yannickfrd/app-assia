@@ -68,7 +68,7 @@ export default class SiSiaoLogin {
      * @param {Object} data 
      */
     responseCheckConnection(data) {
-        if (data.alert && true === data.isConnected) {
+        if (data.alert && data.isConnected === true) {
             this.isConnected = true
             this.siSiaoLoginCheckboxElt.checked = true
             return new AlertMessage(data.alert, data.msg)

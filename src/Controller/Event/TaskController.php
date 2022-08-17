@@ -43,8 +43,7 @@ final class TaskController extends AbstractController
             return $this->exportData($search, $paginator->getTaskRepository(), $this->getUser());
         }
 
-        $formTask = $this->createForm(TaskType::class, new Task())
-            ->handleRequest($request);
+        $formTask = $this->createForm(TaskType::class, new Task());
 
         return $this->render('app/event/task/task_index.html.twig', [
             'form' => $form->createView(),

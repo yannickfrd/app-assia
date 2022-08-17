@@ -16,7 +16,7 @@ export default class DocumentManager extends AbstractManager {
         this.requestPreview = (id) => this.request('preview', id)
         this.requestUpload = (id) => this.request('preview', id, 'POST')
         this.requestDeleteFiles = (ids) => ids.forEach(id => {
-            this.ajax.send('DELETE', this.getPath('delete', id), this.responseAjax.bind(this))
+            this.ajax.send('DELETE', this.getPath('delete', id), (resp) => this.responseAjax(resp))
         })
 
         this.ajax.delayError = 60
@@ -28,7 +28,7 @@ export default class DocumentManager extends AbstractManager {
         this.documentViewer = new DocumentViewer(this)
         this.checkboxSelector = new CheckboxSelector()
         this.dropzoneModal = new Modal('#modal_dropzone')
-        this.dropzone = new Dropzone(this.formDropzoneElt, this.uploadFile.bind(this))
+        this.dropzone = new Dropzone(this.formDropzoneElt, (file) => this.uploadFile(file))
 
         this.init()
     }
@@ -47,7 +47,7 @@ export default class DocumentManager extends AbstractManager {
         const formData = new FormData(this.formActionElt)
         formData.append('items', JSON.stringify(items))
 
-        this.ajax.send('POST', this.formActionElt.action, this.responseAjax.bind(this), formData)
+        this.ajax.send('POST', this.formActionElt.action, (resp) => this.responseAjax(resp), formData)
         return new AlertMessage('success', 'Le téléchargement est en cours. Veuillez patienter...')
     }
 
@@ -62,7 +62,7 @@ export default class DocumentManager extends AbstractManager {
         if (file) {
             formData.append('files', file)
         }
-        this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
+        this.ajax.send('POST', url, (resp) => this.responseAjax(resp), formData)
     }
 
     showDropZone() {
